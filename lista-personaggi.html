@@ -76,8 +76,8 @@ input, input[type=file]{padding:8px;border-radius:8px;border:none;font-size:14px
     </div>
   </div>
 </div>
-
-<script type="module">
+  <script type="module">
+window.addEventListener("DOMContentLoaded", async ()=>{
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -146,7 +146,7 @@ function mostraPersonaggi(){
 mostraPersonaggi();
 
 /* ================= CREA PERSONAGGIO ================= */
-btnCrea.onclick=()=>{
+btnCrea.addEventListener("click", ()=>{
   if(personaggi.length>=2){
     alert("Hai già 2 personaggi!");
     return;
@@ -160,10 +160,10 @@ btnCrea.onclick=()=>{
   }
   form.style.display="flex";
   btnCrea.style.display="none";
-};
+});
 
 /* ================= SUBMIT ================= */
-form.onsubmit=async(e)=>{
+form.addEventListener("submit", async(e)=>{
   e.preventDefault();
   const nuovo={
     nome: form.nome.value,
@@ -185,9 +185,9 @@ form.onsubmit=async(e)=>{
   } else {
     await salvaPersonaggio(nuovo);
   }
-  form.style.display="none";
-  loading.style.display="block";
-};
+  form.style.display = "none";
+  loading.style.display = "block";
+});
 
 /* ================= SALVA SU FIREBASE ================= */
 async function salvaPersonaggio(nuovo){
@@ -220,7 +220,9 @@ function mostraCarta(p){
     fotoDiv.textContent="FOTO";
   }
   carta.onclick=()=>{window.location.href="home.html"+window.location.hash;}
-}
+});
+
 </script>
 </body>
 </html>
+
