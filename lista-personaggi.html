@@ -5,7 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Italia RP - Selezione Personaggi</title>
 <style>
-/* CSS originale rimane invariato */
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI', sans-serif;}
+body{background: linear-gradient(180deg,#1c102b,#2a1b3f);color:white;display:flex;flex-direction:column;align-items:center;min-height:100vh;}
+.container{margin-top:30px;width:90%;max-width:600px;}
+button{padding:10px 20px;background:#5865F2;color:white;border:none;border-radius:10px;cursor:pointer;margin:10px 0;transition:0.2s;}
+button:hover{transform:scale(1.05);}
+.personaggio{background: rgba(255,255,255,0.1);padding:10px 15px;border-radius:12px;margin-bottom:10px;cursor:pointer;}
+.loading{margin-top:20px;font-size:18px;display:none;}
+.carta-container{display:none;margin-top:20px;}
+.carta{width:380px;height:220px;border-radius:20px;position:relative;display:flex;flex-direction:column;justify-content:space-between;padding:15px;box-shadow:0 6px 20px rgba(0,0,0,0.6);cursor:pointer;}
+.carta-front{background: linear-gradient(135deg,#008C45,#ffffff,#CD212A);}
+.carta-header{display:flex;justify-content:space-between;align-items:center;}
+.carta-header img{width:60px;border-radius:8px;}
+.server-name{font-weight:bold;font-size:18px;letter-spacing:1px;}
+.carta-body{display:flex;gap:15px;margin-top:10px;}
+.foto{width:90px;height:110px;background: rgba(0,0,0,0.2);border-radius:10px;display:flex;justify-content:center;align-items:center;font-size:12px;color:white;overflow:hidden;}
+.foto img{width:100%;height:100%;object-fit:cover;}
+.dati{flex:1;display:flex;flex-direction:column;justify-content:space-around;font-size:13px;}
+.dati span{display:flex;justify-content:space-between;margin-bottom:3px;}
+.carta-footer{display:flex;justify-content:flex-end;font-size:10px;font-weight:bold;letter-spacing:1px;}
+.barcode{margin-top:10px;font-size:12px;background:white;color:black;padding:5px 10px;font-family:monospace;}
+.firma{font-style:italic;}
+form{display:flex;flex-direction:column;gap:10px;margin-top:20px;}
+input, input[type=file]{padding:8px;border-radius:8px;border:none;font-size:14px;}
 </style>
 </head>
 <body>
@@ -15,6 +37,7 @@
   <div id="lista-personaggi"></div>
   <button id="crea-personaggio">Crea Personaggio</button>
 
+  <!-- FORM CREAZIONE PERSONAGGIO -->
   <form id="form-personaggio" style="display:none;">
     <input type="text" id="nome" placeholder="Nome" required>
     <input type="text" id="cognome" placeholder="Cognome" required>
@@ -25,51 +48,179 @@
     <button type="submit">Conferma</button>
   </form>
 
+  <!-- LOADING -->
   <div class="loading" id="loading">Creazione carta...</div>
 
+  <!-- CARTA D'IDENTITA -->
   <div class="carta-container">
-    <!-- Carta ID originale -->
+    <div class="carta" id="carta">
+      <div class="carta-front">
+        <div class="carta-header">
+          <img src="assets/logo.jpg" alt="Logo Server">
+          <div class="server-name">Italia RP</div>
+        </div>
+        <div class="carta-body">
+          <div class="foto" id="carta-foto">FOTO</div>
+          <div class="dati">
+            <span><strong>Nome:</strong> <span id="carta-nome">-</span></span>
+            <span><strong>Cognome:</strong> <span id="carta-cognome">-</span></span>
+            <span><strong>Data Nascita:</strong> <span id="carta-data">-</span></span>
+            <span><strong>Occhi:</strong> <span id="carta-occhi">-</span></span>
+            <span><strong>Capelli:</strong> <span id="carta-capelli">-</span></span>
+          </div>
+        </div>
+        <div class="barcode" id="carta-barcode">1234567890</div>
+        <div style="margin-top:10px;">Firma: <span id="carta-firma" class="firma">-</span></div>
+        <div class="carta-footer">Italia RP © 2026</div>
+      </div>
+    </div>
   </div>
 </div>
 
-<script>
-/* Script originale per gestione personaggi rimane invariato */
-</script>
-
-<!-- Firebase SDK + gestione slot Discord -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.16.0/firebase-app.js";
-import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.16.0/firebase-firestore.js";
 
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+/* ================= FIREBASE ================= */
 const firebaseConfig = {
   apiKey: "AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
   authDomain: "sito-rp.firebaseapp.com",
   projectId: "sito-rp",
   storageBucket: "sito-rp.firebasestorage.app",
   messagingSenderId: "234781749995",
-  appId: "1:234781749995:web:6954473363659fe38b04ae",
-  measurementId: "G-R23N60PBYY"
+  appId: "1:234781749995:web:6954473363659fe38b04ae"
 };
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-window.db = db;
-window.doc = doc;
-window.setDoc = setDoc;
 
-// UID reale Discord
-window.uid = sessionStorage.getItem("discord_uid") || "test_user_123";
+/* ================= LOGIN DISCORD ================= */
+const hash = window.location.hash;
+if(!hash.includes("access_token")){
+  alert("Devi prima accedere con Discord.");
+  window.location.href="index.html";
+}
 
-// Sovrascrive salvaPersonaggio per salvare anche su Firebase
-const originaleSalvaPersonaggio = window.salvaPersonaggio || (()=>{});
-window.salvaPersonaggio = function(p){
-  // salva locale originale
-  originaleSalvaPersonaggio(p);
-  // scegli slot: 1 o 2
-  const slot = (JSON.parse(localStorage.getItem("italia_rp_personaggi"))?.length <= 1) ? "1" : "2";
-  setDoc(doc(db, "users", window.uid), { [`personaggi.${slot}`]: p }, { merge:true });
+const params = new URLSearchParams(hash.substring(1));
+const accessToken = params.get("access_token");
+
+const response = await fetch("https://discord.com/api/users/@me", {
+  headers:{Authorization:`Bearer ${accessToken}`}
+});
+const user = await response.json();
+const userId = user.id;
+
+/* ================= DATABASE ================= */
+const userRef = doc(db,"utenti",userId);
+const snap = await getDoc(userRef);
+
+let personaggi = [];
+if(snap.exists()){
+  personaggi = snap.data().personaggi || [];
+}
+
+/* ================= DOM ================= */
+const listaDiv = document.getElementById("lista-personaggi");
+const btnCrea = document.getElementById("crea-personaggio");
+const form = document.getElementById("form-personaggio");
+const loading = document.getElementById("loading");
+const cartaCont = document.querySelector(".carta-container");
+const carta = document.getElementById("carta");
+const fotoUpload = document.getElementById("foto-upload");
+
+/* ================= MOSTRA PERSONAGGI ================= */
+function mostraPersonaggi(){
+  listaDiv.innerHTML="";
+  personaggi.forEach((p,i)=>{
+    const div = document.createElement("div");
+    div.className = "personaggio";
+    div.textContent = p.nome + " " + p.cognome;
+    div.onclick=()=>{
+      localStorage.setItem("personaggio_attivo",i);
+      mostraCarta(p);
+      cartaCont.style.display="block";
+    };
+    listaDiv.appendChild(div);
+  });
+}
+mostraPersonaggi();
+
+/* ================= CREA PERSONAGGIO ================= */
+btnCrea.onclick=()=>{
+  if(personaggi.length>=2){
+    alert("Hai già 2 personaggi!");
+    return;
+  }
+  if(personaggi.length===1){
+    const codice=prompt("Inserisci il codice per sbloccare il secondo personaggio:");
+    if(codice!=="2121"){
+      alert("Codice errato!");
+      return;
+    }
+  }
+  form.style.display="flex";
+  btnCrea.style.display="none";
+};
+
+/* ================= SUBMIT ================= */
+form.onsubmit=async(e)=>{
+  e.preventDefault();
+  const nuovo={
+    nome: form.nome.value,
+    cognome: form.cognome.value,
+    dataNascita: form.dataNascita.value,
+    occhi: form.occhi.value,
+    capelli: form.capelli.value,
+    barcode: Math.floor(Math.random()*1000000000),
+    foto: ""
+  };
+  const file=fotoUpload.files[0];
+  if(file){
+    const reader=new FileReader();
+    reader.onload=async function(e){
+      nuovo.foto=e.target.result;
+      await salvaPersonaggio(nuovo);
+    }
+    reader.readAsDataURL(file);
+  } else {
+    await salvaPersonaggio(nuovo);
+  }
+  form.style.display="none";
+  loading.style.display="block";
+};
+
+/* ================= SALVA SU FIREBASE ================= */
+async function salvaPersonaggio(nuovo){
+  personaggi.push(nuovo);
+  await setDoc(userRef,{personaggi});
+  mostraPersonaggi();
+  loading.style.display="none";
+  mostraCarta(nuovo);
+  cartaCont.style.display="block";
+  btnCrea.style.display="block";
+  form.reset();
+}
+
+/* ================= MOSTRA CARTA ================= */
+function mostraCarta(p){
+  document.getElementById("carta-nome").textContent=p.nome;
+  document.getElementById("carta-cognome").textContent=p.cognome;
+  document.getElementById("carta-data").textContent=p.dataNascita;
+  document.getElementById("carta-occhi").textContent=p.occhi;
+  document.getElementById("carta-capelli").textContent=p.capelli;
+  document.getElementById("carta-barcode").textContent=p.barcode;
+  document.getElementById("carta-firma").textContent=p.nome + " " + p.cognome;
+  const fotoDiv=document.getElementById("carta-foto");
+  fotoDiv.innerHTML="";
+  if(p.foto){
+    const img=document.createElement("img");
+    img.src=p.foto;
+    fotoDiv.appendChild(img);
+  } else {
+    fotoDiv.textContent="FOTO";
+  }
+  carta.onclick=()=>{window.location.href="home.html"+window.location.hash;}
 }
 </script>
-
 </body>
 </html>
