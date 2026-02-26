@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Italia RP - Login</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI', sans-serif;}
+body{
+  background: linear-gradient(180deg,#1c102b,#2a1b3f);
+  color:white;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+}
+.login-container{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:20px;
+  background: rgba(255,255,255,0.05);
+  padding:40px 50px;
+  border-radius:25px;
+  backdrop-filter: blur(10px);
+  box-shadow:0 6px 20px rgba(0,0,0,0.5);
+}
+h1{
+  text-align:center;
+  font-size:28px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+}
+h1 img{width:120px;}
+p{font-size:14px;color:#ddd;text-align:center;max-width:300px;}
+.discord-btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  background:#5865F2;
+  color:white;
+  border:none;
+  border-radius:12px;
+  padding:12px 20px;
+  font-size:16px;
+  cursor:pointer;
+  transition:0.2s;
+  text-decoration:none;
+}
+.discord-btn:hover{transform:scale(1.05);box-shadow:0 6px 15px rgba(0,0,0,0.3);}
+.discord-btn:active{transform:scale(0.95);}
+.discord-btn img{width:24px;height:24px;}
+.footer{text-align:center;margin-top:30px;color:#aaa;font-size:13px;}
+</style>
+</head>
+<body>
+
+<div class="login-container">
+  <h1>
+    <img src="assets/logo.png" alt="Logo Italia RP">
+    Accedi al portale
+  </h1>
+  <p>Per continuare accedi con Discord o entra nel nostro server ufficiale.</p>
+  
+  <a class="discord-btn" href="#" id="discord-login">
+    <img src="assets/logo-discord.png" alt="Discord Logo"> Accedi con Discord
+  </a>
+  
+  <a class="discord-btn" href="https://discord.gg/TUO_LINK_SERVER" target="_blank">
+    <img src="assets/logo-discord.png" alt="Discord Logo"> Entra nel server Discord
+  </a>
+</div>
+
+<div class="footer">Italia RP © 2026 - Login Test</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.16.0/firebase-app.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.16.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
+  authDomain: "sito-rp.firebaseapp.com",
+  projectId: "sito-rp",
+  storageBucket: "sito-rp.firebasestorage.app",
+  messagingSenderId: "234781749995",
+  appId: "1:234781749995:web:6954473363659fe38b04ae",
+  measurementId: "G-R23N60PBYY"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+window.db = db;
+
+// Discord OAuth2
+const clientId = "1475512122330054737";
+const redirectUri = "http://localhost:5500/lista-personaggi.html";
+const scope = "identify email";
+
+const params = new URLSearchParams(window.location.hash.substring(1));
+const token = params.get("access_token");
+
+if(token){
+  fetch("https://discord.com/api/users/@me", {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+  .then(res => res.json())
+  .then(user => {
+    sessionStorage.setItem("discord_uid", user.id);
+    sessionStorage.setItem("discord_username", user.username);
+    window.location.href = redirectUri;
+  })
+  .catch(err => { console.error(err); alert("Errore login Discord"); });
+} else {
+  document.getElementById("discord-login").href =
+    `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${scope}`;
+}
+</script>
+
+</body>
+</html>
