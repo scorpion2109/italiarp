@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Italia RP - Carta d'identità</title>
+<style>
+body{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  background: linear-gradient(180deg,#1c102b,#2a1b3f);
+  font-family:'Segoe UI', sans-serif;
+}
+.carta-container{
+  perspective: 1000px;
+}
+.carta{
+  width:380px;
+  height:220px;
+  border-radius:20px;
+  position:relative;
+  transform-style: preserve-3d;
+  transition: transform 0.8s;
+  cursor:pointer;
+}
+.carta.flipped{transform: rotateY(180deg);}
+.carta-face{
+  position:absolute;
+  width:100%;
+  height:100%;
+  border-radius:20px;
+  backface-visibility: hidden;
+  color:#000;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  padding:15px;
+  box-shadow:0 6px 20px rgba(0,0,0,0.6);
+}
+.carta-front{
+  background: linear-gradient(135deg,#008C45,#ffffff,#CD212A);
+}
+.carta-back{
+  background: #222;
+  color:white;
+  transform: rotateY(180deg);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+}
+.carta-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.carta-header img{width:60px;border-radius:8px;}
+.server-name{font-weight:bold;font-size:18px;letter-spacing:1px;}
+.carta-body{
+  display:flex;
+  gap:15px;
+  margin-top:10px;
+}
+.foto{
+  width:90px;
+  height:110px;
+  background: rgba(0,0,0,0.2);
+  border-radius:10px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:12px;
+  color:white;
+}
+.dati{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-around;
+  font-size:13px;
+}
+.dati span{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:3px;
+}
+.carta-footer{display:flex;justify-content:flex-end;font-size:10px;font-weight:bold;letter-spacing:1px;}
+button{margin-top:20px;padding:12px 20px;border:none;border-radius:12px;background:#5865F2;color:white;cursor:pointer;font-size:16px;transition:0.2s;}
+button:hover{transform:scale(1.05);}
+.barcode{margin-top:20px;font-size:12px;background:white;color:black;padding:5px 10px;font-family:monospace;}
+</style>
+</head>
+<body>
+
+<div>
+  <button id="crea-personaggio">Crea Personaggio</button>
+  <div class="carta-container" style="margin-top:20px; display:none;">
+    <div class="carta" id="carta">
+      <!-- Lato Frontale -->
+      <div class="carta-face carta-front">
+        <div class="carta-header">
+          <img src="assets/logo.png" alt="Logo Server">
+          <div class="server-name">Italia RP</div>
+        </div>
+        <div class="carta-body">
+          <div class="foto" id="foto">FOTO</div>
+          <div class="dati">
+            <span><strong>Nome:</strong> <span id="nome">-</span></span>
+            <span><strong>Cognome:</strong> <span id="cognome">-</span></span>
+            <span><strong>Data Nascita:</strong> <span id="dataNascita">-</span></span>
+            <span><strong>Occhi:</strong> <span id="occhi">-</span></span>
+            <span><strong>Capelli:</strong> <span id="capelli">-</span></span>
+          </div>
+        </div>
+        <div class="carta-footer">Italia RP © 2026</div>
+      </div>
+      <!-- Lato Posteriore -->
+      <div class="carta-face carta-back">
+        <div class="barcode" id="barcode">1234567890</div>
+        <div style="margin-top:10px;">Firma: <span id="firma">-</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// TEST LOCAL STORAGE
+const STORAGE_KEY = "italia_rp_personaggio";
+let personaggio = JSON.parse(localStorage.getItem(STORAGE_KEY)) || null;
+
+// ELEMENTI
+const btnCrea = document.getElementById("crea-personaggio");
+const cartaCont = document.querySelector(".carta-container");
+const carta = document.getElementById("carta");
+
+// CREA PERSONAGGIO
+btnCrea.onclick = ()=>{
+  const nome = prompt("Nome:");
+  const cognome = prompt("Cognome:");
+  const dataNascita = prompt("Data di nascita:");
+  const occhi = prompt("Colore occhi:");
+  const capelli = prompt("Colore capelli:");
+
+  personaggio = {nome, cognome, dataNascita, occhi, capelli, barcode: Math.floor(Math.random()*1000000000)};
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(personaggio));
+  aggiornaCarta();
+  cartaCont.style.display = "block";
+};
+
+// AGGIORNA CARTA
+function aggiornaCarta(){
+  if(!personaggio) return;
+  document.getElementById("nome").textContent = personaggio.nome;
+  document.getElementById("cognome").textContent = personaggio.cognome;
+  document.getElementById("dataNascita").textContent = personaggio.dataNascita;
+  document.getElementById("occhi").textContent = personaggio.occhi;
+  document.getElementById("capelli").textContent = personaggio.capelli;
+  document.getElementById("barcode").textContent = personaggio.barcode;
+  document.getElementById("firma").textContent = `${personaggio.nome} ${personaggio.cognome}`;
+}
+
+// CLICK SULLA CARTA → GIRA
+carta.onclick = ()=>{
+  carta.classList.toggle("flipped");
+};
+
+// SE ESISTE PERSONAGGIO SALVATO
+if(personaggio){
+  aggiornaCarta();
+  cartaCont.style.display = "block";
+}
+</script>
+
+</body>
+</html>
