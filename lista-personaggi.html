@@ -83,8 +83,7 @@ input, input[type=file]{padding:8px;border-radius:8px;border:none;font-size:14px
 <!-- Firebase -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
-import { getFirestore, collection, doc, getDoc, setDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
-import { getAuth, onAuthStateChanged, signInWithPopup, OAuthProvider } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
@@ -98,7 +97,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const auth = getAuth(app);
 
 document.addEventListener("DOMContentLoaded", async () => {
   const listaDiv = document.getElementById("lista-personaggi");
@@ -109,22 +107,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   const carta = document.getElementById("carta");
   const fotoUpload = document.getElementById("foto-upload");
 
-  let user = null;
+  // ======= USO UID DA SESSIONSTORAGE =======
+  const uid = sessionStorage.getItem("discord_uid");
+  if(!uid){
+    alert("Utente non loggato!");
+    window.location.href = "index.html";
+    return;
+  }
+
   let personaggi = [];
 
-  // ==== Login Discord con OAuth popup ====
-  const provider = new OAuthProvider('discord.com');
-  signInWithPopup(auth, provider).then(result=>{
-    user = result.user;
-    caricaPersonaggi();
-  }).catch(err=>{
-    console.error(err);
-    alert("Login Discord fallito");
-  });
-
+  // ======= CARICA PERSONAGGI FIRESTORE =======
   async function caricaPersonaggi(){
-    const col = collection(db, "users");
-    const docRef = doc(col, user.uid);
+    const docRef = doc(db, "users", uid);
     const docSnap = await getDoc(docRef);
     if(docSnap.exists()){
       personaggi = docSnap.data().personaggi || [];
@@ -143,6 +138,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  // ===== CREAZIONE PERSONAGGIO =====
   btnCrea.onclick = ()=>{
     if(personaggi.length >=2){
       const codice = prompt("Inserisci il codice per creare il secondo personaggio:");
@@ -178,7 +174,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   async function salvaPersonaggio(nuovo){
     personaggi.push(nuovo);
-    await setDoc(doc(db,"users",user.uid), { personaggi });
+    await setDoc(doc(db,"users",uid), { personaggi });
     aggiornaLista();
     loading.style.display="none";
     mostraCarta(nuovo);
@@ -203,7 +199,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     } else { fotoDiv.textContent="FOTO"; }
     carta.onclick = ()=>{ window.location.href="home.html"; };
   }
+
+  // ======= CARICA I PERSONAGGI AL CARICAMENTO =======
+  caricaPersonaggi();
 });
 </script>
 </body>
 </html>
+
