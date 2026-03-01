@@ -3,31 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Italia RP</title>
-
+<title>Italia RP - Selezione Personaggi</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
-body{
-  background:radial-gradient(circle at 50% 20%,#2a1b3f,#0f0818);
-  color:white;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  min-height:100vh;
-}
-.container{margin-top:20px;width:90%;max-width:700px;}
-button{padding:10px 20px;background:#5865F2;border:none;border-radius:10px;color:white;cursor:pointer;margin:10px 0;}
-.personaggio{background:rgba(255,255,255,0.1);padding:10px;border-radius:12px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
+body{background: linear-gradient(180deg,#1c102b,#2a1b3f);color:white;display:flex;flex-direction:column;align-items:center;min-height:100vh;}
+.container{margin-top:30px;width:90%;max-width:700px;}
+button{padding:10px 20px;background:#5865F2;color:white;border:none;border-radius:10px;cursor:pointer;margin:10px 0;transition:0.2s;}
+button:hover{transform:scale(1.05);}
+.personaggio{background: rgba(255,255,255,0.1);padding:10px;border-radius:12px;margin-bottom:10px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;}
 .personaggio-info{display:flex;align-items:center;gap:10px;cursor:pointer;}
 .personaggio img{width:50px;height:50px;border-radius:50%;object-fit:cover;border:2px solid white;}
-.actions{display:flex;gap:10px;font-size:20px;cursor:pointer;}
-form{display:none;flex-direction:column;gap:10px;margin-top:15px;}
-input{padding:8px;border-radius:8px;border:none;}
 .wrapper{perspective:2500px;margin-top:30px;display:none;}
 .card{width:540px;height:340px;position:relative;transform-style:preserve-3d;transition:1.2s cubic-bezier(.2,.8,.2,1);cursor:pointer;}
 .card.flipped{transform:rotateY(180deg);}
 .face{position:absolute;width:100%;height:100%;border-radius:18px;backface-visibility:hidden;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,0.8);}
-.front{background:radial-gradient(circle at 20% 30%,rgba(0,120,255,0.05),transparent 40%),radial-gradient(circle at 80% 70%,rgba(0,200,180,0.05),transparent 40%),linear-gradient(135deg,#fdfdfd,#f1f1f1);padding:30px;position:relative;color:black;}
+.front{background:#fdfdfd;padding:30px;position:relative;color:black;}
 .flag{position:absolute;left:0;top:0;width:14px;height:100%;background:linear-gradient(#008C45 33%,#ffffff 33% 66%,#CD212A 66%);}
 .logo{position:absolute;top:20px;right:25px;width:90px;}
 .content{display:flex;margin-top:60px;gap:30px;}
@@ -40,13 +30,15 @@ input{padding:8px;border-radius:8px;border:none;}
 .hologram{position:absolute;right:25px;bottom:25px;width:110px;height:110px;border-radius:50%;background:conic-gradient(rgba(0,255,255,0.6),rgba(255,0,255,0.6),rgba(255,255,0,0.6),rgba(0,255,255,0.6));animation:spin 8s linear infinite;opacity:0.45;}
 @keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
 .back{transform:rotateY(180deg);background:linear-gradient(180deg,#cfe3e6,#e8f1f3);padding:30px;display:flex;flex-direction:column;justify-content:space-between;font-size:14px;border:1px solid rgba(0,0,0,0.2);color:black;}
+form{display:none;flex-direction:column;gap:10px;margin-top:15px;}
+input{padding:8px;border-radius:8px;border:none;}
+.actions{display:flex;gap:10px;font-size:18px;cursor:pointer;}
 </style>
 </head>
 <body>
 
 <div class="container">
 <h2>Selezione Personaggio</h2>
-
 <div id="lista"></div>
 <button id="btnCrea">Crea Personaggio</button>
 
@@ -64,7 +56,6 @@ input{padding:8px;border-radius:8px;border:none;}
 
 <div class="wrapper">
 <div class="card" id="card">
-
 <div class="face front">
 <div class="flag"></div>
 <img src="assets/logo.png" class="logo">
@@ -81,14 +72,12 @@ input{padding:8px;border-radius:8px;border:none;}
 </div>
 <div class="hologram"></div>
 </div>
-
 <div class="face back">
 <div>
 <p><b>Codice Fiscale:</b> <span id="c_cf"></span></p>
 <p><b>Residenza:</b> <span id="c_res"></span></p>
 </div>
 </div>
-
 </div>
 </div>
 
@@ -104,118 +93,148 @@ const firebaseConfig = {
   messagingSenderId: "234781749995",
   appId: "1:234781749995:web:6954473363659fe38b04ae"
 };
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const MAX=2;
-const CODICE="ITALIARP2025";
-let listaPers = [];
 const uid = sessionStorage.getItem("discord_uid");
-
-if(!uid){
-    alert("Utente non loggato!");
-    window.location.href="index.html";
-}
+if(!uid){ alert("Utente non loggato!"); window.location.href="index.html"; }
 
 const lista=document.getElementById("lista");
 const form=document.getElementById("form");
 const btn=document.getElementById("btnCrea");
 const wrapper=document.querySelector(".wrapper");
 const card=document.getElementById("card");
+let listaPers = [];
+const MAX=2;
+const CODICE="ITALIARP2025";
+const DELETE_PASSWORD="admin123";
+let editingIndex = null;
 
-// CARICA PERSONAGGI FIRESTORE
-async function caricaLista(){
-    const docRef = doc(db, "users", uid);
+// ==== Carica o crea documento utente ====
+async function inizializzaUtente(){
+    const docRef = doc(db,"users",uid);
     const docSnap = await getDoc(docRef);
     if(docSnap.exists()){
         listaPers = docSnap.data().personaggi || [];
-        aggiornaLista();
+    } else {
+        await setDoc(docRef, { personaggi: [] });
+        listaPers = [];
     }
+    aggiornaLista();
 }
-caricaLista();
+inizializzaUtente();
 
 function salvaFirestore(){
-    setDoc(doc(db,"users",uid),{personaggi: listaPers});
+    setDoc(doc(db,"users",uid), { personaggi: listaPers }, { merge:true });
 }
 
 function aggiornaLista(){
-lista.innerHTML="";
-listaPers.forEach((p,index)=>{
-let div=document.createElement("div");
-div.className="personaggio";
+    lista.innerHTML="";
+    listaPers.forEach((p,index)=>{
+        let div=document.createElement("div");
+        div.className="personaggio";
 
-let info=document.createElement("div");
-info.className="personaggio-info";
-info.onclick=()=>mostraCarta(p);
+        let info=document.createElement("div");
+        info.className="personaggio-info";
+        info.onclick=()=>mostraCarta(p);
 
-let img=document.createElement("img");
-img.src=p.foto;
+        let img=document.createElement("img"); img.src=p.foto;
+        let nome=document.createElement("div"); nome.textContent=p.nome+" "+p.cognome;
+        info.appendChild(img); info.appendChild(nome);
 
-let nome=document.createElement("div");
-nome.textContent=p.nome+" "+p.cognome;
+        let actions=document.createElement("div"); actions.className="actions";
 
-info.appendChild(img);
-info.appendChild(nome);
+        let edit=document.createElement("span"); edit.textContent="✏️";
+        edit.onclick=()=>modificaPersonaggio(index);
 
-div.appendChild(info);
-lista.appendChild(div);
-});
+        let del=document.createElement("span"); del.textContent="🗑️";
+        del.onclick=()=>{
+            let pass=prompt("Inserisci password per eliminare:");
+            if(pass===DELETE_PASSWORD){
+                listaPers.splice(index,1);
+                salvaFirestore();
+                aggiornaLista();
+                wrapper.style.display="none";
+            } else { alert("Password errata"); }
+        };
+
+        actions.appendChild(edit); actions.appendChild(del);
+
+        div.appendChild(info); div.appendChild(actions);
+        lista.appendChild(div);
+    });
 }
 
+// ==== Bottone crea personaggio ====
 btn.onclick=()=>{
-if(listaPers.length>=MAX){alert("Massimo 2 personaggi");return;}
-if(listaPers.length===1){
-let c=prompt("Inserisci codice:");
-if(c!==CODICE){alert("Codice errato");return;}
+    if(listaPers.length>=MAX){alert("Massimo 2 personaggi");return;}
+    if(listaPers.length===1){
+        let c = prompt("Inserisci codice:");
+        if(c!==CODICE){alert("Codice errato"); return;}
+    }
+    form.style.display="flex";
+    editingIndex = null;
+};
+
+// ==== Form submit ====
+form.onsubmit = e=>{
+    e.preventDefault();
+    let reader = new FileReader();
+    reader.onload = function(){
+        let p = {
+            nome:nome.value,
+            cognome:cognome.value,
+            data:data.value,
+            occhi:occhi.value,
+            capelli:capelli.value,
+            residenza:residenza.value,
+            foto:reader.result,
+            barcode: Math.floor(Math.random()*1000000000),
+            firma: nome.value+" "+cognome.value
+        };
+        if(editingIndex!==null){
+            listaPers[editingIndex]=p;
+        } else {
+            listaPers.push(p);
+        }
+        salvaFirestore();
+        aggiornaLista();
+        mostraCarta(p);
+        form.reset();
+        form.style.display="none";
+        editingIndex=null;
+    };
+    reader.readAsDataURL(fotoInput.files[0]);
+};
+
+// ==== Modifica personaggio ====
+function modificaPersonaggio(index){
+    let p = listaPers[index];
+    nome.value=p.nome;
+    cognome.value=p.cognome;
+    data.value=p.data;
+    occhi.value=p.occhi;
+    capelli.value=p.capelli;
+    residenza.value=p.residenza;
+    form.style.display="flex";
+    editingIndex = index;
 }
-form.style.display="flex";
-};
 
-function generaCF(p){
-return p.cognome.substring(0,3).toUpperCase()+p.nome.substring(0,3).toUpperCase()+"25X0";
-}
-
-form.onsubmit=e=>{
-e.preventDefault();
-let reader=new FileReader();
-reader.onload=function(){
-let p={
-nome:nome.value,
-cognome:cognome.value,
-data:data.value,
-occhi:occhi.value,
-capelli:capelli.value,
-residenza:residenza.value,
-foto:reader.result,
-barcode: Math.floor(Math.random()*1000000000),
-firma: nome.value+" "+cognome.value
-};
-listaPers.push(p);
-salvaFirestore();
-aggiornaLista();
-mostraCarta(p);
-form.reset();
-form.style.display="none";
-};
-reader.readAsDataURL(fotoInput.files[0]);
-};
-
+// ==== Mostra tessera ====
+function generaCF(p){ return p.cognome.substring(0,3).toUpperCase()+p.nome.substring(0,3).toUpperCase()+"25X0"; }
 function mostraCarta(p){
-wrapper.style.display="block";
-card.classList.remove("flipped");
-
-c_nome.textContent=p.nome;
-c_cognome.textContent=p.cognome;
-c_data.textContent=p.data;
-c_occhi.textContent=p.occhi;
-c_capelli.textContent=p.capelli;
-c_res.textContent=p.residenza;
-c_firma.textContent=p.firma;
-c_cf.textContent=generaCF(p);
-c_foto.src=p.foto;
-
-card.onclick=()=>card.classList.toggle("flipped");
+    wrapper.style.display="block";
+    card.classList.remove("flipped");
+    c_nome.textContent=p.nome;
+    c_cognome.textContent=p.cognome;
+    c_data.textContent=p.data;
+    c_occhi.textContent=p.occhi;
+    c_capelli.textContent=p.capelli;
+    c_res.textContent=p.residenza;
+    c_firma.textContent=p.firma;
+    c_cf.textContent=generaCF(p);
+    c_foto.src=p.foto;
+    card.onclick=()=>card.classList.toggle("flipped");
 }
 </script>
 
