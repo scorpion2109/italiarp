@@ -78,13 +78,17 @@ window.onload = async () => {
             const user = await res.json();
             console.log("Discord user:", user);
 
-            // Salva ID su Firebase
-            await setDoc(doc(db, "utenti_discord", user.id), {
+            // Salva ID su Firebase nella collezione 'users'
+            await setDoc(doc(db, "users", user.id), {
                 username: user.username,
                 discriminator: user.discriminator,
                 email: user.email || "",
-                id: user.id
+                id: user.id,
+                personaggi: []
             });
+
+            // Salva UID in sessionStorage per mantenerlo tra le pagine
+            sessionStorage.setItem("discord_uid", user.id);
 
             alert(`Login riuscito! Benvenuto ${user.username}#${user.discriminator}`);
             
@@ -100,6 +104,3 @@ window.onload = async () => {
 
 </body>
 </html>
-
-
-
