@@ -136,11 +136,22 @@ function aggiornaLista(){
 
         let info=document.createElement("div");
         info.className="personaggio-info";
+
+        // Foto → mostra carta
         info.onclick=()=>mostraCarta(p);
 
-        let img=document.createElement("img"); img.src=p.foto;
-        let nome=document.createElement("div"); nome.textContent=p.nome+" "+p.cognome;
-        info.appendChild(img); info.appendChild(nome);
+        let img=document.createElement("img"); 
+        img.src=p.foto;
+
+        let nome=document.createElement("div"); 
+        nome.textContent=p.nome+" "+p.cognome;
+
+        // Click sul nome → home
+        nome.style.cursor="pointer";
+        nome.onclick = ()=>{ window.location.href="home.html"; }
+
+        info.appendChild(img); 
+        info.appendChild(nome);
 
         let actions=document.createElement("div"); actions.className="actions";
 
@@ -158,9 +169,11 @@ function aggiornaLista(){
             } else { alert("Password errata"); }
         };
 
-        actions.appendChild(edit); actions.appendChild(del);
+        actions.appendChild(edit); 
+        actions.appendChild(del);
 
-        div.appendChild(info); div.appendChild(actions);
+        div.appendChild(info); 
+        div.appendChild(actions);
         lista.appendChild(div);
     });
 }
