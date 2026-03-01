@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Italia RP - Login</title>
 <style>
-/* Manteniamo lo stile dei bottoni e della pagina come prima */
 body {
     background: linear-gradient(180deg,#1c102b,#2a1b3f);
     color:white;
@@ -36,26 +35,10 @@ h1 {margin-bottom:20px;}
 <h1>Benvenuto su Italia RP</h1>
 <button id="login-btn">Accedi con Discord</button>
 
-<script type="module">
-// ==== FIREBASE INIT ====
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
-import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
-
-const firebaseConfig = {
-    apiKey: "AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
-    authDomain: "sito-rp.firebaseapp.com",
-    projectId: "sito-rp",
-    storageBucket: "sito-rp.appspot.com",
-    messagingSenderId: "234781749995",
-    appId: "1:234781749995:web:6954473363659fe38b04ae"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
+<script>
 // ==== DISCORD LOGIN ====
 const clientId = "1475512122330054737";
-const redirectUri = "https://scorpion2109.github.io/italiarp/"; // il tuo URL esatto GitHub Pages
+const redirectUri = "https://scorpion2109.github.io/italiarp/"; // tuo URL GitHub Pages
 const scope = "identify email";
 
 document.getElementById("login-btn").onclick = () => {
@@ -71,28 +54,16 @@ window.onload = async () => {
         const accessToken = params.get("access_token");
 
         try {
-            // Chiama API Discord per avere info utente
             const res = await fetch("https://discord.com/api/users/@me", {
                 headers: { Authorization: `Bearer ${accessToken}` }
             });
             const user = await res.json();
             console.log("Discord user:", user);
 
-            // Salva ID su Firebase nella collezione 'users'
-            await setDoc(doc(db, "users", user.id), {
-                username: user.username,
-                discriminator: user.discriminator,
-                email: user.email || "",
-                id: user.id,
-                personaggi: []
-            });
-
-            // Salva UID in sessionStorage per mantenerlo tra le pagine
+            // Salva ID utente in sessionStorage
             sessionStorage.setItem("discord_uid", user.id);
 
-            alert(`Login riuscito! Benvenuto ${user.username}#${user.discriminator}`);
-            
-            // Reindirizza alla lista-personaggi
+            // Vai a lista-personaggi
             window.location.href = "lista-personaggi.html";
         } catch(e) {
             console.error("Errore login Discord:", e);
@@ -104,3 +75,4 @@ window.onload = async () => {
 
 </body>
 </html>
+
