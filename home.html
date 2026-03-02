@@ -3,52 +3,149 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Italia RP - Home Test Personalizzabile</title>
+<title>Italia RP - Home</title>
+
+<!-- STILE -->
 <style>
-/* CSS originale rimane invariato */
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
+body{background:linear-gradient(180deg,#111,#1c1c1c);color:white;}
+
+/* HEADER */
+.header{
+    height:90px;
+    background:#0f0f0f;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 30px;
+    border-bottom:2px solid #222;
+}
+
+.logo{display:flex;align-items:center;gap:15px;}
+.logo img{width:70px;animation: float 3s ease-in-out infinite;}
+@keyframes float{0%{transform:translateY(0);}50%{transform:translateY(-6px);}100%{transform:translateY(0);}}
+
+.server-name{font-size:26px;font-weight:800;letter-spacing:2px;}
+.server-name span{color:#e10600;}
+
+.clock{font-size:22px;font-weight:bold;background:#151515;padding:10px 20px;border-radius:10px;}
+
+.profile{font-size:20px;cursor:pointer;position:relative;}
+.profile-menu{display:none;position:absolute;top:35px;right:0;background:#181818;border:1px solid #222;border-radius:10px;overflow:hidden;min-width:150px;}
+.profile-menu div{padding:10px;cursor:pointer;transition:0.2s;}
+.profile-menu div:hover{background:#222;}
+
+/* GRID */
+.grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:30px;
+    padding:40px 30px 100px 30px;
+}
+
+@media(max-width:800px){
+    .grid{grid-template-columns:1fr;}
+}
+
+.app{
+    background:#181818;
+    border-radius:20px;
+    padding:30px;
+    text-align:center;
+    transition:0.3s;
+    border:1px solid #222;
+}
+.app:hover{transform:scale(1.05);box-shadow:0 0 20px rgba(0,255,0,0.2);}
+.app img{width:90px;height:90px;object-fit:contain;}
+.app span{display:block;margin-top:15px;font-size:18px;font-weight:bold;color:#ddd;}
 </style>
 </head>
 <body>
 
-<div class="topbar">
-  <!-- Header originale -->
+<!-- HEADER -->
+<div class="header">
+    <div class="logo"><img src="assets/logo.png" alt="Logo"></div>
+    <div class="server-name">ITALIA <span>RP</span></div>
+    <div class="clock" id="clock"></div>
+    <div class="profile" id="profile">
+        👤
+        <div class="profile-menu" id="profile-menu">
+            <div id="lista-personaggi">Lista Personaggi</div>
+            <div id="logout">Logout</div>
+        </div>
+    </div>
 </div>
 
-<div class="grid" id="grid-apps"></div>
-<div class="footer">Italia RP © 2026 - Home Test Personalizzabile</div>
+<!-- GRIGLIA APPS -->
+<div class="grid" id="grid">
+    <div class="app" data-app="Comune"><img src="assets/comune.png" alt="Comune"><span>Comune</span></div>
+    <div class="app" data-app="Banca"><img src="assets/banca.png" alt="Banca"><span>Banca</span></div>
+    <div class="app" data-app="Whatsapp"><img src="assets/whatsapp.png" alt="Whatsapp"><span>Whatsapp</span></div>
+    <div class="app" data-app="Instagram"><img src="assets/instagram.png" alt="Instagram"><span>Instagram</span></div>
+    <div class="app" data-app="Bitcoin"><img src="assets/bitcoin.png" alt="Bitcoin"><span>Bitcoin</span></div>
+    <div class="app" data-app="Inventario"><img src="assets/inventario.png" alt="Inventario"><span>Inventario</span></div>
+    <div class="app" data-app="Dark Web"><img src="assets/darkweb.png" alt="Dark Web"><span>Dark Web</span></div>
+    <div class="app" data-app="Listini"><img src="assets/listini.png" alt="Listini"><span>Listini</span></div>
+</div>
 
-<script>
-/* Script originale per apps rimane invariato */
-</script>
-
-<!-- Firebase SDK + lettura dati Discord -->
+<!-- FIREBASE E JS -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.16.0/firebase-app.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.16.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
+import { getFirestore, doc, setDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
 
+// ==== FIREBASE CONFIG ====
 const firebaseConfig = {
   apiKey: "AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
   authDomain: "sito-rp.firebaseapp.com",
   projectId: "sito-rp",
-  storageBucket: "sito-rp.firebasestorage.app",
+  storageBucket: "sito-rp.appspot.com",
   messagingSenderId: "234781749995",
-  appId: "1:234781749995:web:6954473363659fe38b04ae",
-  measurementId: "G-R23N60PBYY"
+  appId: "1:234781749995:web:6954473363659fe38b04ae"
 };
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-window.db = db;
 
-// UID reale Discord
-window.uid = sessionStorage.getItem("discord_uid") || "test_user_123";
+// ==== CONTROLLA LOGIN DISCORD ====
+const uid = sessionStorage.getItem("discord_uid");
+if(!uid){ window.location.href="index.html"; }
 
-// Carica dati utente Firebase
-async function caricaUtente(){
-  const userSnap = await getDoc(doc(db, "users", window.uid));
-  if(userSnap.exists()) console.log("Dati utente Firestore:", userSnap.data());
+// ==== CLOCK ====
+function updateClock(){
+    const now = new Date();
+    document.getElementById("clock").innerText =
+        now.getHours().toString().padStart(2,"0")+":"+
+        now.getMinutes().toString().padStart(2,"0")+":"+
+        now.getSeconds().toString().padStart(2,"0");
 }
-caricaUtente();
+setInterval(updateClock,1000);
+updateClock();
+
+// ==== PROFILE MENU ====
+const profile = document.getElementById("profile");
+const menu = document.getElementById("profile-menu");
+profile.onclick = ()=> menu.style.display = menu.style.display==='block' ? 'none':'block';
+document.getElementById("logout").onclick = ()=>{
+    sessionStorage.removeItem("discord_uid");
+    window.location.href="index.html";
+};
+document.getElementById("lista-personaggi").onclick = ()=> window.location.href="lista-personaggi.html";
+
+// ==== CLICK SU APP ====
+const apps = document.querySelectorAll(".app");
+apps.forEach(a=>{
+    a.onclick = async ()=>{
+        const nomeApp = a.dataset.app;
+        alert("Hai aperto: "+nomeApp);
+
+        // SALVA AZIONE SU FIRESTORE
+        try{
+            await addDoc(collection(db,"users",uid,"logs"),{
+                app:nomeApp,
+                timestamp:serverTimestamp()
+            });
+        }catch(e){console.error("Errore salvataggio log:",e);}
+    };
+});
 </script>
 
 </body>
