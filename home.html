@@ -19,14 +19,14 @@ body{
     flex-direction:column;
     color:white;
 
-    /* SFONDO NITIDO */
+    /* METTI QUI IL TUO SFONDO */
     background-image:url("assets/sfondo.webp");
     background-size:cover;
     background-position:center;
     background-attachment:fixed;
 }
 
-/* Overlay leggero per leggibilità (NON sfoca) */
+/* Overlay leggero SOLO per leggibilità */
 body::before{
     content:"";
     position:fixed;
@@ -35,7 +35,7 @@ body::before{
     z-index:-1;
 }
 
-/* ===== HEADER GLASS ===== */
+/* ===== HEADER ===== */
 .header{
     height:75px;
     backdrop-filter:blur(8px);
@@ -51,14 +51,12 @@ body::before{
     width:55px;
 }
 
-/* Orologio centro */
 .clock{
     font-size:22px;
     font-weight:600;
     letter-spacing:2px;
 }
 
-/* Icone destra */
 .top-icons{
     display:flex;
     gap:20px;
@@ -92,7 +90,7 @@ body::before{
 
 .app{
     display:flex;
-    flex-direction:column;   /* TESTO SOTTO */
+    flex-direction:column;
     align-items:center;
     cursor:pointer;
     transition:0.3s ease;
@@ -126,6 +124,58 @@ body::before{
     justify-content:center;
     font-size:14px;
     border-top:1px solid rgba(255,255,255,0.15);
+}
+
+/* ===== MODALE DOCUMENTI ===== */
+.documenti-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.6);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:1000;
+}
+
+.documenti-box{
+    width:400px;
+    max-width:90%;
+    background:rgba(20,20,20,0.95);
+    border-radius:20px;
+    padding:25px;
+    animation:fadeIn 0.3s ease;
+    backdrop-filter:blur(10px);
+}
+
+.documenti-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.documenti-header span{
+    cursor:pointer;
+    font-size:18px;
+}
+
+.documenti-content{
+    text-align:center;
+}
+
+.documenti-content button{
+    margin-top:15px;
+    padding:10px 20px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    background:#00aa44;
+    color:white;
+}
+
+@keyframes fadeIn{
+    from{opacity:0; transform:scale(0.9);}
+    to{opacity:1; transform:scale(1);}
 }
 </style>
 </head>
@@ -166,26 +216,23 @@ body::before{
         <span>Instagram</span>
     </div>
 
-    <div class="app" data-app="Bitcoin">
-        <img src="assets/bitcoin.png">
-        <span>Bitcoin</span>
-    </div>
+</div>
 
-    <div class="app" data-app="Inventario">
-        <img src="assets/inventario.png">
-        <span>Inventario</span>
-    </div>
+<!-- MODALE DOCUMENTI -->
+<div class="documenti-overlay" id="documentiOverlay">
+    <div class="documenti-box">
+        <div class="documenti-header">
+            <h2>I Tuoi Documenti</h2>
+            <span id="chiudiDocumenti">✖</span>
+        </div>
 
-    <div class="app" data-app="Dark Web">
-        <img src="assets/darkweb.png">
-        <span>Dark Web</span>
+        <div class="documenti-content">
+            <p>Qui potrai visualizzare i tuoi documenti RP.</p>
+            <button onclick="window.location.href='lista-personaggi.html'">
+                Vai alla Lista Personaggi
+            </button>
+        </div>
     </div>
-
-    <div class="app" data-app="Listini">
-        <img src="assets/listini.png">
-        <span>Listini</span>
-    </div>
-
 </div>
 
 <div class="footer">
@@ -225,9 +272,22 @@ function updateClock(){
 setInterval(updateClock,1000);
 updateClock();
 
-/* DOCUMENTI */
+/* DOCUMENTI MODALE */
+const overlay = document.getElementById("documentiOverlay");
+const chiudi = document.getElementById("chiudiDocumenti");
+
 document.getElementById("btnDocumenti").onclick = ()=>{
-    window.location.href="lista-personaggi.html";
+    overlay.style.display = "flex";
+};
+
+chiudi.onclick = ()=>{
+    overlay.style.display = "none";
+};
+
+overlay.onclick = (e)=>{
+    if(e.target === overlay){
+        overlay.style.display = "none";
+    }
 };
 
 /* IMPOSTAZIONI */
@@ -252,4 +312,3 @@ document.querySelectorAll(".app").forEach(app=>{
 
 </body>
 </html>
-
