@@ -6,45 +6,54 @@
 <title>Poste Italiane - Italia RP</title>
 <style>
 body{margin:0;font-family:'Segoe UI',sans-serif;background:#111;color:white;}
+
 /* ===== HEADER ===== */
 .header{
   display:flex;justify-content:space-between;align-items:center;
   padding:10px 20px;background:rgba(20,20,20,0.6);backdrop-filter:blur(8px);
 }
 .header .logo img{width:50px;cursor:pointer;}
-.header .clock{font-weight:bold;}
+.header .clock{font-weight:bold;font-size:18px;}
 .header .right-icons{display:flex;gap:15px;}
 .header .right-icons img{width:35px;cursor:pointer;}
 
 /* ===== CARTA ===== */
-.card-container{width:360px;margin:20px auto;perspective:2000px;}
-.carta{width:100%;height:200px;border-radius:15px;position:relative;cursor:pointer;transform-style:preserve-3d;transition:1s;}
+.card-container{width:380px;margin:20px auto;perspective:2000px;}
+.carta{width:100%;height:220px;border-radius:18px;position:relative;cursor:pointer;transform-style:preserve-3d;transition:1s;}
 .carta.flipped{transform:rotateY(180deg);}
 .carta .fronte,.carta .retro{
-  position:absolute;width:100%;height:100%;border-radius:15px;backface-visibility:hidden;padding:20px;box-sizing:border-box;
+  position:absolute;width:100%;height:100%;border-radius:18px;backface-visibility:hidden;padding:20px;box-sizing:border-box;
 }
 .carta .fronte{
-  background:linear-gradient(135deg,#0073cf,#004a9f);color:white;display:flex;flex-direction:column;justify-content:space-between;
+  background:linear-gradient(135deg,#0073cf,#004a9f);
+  color:white;display:flex;flex-direction:column;justify-content:space-between;
+  box-shadow:0 10px 20px rgba(0,0,0,0.6);border:2px solid #ccc;
+}
+.carta .fronte::after{
+  content:'';position:absolute;top:0;left:0;width:100%;height:100%;border-radius:18px;
+  background:linear-gradient(150deg,rgba(255,255,255,0.2),transparent);pointer-events:none;
 }
 .carta .fronte .top{display:flex;justify-content:space-between;align-items:center;}
+.carta .fronte .cp{font-size:14px;letter-spacing:1px;margin-top:5px;font-weight:bold;}
 .carta .fronte .middle{margin-top:20px;}
-.carta .fronte .bottom{display:flex;justify-content:space-between;align-items:center;}
-.carta .fronte .code{font-size:18px;letter-spacing:2px;font-weight:bold;}
-.carta .fronte .expire{font-size:14px;}
-.carta .fronte .italia{font-weight:bold;}
+.carta .fronte .code{font-size:22px;letter-spacing:3px;font-weight:bold;text-shadow:0 1px 2px black;}
+.carta .fronte .expire{font-size:14px;margin-top:5px;}
+.carta .fronte .bottom{display:flex;justify-content:space-between;align-items:center;font-weight:bold;font-size:16px;}
+.carta .fronte .italia{letter-spacing:1px;}
 
-.carta .retro{background:#222;color:white;transform:rotateY(180deg);}
-.carta .retro .banda{height:40px;background:black;margin-top:10px;border-radius:4px;}
+/* RETRO */
+.carta .retro{background:#222;color:white;transform:rotateY(180deg);border-radius:18px;box-shadow:0 10px 20px rgba(0,0,0,0.6);}
+.carta .retro .banda{height:50px;background:black;margin-top:15px;border-radius:4px;}
 .carta .retro .cvv{margin-top:15px;font-size:14px;}
 .carta .retro .logo{width:60px;margin-top:15px;}
-.carta .retro .iban{margin-top:auto;font-size:12px;letter-spacing:1px;}
+.carta .retro .iban{margin-top:auto;font-size:12px;letter-spacing:1px;padding-bottom:5px;}
 
 /* ===== SALDI ===== */
-.saldo-box{width:360px;margin:auto;margin-top:20px;background:rgba(0,0,0,0.5);border-radius:10px;padding:15px;}
+.saldo-box{width:380px;margin:auto;margin-top:20px;background:rgba(0,0,0,0.5);border-radius:10px;padding:15px;}
 .saldo-box div{margin:5px 0;}
 
 /* ===== OPERAZIONI ===== */
-.operazioni{width:360px;margin:auto;margin-top:20px;display:flex;flex-direction:column;gap:10px;}
+.operazioni{width:380px;margin:auto;margin-top:20px;display:flex;flex-direction:column;gap:10px;}
 .operazioni input, .operazioni select{padding:8px;border-radius:6px;border:none;width:100%;}
 .operazioni button{padding:8px;border:none;border-radius:6px;background:#00aa44;color:white;cursor:pointer;}
 </style>
@@ -65,7 +74,10 @@ body{margin:0;font-family:'Segoe UI',sans-serif;background:#111;color:white;}
     <!-- FRONTE -->
     <div class="fronte">
       <div class="top">
-        <div class="poste">POSTE ITALIANE</div>
+        <div>
+          <div>POSTE ITALIANE</div>
+          <div class="cp">CP: <span id="cardCP">0000</span></div>
+        </div>
         <img src="assets/logo-banca.png" alt="Logo" style="width:50px;">
       </div>
       <div class="middle">
@@ -145,6 +157,7 @@ async function caricaUtente(){
             bank:20000, cash:0, role:"cittadino",
             cardType:"poste-classic", name:"Nome", surname:"Cognome",
             cardCode:Math.floor(Math.random()*9000000000000000+1000000000000000),
+            cardCP:Math.floor(Math.random()*9000+1000),
             cardCVV:Math.floor(Math.random()*900+100),
             cardExpire:"12/30",
             iban:"IT00 0000 0000 0000 0000 0000"
@@ -165,6 +178,7 @@ function aggiornaUI(){
     document.getElementById("cardExpire").innerText = userData.cardExpire;
     document.getElementById("cardCVV").innerText = userData.cardCVV;
     document.getElementById("cardIBAN").innerText = userData.iban;
+    document.getElementById("cardCP").innerText = userData.cardCP;
 }
 
 /* Prelievo / Deposito */
