@@ -85,90 +85,171 @@ input{padding:8px;border-radius:8px;border:none;}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
 import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
 
-// ===== FIREBASE CONFIG =====
 const firebaseConfig = {
-    apiKey: "AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
-    authDomain: "sito-rp.firebaseapp.com",
-    projectId: "sito-rp",
-    storageBucket: "sito-rp.appspot.com",
-    messagingSenderId: "234781749995",
-    appId: "1:234781749995:web:6954473363659fe38b04ae"
+  apiKey: "AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
+  authDomain: "sito-rp.firebaseapp.com",
+  projectId: "sito-rp",
+  storageBucket: "sito-rp.appspot.com",
+  messagingSenderId: "234781749995",
+  appId: "1:234781749995:web:6954473363659fe38b04ae"
 };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// ===== UID DAL LOGIN =====
 const uid = sessionStorage.getItem("discord_uid");
-if(!uid){
-    alert("Non sei loggato!");
-    window.location.href="index.html";
-}
+if(!uid){ alert("Utente non loggato!"); window.location.href="index.html"; }
 
-// ===== ELEMENTI CARD =====
-const card = document.getElementById("card");
-const photoDiv = card.querySelector(".photo");
-const infoRows = card.querySelectorAll(".info .row");
-const signatureDiv = card.querySelector(".signature");
-const backFields = card.querySelectorAll(".back .field");
-const barcodeNumber = card.querySelector(".barcode-number");
-const mrzLines = card.querySelectorAll(".mrz");
+const lista=document.getElementById("lista");
+const form=document.getElementById("form");
+const btn=document.getElementById("btnCrea");
+const wrapper=document.querySelector(".wrapper");
+const card=document.getElementById("card");
+let listaPers = [];
+const MAX=2;
+const CODICE="ITALIARP2025";
+const DELETE_PASSWORD="admin123";
+let editingIndex = null;
 
-// ===== CARICA DOCUMENTO FIRESTORE =====
-async function caricaDocumento() {
-    const docRef = doc(db, "users", uid);
-    let docSnap = await getDoc(docRef);
-    
-    if(!docSnap.exists()){
-        // Primo accesso → crea documento base
-        const nuovoDoc = {
-            nome:"Damiano",
-            cognome:"Rossi",
-            dataNascita:"12/03/1998",
-            occhi:"Marroni",
-            capelli:"Neri",
-            residenza:"Via Roma 12, Milano",
-            codiceFiscale:"RSSDMI98C12H501Z",
-            estremiAtto:"00000.0.A00",
-            barcode:"ITA-4821-9374",
-        };
-        await setDoc(docRef, nuovoDoc);
-        docSnap = await getDoc(docRef);
+// ==== Carica o crea documento utente ====
+async function inizializzaUtente(){
+    const docRef = doc(db,"users",uid);
+    const docSnap = await getDoc(docRef);
+    if(docSnap.exists()){
+        listaPers = docSnap.data().personaggi || [];
+    } else {
+        await setDoc(docRef, { personaggi: [] });
+        listaPers = [];
     }
-    
-    aggiornaCard(docSnap.data());
+    aggiornaLista();
+}
+inizializzaUtente();
+
+function salvaFirestore(){
+    setDoc(doc(db,"users",uid), { personaggi: listaPers }, { merge:true });
 }
 
-// ===== AGGIORNA CARD =====
-function aggiornaCard(data){
-    // Foto
-    if(data.foto) photoDiv.innerHTML = `<img src="${data.foto}">`;
-    
-    // Front
-    infoRows[0].querySelector("span").nextSibling.textContent = data.nome;
-    infoRows[1].querySelector("span").nextSibling.textContent = data.cognome;
-    infoRows[2].querySelector("span").nextSibling.textContent = data.dataNascita;
-    infoRows[3].querySelector("span").nextSibling.textContent = data.occhi;
-    infoRows[4].querySelector("span").nextSibling.textContent = data.capelli;
-    signatureDiv.textContent = `${data.nome} ${data.cognome}`;
-    
-    // Back
-    backFields[0].querySelector("span").nextSibling.textContent = data.codiceFiscale;
-    backFields[1].querySelector("span").nextSibling.textContent = data.residenza;
-    backFields[2].querySelector("span").nextSibling.textContent = data.estremiAtto;
-    
-    barcodeNumber.textContent = data.barcode;
-    
-    mrzLines[0].textContent = `IDITA${data.cognome.toUpperCase()}<<${data.nome.toUpperCase()}<<<<<<<<<<<<<<`;
-    mrzLines[1].textContent = `${data.barcode.replace(/-/g,"")}ITA${data.dataNascita.replace(/\//g,"")}<<<<<<<<<<<<<<<`;
+function aggiornaLista(){
+    lista.innerHTML="";
+    listaPers.forEach((p,index)=>{
+        let div=document.createElement("div");
+        div.className="personaggio";
+
+        let info=document.createElement("div");
+        info.className="personaggio-info";
+
+        // Foto → mostra carta
+        info.onclick=()=>mostraCarta(p);
+
+        let img=document.createElement("img"); 
+        img.src=p.foto;
+
+        let nome=document.createElement("div"); 
+        nome.textContent=p.nome+" "+p.cognome;
+
+        // Click sul nome → home
+        nome.style.cursor="pointer";
+        nome.onclick = ()=>{ window.location.href="home.html"; }
+
+        info.appendChild(img); 
+        info.appendChild(nome);
+
+        let actions=document.createElement("div"); actions.className="actions";
+
+        let edit=document.createElement("span"); edit.textContent="✏️";
+        edit.onclick=()=>modificaPersonaggio(index);
+
+        let del=document.createElement("span"); del.textContent="🗑️";
+        del.onclick=()=>{
+            let pass=prompt("Inserisci password per eliminare:");
+            if(pass===DELETE_PASSWORD){
+                listaPers.splice(index,1);
+                salvaFirestore();
+                aggiornaLista();
+                wrapper.style.display="none";
+            } else { alert("Password errata"); }
+        };
+
+        actions.appendChild(edit); 
+        actions.appendChild(del);
+
+        div.appendChild(info); 
+        div.appendChild(actions);
+        lista.appendChild(div);
+    });
 }
 
-// ===== CLICK CARD → FLIP =====
-card.onclick = () => card.classList.toggle("flipped");
+// ==== Bottone crea personaggio ====
+btn.onclick=()=>{
+    if(listaPers.length>=MAX){alert("Massimo 2 personaggi");return;}
+    if(listaPers.length===1){
+        let c = prompt("Inserisci codice:");
+        if(c!==CODICE){alert("Codice errato"); return;}
+    }
+    form.style.display="flex";
+    editingIndex = null;
+};
 
-// ===== CHIAMATA INIZIALE =====
-caricaDocumento();
+// ==== Form submit ====
+form.onsubmit = e=>{
+    e.preventDefault();
+    let reader = new FileReader();
+    reader.onload = function(){
+        let p = {
+            nome:nome.value,
+            cognome:cognome.value,
+            data:data.value,
+            occhi:occhi.value,
+            capelli:capelli.value,
+            residenza:residenza.value,
+            foto:reader.result,
+            barcode: Math.floor(Math.random()*1000000000),
+            firma: nome.value+" "+cognome.value
+        };
+        if(editingIndex!==null){
+            listaPers[editingIndex]=p;
+        } else {
+            listaPers.push(p);
+        }
+        salvaFirestore();
+        aggiornaLista();
+        mostraCarta(p);
+        form.reset();
+        form.style.display="none";
+        editingIndex=null;
+    };
+    reader.readAsDataURL(fotoInput.files[0]);
+};
+
+// ==== Modifica personaggio ====
+function modificaPersonaggio(index){
+    let p = listaPers[index];
+    nome.value=p.nome;
+    cognome.value=p.cognome;
+    data.value=p.data;
+    occhi.value=p.occhi;
+    capelli.value=p.capelli;
+    residenza.value=p.residenza;
+    form.style.display="flex";
+    editingIndex = index;
+}
+
+// ==== Mostra tessera ====
+function generaCF(p){ return p.cognome.substring(0,3).toUpperCase()+p.nome.substring(0,3).toUpperCase()+"25X0"; }
+function mostraCarta(p){
+    wrapper.style.display="block";
+    card.classList.remove("flipped");
+    c_nome.textContent=p.nome;
+    c_cognome.textContent=p.cognome;
+    c_data.textContent=p.data;
+    c_occhi.textContent=p.occhi;
+    c_capelli.textContent=p.capelli;
+    c_res.textContent=p.residenza;
+    c_firma.textContent=p.firma;
+    c_cf.textContent=generaCF(p);
+    c_foto.src=p.foto;
+    card.onclick=()=>card.classList.toggle("flipped");
+}
 </script>
 
 </body>
 </html>
-
