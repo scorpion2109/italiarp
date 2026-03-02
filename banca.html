@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Poste Italiane - ITALIA LP</title>
+<title>Poste Italiane - Banca</title>
 
 <style>
 body{margin:0;font-family:'Segoe UI',sans-serif;background:#0f0f0f;color:white}
@@ -12,24 +12,42 @@ body{margin:0;font-family:'Segoe UI',sans-serif;background:#0f0f0f;color:white}
 .clock{font-weight:bold}
 .menu{display:flex;gap:20px;cursor:pointer}
 
-.card-container{width:420px;height:250px;margin:40px auto;perspective:2000px}
+/* ===== CARTA ===== */
+.card-container{width:430px;height:260px;margin:50px auto;perspective:2000px}
 .card{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:1s;cursor:pointer}
 .card.flip{transform:rotateY(180deg)}
 .front,.back{
-position:absolute;width:100%;height:100%;border-radius:20px;
-backface-visibility:hidden;padding:25px;box-sizing:border-box;
-box-shadow:0 20px 50px rgba(0,0,0,0.8);overflow:hidden
+position:absolute;width:100%;height:100%;border-radius:18px;
+backface-visibility:hidden;padding:28px;box-sizing:border-box;
+box-shadow:0 25px 60px rgba(0,0,0,0.7)
 }
-.front{background:linear-gradient(135deg,#0f0f0f,#1c1c1c,#0a0a0a)}
-.back{background:#111;transform:rotateY(180deg)}
-.chip{width:60px;height:45px;background:linear-gradient(135deg,#c8a95e,#f5d67b,#b9923d);border-radius:8px}
-.card-number{font-size:22px;letter-spacing:4px;margin-top:40px}
-.bottom-row{position:absolute;bottom:25px;left:25px;right:25px;display:flex;justify-content:space-between}
-.stripe{background:black;height:50px;margin-top:20px}
-.cvv-box{background:white;color:black;width:80px;padding:5px;margin-top:20px;text-align:right;font-weight:bold}
-.iban{position:absolute;bottom:20px;font-size:12px;letter-spacing:2px}
 
-.box{width:420px;margin:20px auto;background:#1a1a1a;padding:20px;border-radius:10px}
+/* FRONTE */
+.front{background:#ffd400;color:#111}
+.logo-poste{position:absolute;top:20px;left:28px;font-weight:800;font-size:20px}
+.circuit{position:absolute;top:20px;right:28px;width:60px;height:35px}
+.c1,.c2{position:absolute;width:35px;height:35px;border-radius:50%}
+.c1{background:#eb001b;left:0}
+.c2{background:#f79e1b;right:0;opacity:0.9}
+
+.chip{
+margin-top:60px;width:65px;height:48px;border-radius:6px;
+background:linear-gradient(135deg,#d4af37,#f7e27b,#b8860b);
+box-shadow:inset 0 0 5px rgba(0,0,0,0.4)
+}
+
+.card-number{margin-top:45px;font-size:22px;letter-spacing:3px;font-weight:bold}
+.card-info{margin-top:20px;font-size:14px}
+.card-holder{margin-top:20px;font-weight:bold;letter-spacing:1px}
+
+/* RETRO */
+.back{background:#ffd400;color:#111;transform:rotateY(180deg)}
+.stripe{background:black;height:50px;margin-top:20px;border-radius:4px}
+.cvv-box{background:white;color:black;width:80px;padding:6px;margin-top:20px;text-align:right;font-weight:bold;border-radius:4px}
+.iban{position:absolute;bottom:20px;left:28px;font-size:13px;letter-spacing:2px;font-weight:bold}
+
+/* BOX */
+.box{width:430px;margin:20px auto;background:#1a1a1a;padding:20px;border-radius:10px}
 input,select,button{width:100%;padding:10px;margin-top:10px;border-radius:6px;border:none}
 button{background:#00aa44;color:white;cursor:pointer}
 button:hover{opacity:0.8}
@@ -49,30 +67,46 @@ button:hover{opacity:0.8}
 </div>
 </div>
 
+<!-- CARTA -->
 <div class="card-container">
 <div class="card" id="card">
+
 <div class="front">
+<div class="logo-poste">POSTEPAY</div>
+
+<div class="circuit">
+<div class="c1"></div>
+<div class="c2"></div>
+</div>
+
 <div class="chip"></div>
+
 <div class="card-number" id="cardNumber"></div>
-<div class="bottom-row">
-<div>VALID THRU<br><span id="expireDate"></span></div>
-<div>ITALIA</div>
+
+<div class="card-info">
+VALID THRU <span id="expireDate"></span>
 </div>
+
+<div class="card-holder" id="cardHolder"></div>
 </div>
+
 <div class="back">
 <div class="stripe"></div>
 <div class="cvv-box">CVV <span id="cvv"></span></div>
 <div class="iban" id="iban"></div>
 </div>
+
 </div>
 </div>
 
+<!-- SALDO -->
 <div class="box">
 <h3>Saldo</h3>
 <div>Bank: € <span id="bank"></span></div>
 <div>Cash: € <span id="cash"></span></div>
 </div>
 
+<!-- DEPOSITA / PRELEVA -->
 <div class="box">
 <h3>Deposita / Preleva</h3>
 <select id="azione">
@@ -83,6 +117,7 @@ button:hover{opacity:0.8}
 <button onclick="eseguiOperazione()">Conferma</button>
 </div>
 
+<!-- BONIFICO -->
 <div class="box">
 <h3>Bonifico</h3>
 <select id="destinatario"></select>
@@ -90,6 +125,7 @@ button:hover{opacity:0.8}
 <button onclick="inviaBonifico()">Invia Bonifico</button>
 </div>
 
+<!-- PRESTITO -->
 <div class="box">
 <h3>Prestito</h3>
 <input type="number" id="prestitoImporto" placeholder="Importo (max 100000)">
@@ -98,6 +134,7 @@ button:hover{opacity:0.8}
 <div class="progress"><div id="barraPrestito" class="progress-bar"></div></div>
 </div>
 
+<!-- STORICO -->
 <div class="box">
 <h3>Storico Transazioni</h3>
 <div id="storico"></div>
@@ -106,10 +143,9 @@ button:hover{opacity:0.8}
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { 
-getFirestore, doc, getDoc, setDoc, updateDoc,
-collection, getDocs, addDoc, query, orderBy
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc,
+collection, getDocs, addDoc, query, orderBy }
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
@@ -121,23 +157,23 @@ const firebaseConfig = {
   measurementId: "G-R23N60PBYY"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const app=initializeApp(firebaseConfig);
+const db=getFirestore(app);
 
-let uid = sessionStorage.getItem("discord_uid");
+let uid=sessionStorage.getItem("discord_uid");
 if(!uid) window.location.href="index.html";
 
-let userRef = doc(db,"users",uid);
+let userRef=doc(db,"users",uid);
 let userData;
 
 function generaNumero(l){let r='';for(let i=0;i<l;i++)r+=Math.floor(Math.random()*10);return r;}
 
 async function caricaUtente(){
-let snap = await getDoc(userRef);
+let snap=await getDoc(userRef);
 
 if(!snap.exists()){
 userData={
-bank:20000,cash:0,name:"Utente",
+bank:20000,cash:0,name:"UTENTE ITALIA",
 cardNumber:generaNumero(16),
 cvv:generaNumero(3),
 expire:"12/30",
@@ -159,14 +195,8 @@ document.getElementById("cardNumber").innerText=userData.cardNumber.match(/.{1,4
 document.getElementById("cvv").innerText=userData.cvv;
 document.getElementById("expireDate").innerText=userData.expire;
 document.getElementById("iban").innerText=userData.iban;
+document.getElementById("cardHolder").innerText=userData.name.toUpperCase();
 aggiornaBarra();
-}
-
-async function aggiungiTransazione(tipo,importo,desc){
-await addDoc(collection(db,"users",uid,"transactions"),{
-type:tipo,amount:importo,description:desc,date:new Date()
-});
-caricaStorico();
 }
 
 window.eseguiOperazione=async function(){
@@ -176,138 +206,14 @@ if(q<=0) return alert("Importo non valido");
 
 if(tipo==="deposita"){
 if(userData.cash<q) return alert("Cash insufficiente");
-userData.cash-=q; userData.bank+=q;
-await aggiungiTransazione("Deposito",q,"Deposito contanti");
+userData.cash-=q;userData.bank+=q;
 }else{
 if(userData.bank<q) return alert("Bank insufficiente");
-userData.bank-=q; userData.cash+=q;
-await aggiungiTransazione("Prelievo",q,"Prelievo contanti");
+userData.bank-=q;userData.cash+=q;
 }
 
 await updateDoc(userRef,{bank:userData.bank,cash:userData.cash});
 aggiornaUI();
-}
-
-async function caricaUtenti(){
-let snap=await getDocs(collection(db,"users"));
-let sel=document.getElementById("destinatario");
-sel.innerHTML="";
-snap.forEach(d=>{
-if(d.id!==uid){
-let opt=document.createElement("option");
-opt.value=d.id;
-opt.textContent=d.data().name||d.id;
-sel.appendChild(opt);
-}});
-}
-
-window.inviaBonifico=async function(){
-let dest=document.getElementById("destinatario").value;
-let q=parseInt(document.getElementById("bonificoImporto").value);
-if(q<=0) return alert("Importo non valido");
-if(userData.bank<q) return alert("Saldo insufficiente");
-
-let destRef=doc(db,"users",dest);
-let destSnap=await getDoc(destRef);
-let destData=destSnap.data();
-
-userData.bank-=q;
-destData.bank+=q;
-
-await updateDoc(userRef,{bank:userData.bank});
-await updateDoc(destRef,{bank:destData.bank});
-
-await aggiungiTransazione("Bonifico Inviato",q,"A: "+destData.name);
-await addDoc(collection(db,"users",dest,"transactions"),{
-type:"Bonifico Ricevuto",amount:q,
-description:"Da: "+userData.name,date:new Date()
-});
-
-aggiornaUI();
-}
-
-window.richiediPrestito=async function(){
-let importo=parseInt(document.getElementById("prestitoImporto").value);
-if(importo<=0||importo>100000) return alert("Importo non valido");
-
-let totale=Math.ceil(importo*1.10);
-let rata=Math.ceil(totale/10);
-
-userData.bank+=importo;
-
-userData.prestito={
-attivo:true,totale:totale,rata:rata,
-rateTotali:10,rateRimanenti:10,
-prossimaRata:Date.now()+60000,
-rateFallite:0,bloccato:false
-};
-
-await updateDoc(userRef,{bank:userData.bank,prestito:userData.prestito});
-await aggiungiTransazione("Prestito Ricevuto",importo,"Prestito bancario");
-aggiornaUI();
-controllaPrestito();
-}
-
-function aggiornaBarra(){
-if(!userData.prestito) return;
-let p=userData.prestito;
-let percent=((p.rateTotali-p.rateRimanenti)/p.rateTotali)*100;
-document.getElementById("barraPrestito").style.width=percent+"%";
-}
-
-async function controllaPrestito(){
-setInterval(async()=>{
-let p=userData.prestito;
-if(!p||!p.attivo||p.bloccato) return;
-if(Date.now()>=p.prossimaRata){
-
-if(userData.bank<p.rata){
-p.rateFallite++;
-p.totale+=Math.ceil(p.rata*0.05);
-
-if(p.rateFallite>=3){
-p.bloccato=true;
-await aggiungiTransazione("Conto Bloccato",0,"3 rate non pagate");
-document.getElementById("prestitoInfo").innerHTML="🚔 CONTO BLOCCATO";
-}
-
-p.prossimaRata=Date.now()+60000;
-await updateDoc(userRef,{prestito:p});
-return;
-}
-
-userData.bank-=p.rata;
-p.rateRimanenti--;
-p.rateFallite=0;
-p.prossimaRata=Date.now()+60000;
-
-await updateDoc(userRef,{bank:userData.bank,prestito:p});
-await aggiungiTransazione("Rata Pagata",p.rata,"Pagamento rata");
-
-if(p.rateRimanenti===0){
-p.attivo=false;
-await updateDoc(userRef,{prestito:p});
-await aggiungiTransazione("Prestito Estinto",0,"Prestito completato");
-}
-
-aggiornaUI();
-}
-},5000);
-}
-
-async function caricaStorico(){
-let div=document.getElementById("storico");
-div.innerHTML="";
-let qy=query(collection(db,"users",uid,"transactions"),orderBy("date","desc"));
-let snap=await getDocs(qy);
-snap.forEach(d=>{
-let t=d.data();
-let el=document.createElement("div");
-el.className="trans-item";
-el.innerHTML="<strong>"+t.type+"</strong> - €"+t.amount+
-"<br><small>"+t.description+"</small>";
-div.appendChild(el);
-});
 }
 
 setInterval(()=>{
@@ -318,11 +224,12 @@ now.getMinutes().toString().padStart(2,"0")+":"+
 now.getSeconds().toString().padStart(2,"0");
 },1000);
 
-document.getElementById("card").onclick=()=>document.getElementById("card").classList.toggle("flip");
+document.getElementById("card").onclick=()=>{
+document.getElementById("card").classList.toggle("flip");
+}
 
 caricaUtente();
 
 </script>
-
 </body>
 </html>
