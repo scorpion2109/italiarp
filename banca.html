@@ -6,290 +6,322 @@
 <title>Poste Italiane - ITALIA LP</title>
 
 <style>
-body{
-  margin:0;
-  font-family:'Segoe UI',sans-serif;
-  background:#0f0f0f;
-  color:white;
-}
+body{margin:0;font-family:'Segoe UI',sans-serif;background:#0f0f0f;color:white}
+.header{display:flex;justify-content:space-between;align-items:center;padding:15px 30px;background:#111}
+.logo{font-weight:bold;cursor:pointer}
+.clock{font-weight:bold}
+.menu{display:flex;gap:20px;cursor:pointer}
 
-/* ===== HEADER ===== */
-.header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:15px 30px;
-  background:#111;
+.card-container{width:420px;height:250px;margin:40px auto;perspective:2000px}
+.card{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:1s;cursor:pointer}
+.card.flip{transform:rotateY(180deg)}
+.front,.back{
+position:absolute;width:100%;height:100%;border-radius:20px;
+backface-visibility:hidden;padding:25px;box-sizing:border-box;
+box-shadow:0 20px 50px rgba(0,0,0,0.8);overflow:hidden
 }
+.front{background:linear-gradient(135deg,#0f0f0f,#1c1c1c,#0a0a0a)}
+.back{background:#111;transform:rotateY(180deg)}
+.chip{width:60px;height:45px;background:linear-gradient(135deg,#c8a95e,#f5d67b,#b9923d);border-radius:8px}
+.card-number{font-size:22px;letter-spacing:4px;margin-top:40px}
+.bottom-row{position:absolute;bottom:25px;left:25px;right:25px;display:flex;justify-content:space-between}
+.stripe{background:black;height:50px;margin-top:20px}
+.cvv-box{background:white;color:black;width:80px;padding:5px;margin-top:20px;text-align:right;font-weight:bold}
+.iban{position:absolute;bottom:20px;font-size:12px;letter-spacing:2px}
 
-.logo{
-  font-weight:bold;
-  font-size:18px;
-  cursor:pointer;
-}
-
-.clock{
-  font-size:18px;
-  font-weight:bold;
-}
-
-.menu{
-  display:flex;
-  gap:20px;
-}
-
-.menu span{
-  cursor:pointer;
-}
-
-/* ===== CARD ===== */
-.card-container{
-  width:420px;
-  height:250px;
-  margin:60px auto;
-  perspective:2000px;
-}
-
-.card{
-  width:100%;
-  height:100%;
-  position:relative;
-  transform-style:preserve-3d;
-  transition:1s;
-  cursor:pointer;
-}
-
-.card.flip{
-  transform:rotateY(180deg);
-}
-
-.front, .back{
-  position:absolute;
-  width:100%;
-  height:100%;
-  border-radius:20px;
-  backface-visibility:hidden;
-  padding:25px;
-  box-sizing:border-box;
-  box-shadow:0 20px 50px rgba(0,0,0,0.8);
-  overflow:hidden;
-}
-
-/* FRONT BLACK METAL */
-.front{
-  background:linear-gradient(135deg,#0f0f0f,#1c1c1c,#0a0a0a);
-  position:relative;
-}
-
-.front::after{
-  content:'';
-  position:absolute;
-  top:0;
-  left:-100%;
-  width:60%;
-  height:100%;
-  background:linear-gradient(120deg,
-    rgba(255,255,255,0.05),
-    rgba(255,255,255,0.3),
-    rgba(255,255,255,0.05));
-  transform:skewX(-25deg);
-  animation:shine 4s infinite;
-}
-
-@keyframes shine{
-  0%{ left:-100%; }
-  100%{ left:150%; }
-}
-
-/* CHIP */
-.chip{
-  width:60px;
-  height:45px;
-  background:linear-gradient(135deg,#c8a95e,#f5d67b,#b9923d);
-  border-radius:8px;
-  box-shadow:inset 0 0 10px rgba(0,0,0,0.6);
-}
-
-/* TOP ROW */
-.top-row{
-  display:flex;
-  justify-content:space-between;
-  margin-top:20px;
-  font-weight:bold;
-  letter-spacing:1px;
-}
-
-.brand{
-  font-size:14px;
-  opacity:0.8;
-}
-
-.logo-rp{
-  font-size:14px;
-}
-
-/* CARD NUMBER */
-.card-number{
-  margin-top:40px;
-  font-size:22px;
-  letter-spacing:4px;
-  font-weight:600;
-}
-
-/* BOTTOM */
-.bottom-row{
-  position:absolute;
-  bottom:25px;
-  left:25px;
-  right:25px;
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-end;
-}
-
-.expire span:first-child{
-  font-size:10px;
-  opacity:0.6;
-}
-
-.country{
-  font-weight:bold;
-  letter-spacing:2px;
-}
-
-/* BACK */
-.back{
-  background:#111;
-  transform:rotateY(180deg);
-}
-
-.stripe{
-  background:black;
-  height:50px;
-  margin-top:20px;
-}
-
-.cvv-box{
-  background:white;
-  color:black;
-  width:80px;
-  padding:5px;
-  margin-top:20px;
-  text-align:right;
-  font-weight:bold;
-}
-
-.iban{
-  position:absolute;
-  bottom:20px;
-  font-size:12px;
-  letter-spacing:2px;
-}
-
-/* SALDO */
-.balance{
-  width:420px;
-  margin:30px auto;
-  background:#1a1a1a;
-  padding:20px;
-  border-radius:10px;
-}
+.box{width:420px;margin:20px auto;background:#1a1a1a;padding:20px;border-radius:10px}
+input,select,button{width:100%;padding:10px;margin-top:10px;border-radius:6px;border:none}
+button{background:#00aa44;color:white;cursor:pointer}
+button:hover{opacity:0.8}
+.progress{margin-top:10px;background:#333;border-radius:8px;height:20px;overflow:hidden}
+.progress-bar{height:100%;width:0%;background:orange}
+.trans-item{padding:8px;border-bottom:1px solid #333;font-size:14px}
 </style>
 </head>
-
 <body>
 
 <div class="header">
-  <div class="logo" onclick="window.location.href='home.html'">
-    POSTE ITALIANE
-  </div>
-  <div class="clock" id="clock"></div>
-  <div class="menu">
-    <span onclick="window.location.href='documento.html'">Documento</span>
-    <span>Impostazioni</span>
-  </div>
+<div class="logo" onclick="window.location.href='home.html'">POSTE ITALIANE</div>
+<div class="clock" id="clock"></div>
+<div class="menu">
+<div onclick="window.location.href='documento.html'">Documento</div>
+<div>Impostazioni</div>
+</div>
 </div>
 
 <div class="card-container">
-  <div class="card" id="card">
-
-    <div class="front">
-      <div class="chip"></div>
-
-      <div class="top-row">
-        <div class="brand">POSTE ITALIANE</div>
-        <div class="logo-rp">ITALIA LP</div>
-      </div>
-
-      <div class="card-number" id="cardNumber"></div>
-
-      <div class="bottom-row">
-        <div class="expire">
-          <span>VALID THRU</span><br>
-          <span id="expireDate"></span>
-        </div>
-        <div class="country">ITALIA</div>
-      </div>
-    </div>
-
-    <div class="back">
-      <div class="stripe"></div>
-      <div class="cvv-box">
-        CVV <span id="cvv"></span>
-      </div>
-      <div class="iban" id="iban"></div>
-    </div>
-
-  </div>
+<div class="card" id="card">
+<div class="front">
+<div class="chip"></div>
+<div class="card-number" id="cardNumber"></div>
+<div class="bottom-row">
+<div>VALID THRU<br><span id="expireDate"></span></div>
+<div>ITALIA</div>
+</div>
+</div>
+<div class="back">
+<div class="stripe"></div>
+<div class="cvv-box">CVV <span id="cvv"></span></div>
+<div class="iban" id="iban"></div>
+</div>
+</div>
 </div>
 
-<div class="balance">
-  <div>Bank: € <span id="bank"></span></div>
-  <div>Cash: € <span id="cash"></span></div>
+<div class="box">
+<h3>Saldo</h3>
+<div>Bank: € <span id="bank"></span></div>
+<div>Cash: € <span id="cash"></span></div>
 </div>
 
-<script>
-/* OROLOGIO */
-function updateClock(){
-  const now = new Date();
-  document.getElementById("clock").innerText =
-    now.getHours().toString().padStart(2,"0") + ":" +
-    now.getMinutes().toString().padStart(2,"0") + ":" +
-    now.getSeconds().toString().padStart(2,"0");
+<div class="box">
+<h3>Deposita / Preleva</h3>
+<select id="azione">
+<option value="deposita">Deposita</option>
+<option value="preleva">Preleva</option>
+</select>
+<input type="number" id="quantita" placeholder="Quantità">
+<button onclick="eseguiOperazione()">Conferma</button>
+</div>
+
+<div class="box">
+<h3>Bonifico</h3>
+<select id="destinatario"></select>
+<input type="number" id="bonificoImporto" placeholder="Quantità">
+<button onclick="inviaBonifico()">Invia Bonifico</button>
+</div>
+
+<div class="box">
+<h3>Prestito</h3>
+<input type="number" id="prestitoImporto" placeholder="Importo (max 100000)">
+<button onclick="richiediPrestito()">Richiedi Prestito</button>
+<div id="prestitoInfo"></div>
+<div class="progress"><div id="barraPrestito" class="progress-bar"></div></div>
+</div>
+
+<div class="box">
+<h3>Storico Transazioni</h3>
+<div id="storico"></div>
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { 
+getFirestore, doc, getDoc, setDoc, updateDoc,
+collection, getDocs, addDoc, query, orderBy
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
+  authDomain: "sito-rp.firebaseapp.com",
+  projectId: "sito-rp",
+  storageBucket: "sito-rp.firebasestorage.app",
+  messagingSenderId: "234781749995",
+  appId: "1:234781749995:web:6954473363659fe38b04ae",
+  measurementId: "G-R23N60PBYY"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let uid = sessionStorage.getItem("discord_uid");
+if(!uid) window.location.href="index.html";
+
+let userRef = doc(db,"users",uid);
+let userData;
+
+function generaNumero(l){let r='';for(let i=0;i<l;i++)r+=Math.floor(Math.random()*10);return r;}
+
+async function caricaUtente(){
+let snap = await getDoc(userRef);
+
+if(!snap.exists()){
+userData={
+bank:20000,cash:0,name:"Utente",
+cardNumber:generaNumero(16),
+cvv:generaNumero(3),
+expire:"12/30",
+iban:"IT60X"+generaNumero(20)
+};
+await setDoc(userRef,userData);
+}else{userData=snap.data();}
+
+aggiornaUI();
+caricaUtenti();
+caricaStorico();
+if(userData.prestito && userData.prestito.attivo) controllaPrestito();
 }
-setInterval(updateClock,1000);
-updateClock();
 
-/* GENERAZIONE DATI */
-function randomNumber(length){
-  let result = '';
-  for(let i=0;i<length;i++){
-    result += Math.floor(Math.random()*10);
-  }
-  return result;
+function aggiornaUI(){
+document.getElementById("bank").innerText=userData.bank.toLocaleString();
+document.getElementById("cash").innerText=userData.cash.toLocaleString();
+document.getElementById("cardNumber").innerText=userData.cardNumber.match(/.{1,4}/g).join(" ");
+document.getElementById("cvv").innerText=userData.cvv;
+document.getElementById("expireDate").innerText=userData.expire;
+document.getElementById("iban").innerText=userData.iban;
+aggiornaBarra();
 }
 
-let cardNumber = randomNumber(16).match(/.{1,4}/g).join(" ");
-let cvv = randomNumber(3);
-let expire = "12/30";
-let iban = "IT60X" + randomNumber(20);
-
-document.getElementById("cardNumber").innerText = cardNumber;
-document.getElementById("cvv").innerText = cvv;
-document.getElementById("expireDate").innerText = expire;
-document.getElementById("iban").innerText = iban;
-
-/* SALDO INIZIALE */
-let bank = 20000;
-let cash = 0;
-
-document.getElementById("bank").innerText = bank.toLocaleString();
-document.getElementById("cash").innerText = cash.toLocaleString();
-
-/* FLIP CARD */
-document.getElementById("card").addEventListener("click",function(){
-  this.classList.toggle("flip");
+async function aggiungiTransazione(tipo,importo,desc){
+await addDoc(collection(db,"users",uid,"transactions"),{
+type:tipo,amount:importo,description:desc,date:new Date()
 });
+caricaStorico();
+}
+
+window.eseguiOperazione=async function(){
+let tipo=document.getElementById("azione").value;
+let q=parseInt(document.getElementById("quantita").value);
+if(q<=0) return alert("Importo non valido");
+
+if(tipo==="deposita"){
+if(userData.cash<q) return alert("Cash insufficiente");
+userData.cash-=q; userData.bank+=q;
+await aggiungiTransazione("Deposito",q,"Deposito contanti");
+}else{
+if(userData.bank<q) return alert("Bank insufficiente");
+userData.bank-=q; userData.cash+=q;
+await aggiungiTransazione("Prelievo",q,"Prelievo contanti");
+}
+
+await updateDoc(userRef,{bank:userData.bank,cash:userData.cash});
+aggiornaUI();
+}
+
+async function caricaUtenti(){
+let snap=await getDocs(collection(db,"users"));
+let sel=document.getElementById("destinatario");
+sel.innerHTML="";
+snap.forEach(d=>{
+if(d.id!==uid){
+let opt=document.createElement("option");
+opt.value=d.id;
+opt.textContent=d.data().name||d.id;
+sel.appendChild(opt);
+}});
+}
+
+window.inviaBonifico=async function(){
+let dest=document.getElementById("destinatario").value;
+let q=parseInt(document.getElementById("bonificoImporto").value);
+if(q<=0) return alert("Importo non valido");
+if(userData.bank<q) return alert("Saldo insufficiente");
+
+let destRef=doc(db,"users",dest);
+let destSnap=await getDoc(destRef);
+let destData=destSnap.data();
+
+userData.bank-=q;
+destData.bank+=q;
+
+await updateDoc(userRef,{bank:userData.bank});
+await updateDoc(destRef,{bank:destData.bank});
+
+await aggiungiTransazione("Bonifico Inviato",q,"A: "+destData.name);
+await addDoc(collection(db,"users",dest,"transactions"),{
+type:"Bonifico Ricevuto",amount:q,
+description:"Da: "+userData.name,date:new Date()
+});
+
+aggiornaUI();
+}
+
+window.richiediPrestito=async function(){
+let importo=parseInt(document.getElementById("prestitoImporto").value);
+if(importo<=0||importo>100000) return alert("Importo non valido");
+
+let totale=Math.ceil(importo*1.10);
+let rata=Math.ceil(totale/10);
+
+userData.bank+=importo;
+
+userData.prestito={
+attivo:true,totale:totale,rata:rata,
+rateTotali:10,rateRimanenti:10,
+prossimaRata:Date.now()+60000,
+rateFallite:0,bloccato:false
+};
+
+await updateDoc(userRef,{bank:userData.bank,prestito:userData.prestito});
+await aggiungiTransazione("Prestito Ricevuto",importo,"Prestito bancario");
+aggiornaUI();
+controllaPrestito();
+}
+
+function aggiornaBarra(){
+if(!userData.prestito) return;
+let p=userData.prestito;
+let percent=((p.rateTotali-p.rateRimanenti)/p.rateTotali)*100;
+document.getElementById("barraPrestito").style.width=percent+"%";
+}
+
+async function controllaPrestito(){
+setInterval(async()=>{
+let p=userData.prestito;
+if(!p||!p.attivo||p.bloccato) return;
+if(Date.now()>=p.prossimaRata){
+
+if(userData.bank<p.rata){
+p.rateFallite++;
+p.totale+=Math.ceil(p.rata*0.05);
+
+if(p.rateFallite>=3){
+p.bloccato=true;
+await aggiungiTransazione("Conto Bloccato",0,"3 rate non pagate");
+document.getElementById("prestitoInfo").innerHTML="🚔 CONTO BLOCCATO";
+}
+
+p.prossimaRata=Date.now()+60000;
+await updateDoc(userRef,{prestito:p});
+return;
+}
+
+userData.bank-=p.rata;
+p.rateRimanenti--;
+p.rateFallite=0;
+p.prossimaRata=Date.now()+60000;
+
+await updateDoc(userRef,{bank:userData.bank,prestito:p});
+await aggiungiTransazione("Rata Pagata",p.rata,"Pagamento rata");
+
+if(p.rateRimanenti===0){
+p.attivo=false;
+await updateDoc(userRef,{prestito:p});
+await aggiungiTransazione("Prestito Estinto",0,"Prestito completato");
+}
+
+aggiornaUI();
+}
+},5000);
+}
+
+async function caricaStorico(){
+let div=document.getElementById("storico");
+div.innerHTML="";
+let qy=query(collection(db,"users",uid,"transactions"),orderBy("date","desc"));
+let snap=await getDocs(qy);
+snap.forEach(d=>{
+let t=d.data();
+let el=document.createElement("div");
+el.className="trans-item";
+el.innerHTML="<strong>"+t.type+"</strong> - €"+t.amount+
+"<br><small>"+t.description+"</small>";
+div.appendChild(el);
+});
+}
+
+setInterval(()=>{
+let now=new Date();
+document.getElementById("clock").innerText=
+now.getHours().toString().padStart(2,"0")+":"+
+now.getMinutes().toString().padStart(2,"0")+":"+
+now.getSeconds().toString().padStart(2,"0");
+},1000);
+
+document.getElementById("card").onclick=()=>document.getElementById("card").classList.toggle("flip");
+
+caricaUtente();
+
 </script>
 
 </body>
