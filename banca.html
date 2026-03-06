@@ -1,9 +1,9 @@
-```html
 <!DOCTYPE html>
 <html lang="it">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Italia RP - Banca</title>
 
 <style>
@@ -11,56 +11,39 @@
 body{
 margin:0;
 font-family:'Segoe UI',sans-serif;
+background:linear-gradient(180deg,#1c102b,#2a1b3f);
 color:white;
-
-/* STESSO SFONDO DELLA HOME */
-background:url("sfondo.jpg");
-background-size:cover;
-background-position:center;
-background-attachment:fixed;
 }
 
-/* ===== HEADER ===== */
+/* HEADER */
 
 .header{
+height:70px;
+background:#0b0b0b;
 display:flex;
-justify-content:space-between;
 align-items:center;
-padding:15px 30px;
-background:#000000cc;
-backdrop-filter:blur(10px);
+justify-content:space-between;
+padding:0 30px;
+box-shadow:0 5px 15px rgba(0,0,0,0.5);
 }
 
 .logo{
-display:flex;
-align-items:center;
-gap:10px;
-cursor:pointer;
-}
-
-.logo img{
 height:40px;
-}
-
-.clock{
-font-weight:bold;
+cursor:pointer;
 }
 
 .menu{
 display:flex;
-gap:25px;
-}
-
-.menu div{
+gap:20px;
 cursor:pointer;
 }
 
-/* ===== CARD ===== */
+/* CARTA */
 
 .card-container{
-width:430px;
+width:420px;
 height:260px;
-margin:80px auto;
+margin:60px auto;
 perspective:2000px;
 }
 
@@ -83,122 +66,99 @@ width:100%;
 height:100%;
 border-radius:18px;
 backface-visibility:hidden;
-padding:25px;
-box-sizing:border-box;
-box-shadow:0 30px 70px rgba(0,0,0,0.8);
+box-shadow:0 25px 60px rgba(0,0,0,0.8);
 }
 
-/* ===== FRONTE ===== */
+/* FRONTE */
 
 .front{
 background:#ffd400;
 color:#111;
+padding:25px;
+box-sizing:border-box;
 }
 
-/* banda dorata */
-
-.gold-strip{
+.gold-bar{
 position:absolute;
 left:0;
 top:0;
-width:90px;
+width:50px;
 height:100%;
-background:linear-gradient(45deg,#b8962e,#e6c45f,#a68020);
-border-top-left-radius:18px;
-border-bottom-left-radius:18px;
+background:linear-gradient(#b38b00,#ffd700,#a67c00);
+border-radius:18px 0 0 18px;
 }
 
 .postepay{
 position:absolute;
 top:20px;
-left:110px;
-font-weight:bold;
+left:70px;
+font-weight:800;
 font-size:22px;
 }
 
 .chip{
-position:absolute;
-top:70px;
-left:110px;
-width:65px;
+margin-top:60px;
+margin-left:70px;
+width:60px;
 height:45px;
 border-radius:6px;
 background:linear-gradient(135deg,#d4af37,#f7e27b,#b8860b);
-box-shadow:inset 0 0 5px rgba(0,0,0,0.6);
+box-shadow:inset 0 0 5px rgba(0,0,0,0.5);
 }
 
 .contactless{
 position:absolute;
-top:70px;
-left:190px;
+top:100px;
+left:150px;
 font-size:22px;
-transform:rotate(90deg);
-}
-
-.poste{
-position:absolute;
-top:120px;
-left:110px;
-font-size:14px;
-font-weight:bold;
 }
 
 .card-number{
-position:absolute;
-top:160px;
-left:110px;
+margin-top:50px;
 font-size:22px;
 letter-spacing:3px;
+margin-left:70px;
 font-weight:bold;
 }
 
 .expire{
-position:absolute;
-top:200px;
-left:200px;
-font-size:13px;
+margin-left:70px;
+margin-top:15px;
+font-size:14px;
 }
 
-.iban-front{
+.iban{
 position:absolute;
-bottom:15px;
-left:110px;
-font-size:12px;
-letter-spacing:2px;
+bottom:20px;
+left:70px;
+font-size:13px;
 font-weight:bold;
+letter-spacing:1px;
 }
 
 .mastercard{
 position:absolute;
 bottom:15px;
 right:25px;
-width:60px;
-height:40px;
+display:flex;
 }
 
-.m1,.m2{
-position:absolute;
+.mc1,.mc2{
 width:35px;
 height:35px;
 border-radius:50%;
 }
 
-.m1{
-background:#eb001b;
-left:0;
-}
+.mc1{background:#eb001b;}
+.mc2{background:#f79e1b;margin-left:-15px;opacity:0.9;}
 
-.m2{
-background:#f79e1b;
-right:0;
-opacity:0.9;
-}
-
-/* ===== RETRO ===== */
+/* RETRO */
 
 .back{
 background:#ffd400;
 transform:rotateY(180deg);
+padding:20px;
+box-sizing:border-box;
 }
 
 .stripe{
@@ -208,42 +168,14 @@ margin-top:30px;
 border-radius:4px;
 }
 
-.cvv-box{
+.cvv{
+margin-top:20px;
 background:white;
 width:80px;
 padding:6px;
-margin-top:25px;
 text-align:right;
 font-weight:bold;
 border-radius:4px;
-}
-
-/* ===== BOX ===== */
-
-.box{
-width:430px;
-margin:20px auto;
-background:#000000aa;
-padding:20px;
-border-radius:10px;
-}
-
-input,select,button{
-width:100%;
-padding:10px;
-margin-top:10px;
-border-radius:6px;
-border:none;
-}
-
-button{
-background:#00aa44;
-color:white;
-cursor:pointer;
-}
-
-button:hover{
-opacity:0.8;
 }
 
 </style>
@@ -253,14 +185,10 @@ opacity:0.8;
 
 <div class="header">
 
-<div class="logo" onclick="window.location.href='home.html'">
-<img src="logo-banca.png">
-</div>
-
-<div class="clock" id="clock"></div>
+<img src="assets/logo-banca.png" class="logo" onclick="window.location.href='home.html'">
 
 <div class="menu">
-<div onclick="window.location.href='documento.html'">Documento</div>
+<div onclick="window.location.href='lista-personaggi.html'">Personaggi</div>
 <div>Impostazioni</div>
 </div>
 
@@ -273,7 +201,7 @@ opacity:0.8;
 
 <div class="front">
 
-<div class="gold-strip"></div>
+<div class="gold-bar"></div>
 
 <div class="postepay">POSTEPAY</div>
 
@@ -281,30 +209,25 @@ opacity:0.8;
 
 <div class="contactless">)))</div>
 
-<div class="poste">POSTE ITALIANE</div>
-
 <div class="card-number" id="cardNumber"></div>
 
-<div class="expire">
-VALID THRU <span id="expireDate"></span>
-</div>
+<div class="expire">VALID THRU <span id="expire"></span></div>
 
-<div class="iban-front" id="iban"></div>
+<div class="iban" id="iban"></div>
 
 <div class="mastercard">
-<div class="m1"></div>
-<div class="m2"></div>
+<div class="mc1"></div>
+<div class="mc2"></div>
 </div>
 
 </div>
+
 
 <div class="back">
 
 <div class="stripe"></div>
 
-<div class="cvv-box">
-CVV <span id="cvv"></span>
-</div>
+<div class="cvv">CVV <span id="cvv"></span></div>
 
 </div>
 
@@ -313,94 +236,33 @@ CVV <span id="cvv"></span>
 </div>
 
 
-<script type="module">
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc }
-from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-const firebaseConfig = {
-
-apiKey: "APIKEY",
-authDomain: "sito-rp.firebaseapp.com",
-projectId: "sito-rp"
-
-};
-
-const app=initializeApp(firebaseConfig);
-const db=getFirestore(app);
-
-let uid=sessionStorage.getItem("discord_uid");
-
-let userRef=doc(db,"users",uid);
+<script>
 
 function generaNumero(l){
-
 let r='';
-for(let i=0;i<l;i++) r+=Math.floor(Math.random()*10);
-
+for(let i=0;i<l;i++){
+r+=Math.floor(Math.random()*10);
+}
 return r;
-
 }
 
-async function caricaUtente(){
-
-let snap=await getDoc(userRef);
-
-let user;
-
-if(!snap.exists()){
-
-user={
-cardNumber:generaNumero(16),
-cvv:generaNumero(3),
-expire:"12/30",
-iban:"IT60X"+generaNumero(20)
-};
-
-await setDoc(userRef,user);
-
-}else{
-
-user=snap.data();
-
-}
+const cardNumber=generaNumero(16)
+const iban="IT60X"+generaNumero(20)
+const cvv=generaNumero(3)
 
 document.getElementById("cardNumber").innerText=
-user.cardNumber.match(/.{1,4}/g).join(" ");
+cardNumber.match(/.{1,4}/g).join(" ")
 
-document.getElementById("cvv").innerText=user.cvv;
-document.getElementById("expireDate").innerText=user.expire;
-document.getElementById("iban").innerText=user.iban;
+document.getElementById("expire").innerText="12/30"
+document.getElementById("iban").innerText=iban
+document.getElementById("cvv").innerText=cvv
 
-}
-
-caricaUtente();
-
-/* FLIP CARD */
 
 document.getElementById("card").onclick=()=>{
-
-document.getElementById("card").classList.toggle("flip");
-
+document.getElementById("card").classList.toggle("flip")
 }
-
-/* CLOCK */
-
-setInterval(()=>{
-
-let now=new Date();
-
-document.getElementById("clock").innerText=
-
-now.getHours().toString().padStart(2,"0")+":"+
-now.getMinutes().toString().padStart(2,"0")+":"+
-now.getSeconds().toString().padStart(2,"0");
-
-},1000);
 
 </script>
 
 </body>
 </html>
-```
