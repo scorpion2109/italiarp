@@ -14,20 +14,17 @@ display:flex;
 justify-content:center;
 align-items:center;
 background:#1a1a2e;
-font-family:sans-serif;
+font-family:Arial, sans-serif;
 }
 
 /* CARTA */
 
 .card{
-
 width:420px;
 height:260px;
 border-radius:18px;
 position:relative;
 overflow:hidden;
-
-/* grigio metallico */
 
 background:
 linear-gradient(
@@ -42,13 +39,11 @@ linear-gradient(
 box-shadow:
 0 25px 60px rgba(0,0,0,0.8),
 inset 0 2px 6px rgba(255,255,255,0.2);
-
 }
 
-/* STRISCIA ORO SINISTRA */
+/* BARRA ORO */
 
 .gold-bar{
-
 position:absolute;
 left:0;
 top:0;
@@ -67,7 +62,45 @@ linear-gradient(
 
 box-shadow:
 inset -3px 0 6px rgba(0,0,0,0.4);
+}
 
+/* LOGO POSTEPAY */
+
+.postepay{
+position:absolute;
+top:20px;
+left:70px;
+color:#ffd700;
+font-weight:800;
+font-size:26px;
+letter-spacing:1px;
+}
+
+.evolution{
+position:absolute;
+top:50px;
+left:72px;
+color:#ffd700;
+font-size:12px;
+letter-spacing:1px;
+}
+
+/* RETTANGOLO ITALIA RP */
+
+.rp-box{
+position:absolute;
+top:18px;
+right:20px;
+padding:6px 14px;
+border-radius:6px;
+
+background:rgba(0,0,0,0.35);
+border:1px solid rgba(255,255,255,0.25);
+
+color:white;
+font-weight:700;
+font-size:12px;
+letter-spacing:1px;
 }
 
 </style>
@@ -76,7 +109,14 @@ inset -3px 0 6px rgba(0,0,0,0.4);
 <body>
 
 <div class="card">
+
 <div class="gold-bar"></div>
+
+<div class="postepay">POSTEPAY</div>
+<div class="evolution">evolution</div>
+
+<div class="rp-box">ITALIA RP</div>
+
 </div>
 
 </body>
