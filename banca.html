@@ -19,7 +19,6 @@ body{
     background-attachment:fixed;
 }
 
-/* Overlay per leggibilità */
 body::before{
     content:"";
     position:fixed;
@@ -28,7 +27,7 @@ body::before{
     z-index:-1;
 }
 
-/* ===== HEADER ===== */
+/* HEADER */
 .header{
     height:75px;
     backdrop-filter:blur(8px);
@@ -59,7 +58,7 @@ body::before{
     cursor:pointer;
 }
 
-/* ===== CARTA ===== */
+/* CARTA 3D stile Postepay */
 .card-container {
     width:430px;
     height:270px;
@@ -98,90 +97,62 @@ body::before{
 
 /* FRONTE */
 .front {
-    background:#ffd400;
-    color:#111;
+    background: linear-gradient(135deg, #2b2b2b, #1c1c1c);
+    color:white;
     display:flex;
     flex-direction:column;
     justify-content:space-between;
     padding:20px 28px;
 }
 
-.logo-poste {
-    font-weight:800;
-    font-size:20px;
-}
-
-.circuit {
+.logo-italiarp {
     position:absolute;
-    top:20px;
-    right:28px;
-    width:60px;
-    height:35px;
+    top:15px;
+    right:20px;
+    font-weight:bold;
+    font-size:18px;
+    color:#ffd400;
 }
-.c1, .c2 {
-    position:absolute;
-    width:35px;
-    height:35px;
-    border-radius:50%;
-}
-.c1 {background:#eb001b; left:0;}
-.c2 {background:#f79e1b; right:0; opacity:0.9;}
 
 .chip {
     width:60px;
     height:45px;
     border-radius:6px;
     background:linear-gradient(135deg,#d4af37,#f7e27b,#b8860b);
-    box-shadow:inset 0 0 5px rgba(0,0,0,0.4);
     margin-top:40px;
 }
 
-.card-name {
+.nfc {
+    width:20px;
+    height:20px;
+    border-radius:50%;
+    border:2px solid #ffd400;
     position:absolute;
-    top:120px;
-    left:28px;
-    font-weight:bold;
-    font-size:16px;
-    color:#111;
+    top:55px;
+    left:100px;
 }
 
 .card-number {
-    position:absolute;
-    top:160px;
-    left:28px;
-    font-size:20px;
+    margin-top:50px;
+    font-size:22px;
     letter-spacing:3px;
-    font-weight:bold;
-    color:#111;
 }
 
-.card-info {
-    position:absolute;
-    top:200px;
-    left:28px;
-    font-size:14px;
+.card-name {
+    margin-top:15px;
+    font-size:16px;
+    font-weight:bold;
 }
 
 .card-iban-front {
-    position:absolute;
-    bottom:20px;
-    left:28px;
-    font-size:13px;
-    letter-spacing:2px;
-    font-weight:bold;
-    color:#111;
-}
-
-.card-holder {
-    margin-top:20px;
-    font-weight:bold;
-    letter-spacing:1px;
+    font-size:12px;
+    margin-top:5px;
 }
 
 /* RETRO */
 .back {
-    background:#ffd400;
-    color:#111;
+    background:#2b2b2b;
+    color:white;
     transform:rotateY(180deg);
     padding:28px;
 }
@@ -196,7 +167,7 @@ body::before{
 .cvv-box {
     background:white;
     color:black;
-    width:80px;
+    width:50px;
     padding:6px;
     margin-top:20px;
     text-align:right;
@@ -206,11 +177,9 @@ body::before{
 
 .iban {
     position:absolute;
-    bottom:20px;
+    bottom:15px;
     left:28px;
-    font-size:13px;
-    letter-spacing:2px;
-    font-weight:bold;
+    font-size:12px;
 }
 
 /* BOX */
@@ -240,17 +209,12 @@ button:hover{opacity:0.8}
 <div class="card-container">
 <div class="card" id="card">
     <div class="front">
-        <div class="logo-poste">POSTEPAY</div>
-        <div class="circuit">
-            <div class="c1"></div>
-            <div class="c2"></div>
-        </div>
+        <div class="logo-italiarp">ITALIA RP</div>
         <div class="chip"></div>
-        <div class="card-name" id="cardName"></div>
+        <div class="nfc"></div>
         <div class="card-number" id="cardNumber"></div>
-        <div class="card-info">VALID THRU <span id="expireDate"></span></div>
+        <div class="card-name" id="cardName"></div>
         <div class="card-iban-front">IT60X12345678901234567890</div>
-        <div class="card-holder" id="cardHolder"></div>
     </div>
     <div class="back">
         <div class="stripe"></div>
@@ -276,29 +240,6 @@ button:hover{opacity:0.8}
 </select>
 <input type="number" id="quantita" placeholder="Quantità">
 <button onclick="eseguiOperazione()">Conferma</button>
-</div>
-
-<!-- BONIFICO -->
-<div class="box">
-<h3>Bonifico</h3>
-<select id="destinatario"></select>
-<input type="number" id="bonificoImporto" placeholder="Quantità">
-<button onclick="inviaBonifico()">Invia Bonifico</button>
-</div>
-
-<!-- PRESTITO -->
-<div class="box">
-<h3>Prestito</h3>
-<input type="number" id="prestitoImporto" placeholder="Importo (max 100000)">
-<button onclick="richiediPrestito()">Richiedi Prestito</button>
-<div id="prestitoInfo"></div>
-<div class="progress"><div id="barraPrestito" class="progress-bar"></div></div>
-</div>
-
-<!-- STORICO -->
-<div class="box">
-<h3>Storico Transazioni</h3>
-<div id="storico"></div>
 </div>
 
 <script type="module">
@@ -350,7 +291,6 @@ function aggiornaUI(){
     document.getElementById("cvv").innerText = userData.cvv;
     document.getElementById("expireDate").innerText = userData.expire;
     document.getElementById("iban").innerText = userData.iban;
-    document.getElementById("cardHolder").innerText = userData.name.toUpperCase();
     document.getElementById("cardName").innerText = userData.name.toUpperCase();
 }
 
