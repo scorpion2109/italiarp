@@ -13,38 +13,160 @@ body{margin:0;font-family:'Segoe UI',sans-serif;background:#0f0f0f;color:white}
 .menu{display:flex;gap:20px;cursor:pointer}
 
 /* ===== CARTA ===== */
-.card-container{width:430px;height:260px;margin:50px auto;perspective:2000px}
-.card{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:1s;cursor:pointer}
-.card.flip{transform:rotateY(180deg)}
-.front,.back{
-position:absolute;width:100%;height:100%;border-radius:18px;
-backface-visibility:hidden;padding:28px;box-sizing:border-box;
-box-shadow:0 25px 60px rgba(0,0,0,0.7)
+.card-container {
+    width:430px;
+    height:270px;
+    margin:50px auto;
+    perspective:2000px;
+}
+
+.card {
+    width:100%;
+    height:100%;
+    position:relative;
+    transform-style:preserve-3d;
+    transition: transform 0.6s cubic-bezier(.03,.98,.52,.99);
+    cursor:pointer;
+    border-radius:18px;
+    box-shadow:0 25px 60px rgba(0,0,0,0.7);
+}
+
+/* Hover: inclinazione 3D */
+.card-container:hover .card {
+    transform: rotateX(5deg) rotateY(10deg);
+}
+
+/* Flip al click */
+.card.flip {
+    transform: rotateY(180deg);
+}
+
+.front, .back {
+    position:absolute;
+    width:100%;
+    height:100%;
+    border-radius:18px;
+    backface-visibility:hidden;
+    box-sizing:border-box;
+    padding:28px;
 }
 
 /* FRONTE */
-.front{background:#ffd400;color:#111}
-.logo-poste{position:absolute;top:20px;left:28px;font-weight:800;font-size:20px}
-.circuit{position:absolute;top:20px;right:28px;width:60px;height:35px}
-.c1,.c2{position:absolute;width:35px;height:35px;border-radius:50%}
-.c1{background:#eb001b;left:0}
-.c2{background:#f79e1b;right:0;opacity:0.9}
-
-.chip{
-margin-top:60px;width:65px;height:48px;border-radius:6px;
-background:linear-gradient(135deg,#d4af37,#f7e27b,#b8860b);
-box-shadow:inset 0 0 5px rgba(0,0,0,0.4)
+.front {
+    background:#ffd400;
+    color:#111;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    padding:20px 28px;
 }
 
-.card-number{margin-top:45px;font-size:22px;letter-spacing:3px;font-weight:bold}
-.card-info{margin-top:20px;font-size:14px}
-.card-holder{margin-top:20px;font-weight:bold;letter-spacing:1px}
+.logo-poste {
+    font-weight:800;
+    font-size:20px;
+}
+
+.circuit {
+    position:absolute;
+    top:20px;
+    right:28px;
+    width:60px;
+    height:35px;
+}
+.c1, .c2 {
+    position:absolute;
+    width:35px;
+    height:35px;
+    border-radius:50%;
+}
+.c1 {background:#eb001b; left:0;}
+.c2 {background:#f79e1b; right:0; opacity:0.9;}
+
+.chip {
+    width:60px;
+    height:45px;
+    border-radius:6px;
+    background:linear-gradient(135deg,#d4af37,#f7e27b,#b8860b);
+    box-shadow:inset 0 0 5px rgba(0,0,0,0.4);
+    margin-top:40px;
+}
+
+.card-name {
+    position:absolute;
+    top:120px;
+    left:28px;
+    font-weight:bold;
+    font-size:16px;
+    color:#111;
+}
+
+.card-number {
+    position:absolute;
+    top:160px;
+    left:28px;
+    font-size:20px;
+    letter-spacing:3px;
+    font-weight:bold;
+    color:#111;
+}
+
+.card-info {
+    position:absolute;
+    top:200px;
+    left:28px;
+    font-size:14px;
+}
+
+.card-iban-front {
+    position:absolute;
+    bottom:20px;
+    left:28px;
+    font-size:13px;
+    letter-spacing:2px;
+    font-weight:bold;
+    color:#111;
+}
+
+.card-holder {
+    margin-top:20px;
+    font-weight:bold;
+    letter-spacing:1px;
+}
 
 /* RETRO */
-.back{background:#ffd400;color:#111;transform:rotateY(180deg)}
-.stripe{background:black;height:50px;margin-top:20px;border-radius:4px}
-.cvv-box{background:white;color:black;width:80px;padding:6px;margin-top:20px;text-align:right;font-weight:bold;border-radius:4px}
-.iban{position:absolute;bottom:20px;left:28px;font-size:13px;letter-spacing:2px;font-weight:bold}
+.back {
+    background:#ffd400;
+    color:#111;
+    transform:rotateY(180deg);
+    padding:28px;
+}
+
+.stripe {
+    background:black;
+    height:50px;
+    margin-top:20px;
+    border-radius:4px;
+}
+
+.cvv-box {
+    background:white;
+    color:black;
+    width:80px;
+    padding:6px;
+    margin-top:20px;
+    text-align:right;
+    font-weight:bold;
+    border-radius:4px;
+}
+
+.iban {
+    position:absolute;
+    bottom:20px;
+    left:28px;
+    font-size:13px;
+    letter-spacing:2px;
+    font-weight:bold;
+}
 
 /* BOX */
 .box{width:430px;margin:20px auto;background:#1a1a1a;padding:20px;border-radius:10px}
@@ -81,12 +203,10 @@ button:hover{opacity:0.8}
 
 <div class="chip"></div>
 
+<div class="card-name" id="cardName"></div> <!-- Nome Cognome -->
 <div class="card-number" id="cardNumber"></div>
-
-<div class="card-info">
-VALID THRU <span id="expireDate"></span>
-</div>
-
+<div class="card-info">VALID THRU <span id="expireDate"></span></div>
+<div class="card-iban-front">IT60X12345678901234567890</div> <!-- IBAN Fisso -->
 <div class="card-holder" id="cardHolder"></div>
 </div>
 
@@ -143,9 +263,7 @@ VALID THRU <span id="expireDate"></span>
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc,
-collection, getDocs, addDoc, query, orderBy }
-from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
@@ -157,75 +275,75 @@ const firebaseConfig = {
   measurementId: "G-R23N60PBYY"
 };
 
-const app=initializeApp(firebaseConfig);
-const db=getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-let uid=sessionStorage.getItem("discord_uid");
+let uid = sessionStorage.getItem("discord_uid");
 if(!uid) window.location.href="index.html";
 
-let userRef=doc(db,"users",uid);
+let userRef = doc(db,"users",uid);
 let userData;
 
 function generaNumero(l){let r='';for(let i=0;i<l;i++)r+=Math.floor(Math.random()*10);return r;}
 
 async function caricaUtente(){
-let snap=await getDoc(userRef);
+    let snap = await getDoc(userRef);
 
-if(!snap.exists()){
-userData={
-bank:20000,cash:0,name:"UTENTE ITALIA",
-cardNumber:generaNumero(16),
-cvv:generaNumero(3),
-expire:"12/30",
-iban:"IT60X"+generaNumero(20)
-};
-await setDoc(userRef,userData);
-}else{userData=snap.data();}
+    if(!snap.exists()){
+        userData = {
+            bank:20000,
+            cash:0,
+            name:"UTENTE ITALIA",
+            cardNumber:generaNumero(16),
+            cvv:generaNumero(3),
+            expire:"12/30",
+            iban:"IT60X"+generaNumero(20)
+        };
+        await setDoc(userRef,userData);
+    } else {userData = snap.data();}
 
-aggiornaUI();
-caricaUtenti();
-caricaStorico();
-if(userData.prestito && userData.prestito.attivo) controllaPrestito();
+    aggiornaUI();
 }
 
 function aggiornaUI(){
-document.getElementById("bank").innerText=userData.bank.toLocaleString();
-document.getElementById("cash").innerText=userData.cash.toLocaleString();
-document.getElementById("cardNumber").innerText=userData.cardNumber.match(/.{1,4}/g).join(" ");
-document.getElementById("cvv").innerText=userData.cvv;
-document.getElementById("expireDate").innerText=userData.expire;
-document.getElementById("iban").innerText=userData.iban;
-document.getElementById("cardHolder").innerText=userData.name.toUpperCase();
-aggiornaBarra();
+    document.getElementById("bank").innerText = userData.bank.toLocaleString();
+    document.getElementById("cash").innerText = userData.cash.toLocaleString();
+    document.getElementById("cardNumber").innerText = userData.cardNumber.match(/.{1,4}/g).join(" ");
+    document.getElementById("cvv").innerText = userData.cvv;
+    document.getElementById("expireDate").innerText = userData.expire;
+    document.getElementById("iban").innerText = userData.iban;
+    document.getElementById("cardHolder").innerText = userData.name.toUpperCase();
+    document.getElementById("cardName").innerText = userData.name.toUpperCase();
 }
 
-window.eseguiOperazione=async function(){
-let tipo=document.getElementById("azione").value;
-let q=parseInt(document.getElementById("quantita").value);
-if(q<=0) return alert("Importo non valido");
+window.eseguiOperazione = async function(){
+    let tipo = document.getElementById("azione").value;
+    let q = parseInt(document.getElementById("quantita").value);
+    if(q <= 0) return alert("Importo non valido");
 
-if(tipo==="deposita"){
-if(userData.cash<q) return alert("Cash insufficiente");
-userData.cash-=q;userData.bank+=q;
-}else{
-if(userData.bank<q) return alert("Bank insufficiente");
-userData.bank-=q;userData.cash+=q;
-}
+    if(tipo==="deposita"){
+        if(userData.cash < q) return alert("Cash insufficiente");
+        userData.cash -= q; userData.bank += q;
+    } else {
+        if(userData.bank < q) return alert("Bank insufficiente");
+        userData.bank -= q; userData.cash += q;
+    }
 
-await updateDoc(userRef,{bank:userData.bank,cash:userData.cash});
-aggiornaUI();
+    await updateDoc(userRef, {bank:userData.bank, cash:userData.cash});
+    aggiornaUI();
 }
 
 setInterval(()=>{
-let now=new Date();
-document.getElementById("clock").innerText=
-now.getHours().toString().padStart(2,"0")+":"+
-now.getMinutes().toString().padStart(2,"0")+":"+
-now.getSeconds().toString().padStart(2,"0");
+    let now = new Date();
+    document.getElementById("clock").innerText =
+    now.getHours().toString().padStart(2,"0")+":"+
+    now.getMinutes().toString().padStart(2,"0")+":"+
+    now.getSeconds().toString().padStart(2,"0");
 },1000);
 
-document.getElementById("card").onclick=()=>{
-document.getElementById("card").classList.toggle("flip");
+const card = document.getElementById("card");
+card.onclick = () => {
+    card.classList.toggle("flip");
 }
 
 caricaUtente();
