@@ -3,140 +3,81 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Italia RP - Carta Realistica</title>
+<title>Carta RP</title>
+
 <style>
-body {
-  margin:0;
-  background:#1c102b;
-  font-family:'Roboto', sans-serif;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  min-height:100vh;
+
+body{
+margin:0;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:#1a1a2e;
+font-family:sans-serif;
 }
-.card-container {
-  width:420px;
-  max-width:90vw;
-  height:260px;
-  perspective:2000px;
+
+/* CARTA */
+
+.card{
+
+width:420px;
+height:260px;
+border-radius:18px;
+position:relative;
+overflow:hidden;
+
+/* grigio metallico */
+
+background:
+linear-gradient(
+135deg,
+#5e5e5e,
+#9a9a9a,
+#6e6e6e,
+#b3b3b3,
+#5f5f5f
+);
+
+box-shadow:
+0 25px 60px rgba(0,0,0,0.8),
+inset 0 2px 6px rgba(255,255,255,0.2);
+
 }
-.card {
-  width:100%;
-  height:100%;
-  position:relative;
-  transform-style:preserve-3d;
-  transition:1s;
-  cursor:pointer;
-  border-radius:18px;
+
+/* STRISCIA ORO SINISTRA */
+
+.gold-bar{
+
+position:absolute;
+left:0;
+top:0;
+height:100%;
+width:50px;
+
+background:
+linear-gradient(
+180deg,
+#7a5a00,
+#d4af37,
+#ffd700,
+#cfa600,
+#7a5a00
+);
+
+box-shadow:
+inset -3px 0 6px rgba(0,0,0,0.4);
+
 }
-.card.flip {
-  transform:rotateY(180deg);
-}
-.front, .back {
-  position:absolute;
-  width:100%;
-  height:100%;
-  border-radius:18px;
-  backface-visibility:hidden;
-  overflow:hidden;
-}
-/* FRONTE */
-.front {
-  background-image: url('assets/postepay_front.png'); /* Immagine reale della Postepay */
-  background-size: cover;
-  background-position: center;
-}
-.front-text {
-  position:absolute;
-  left:70px;
-  top:60px;
-  color:#fff;
-  font-family:'OCR A Std', monospace;
-  font-size:22px;
-  letter-spacing:3px;
-  font-weight:bold;
-}
-.expire-text {
-  position:absolute;
-  left:70px;
-  bottom:60px;
-  font-size:14px;
-  font-weight:bold;
-}
-.iban-text {
-  position:absolute;
-  left:70px;
-  bottom:30px;
-  font-size:13px;
-  font-weight:bold;
-}
-/* RETRO */
-.back {
-  background-image: url('assets/postepay_back.png'); /* Retro reale */
-  background-size: cover;
-  background-position: center;
-}
-.cvv-text {
-  position:absolute;
-  right:50px;
-  top:100px;
-  font-size:14px;
-  font-weight:bold;
-  color:#000;
-}
+
 </style>
 </head>
+
 <body>
 
-<div class="card-container">
-  <div class="card" id="card">
-    <div class="front">
-      <div class="front-text" id="cardNumber"></div>
-      <div class="expire-text">VALID THRU <span id="expire"></span></div>
-      <div class="iban-text" id="iban"></div>
-    </div>
-    <div class="back">
-      <div class="cvv-text">CVV <span id="cvv"></span></div>
-    </div>
-  </div>
+<div class="card">
+<div class="gold-bar"></div>
 </div>
-
-<script>
-// Nome del personaggio
-const personaggio = "Mario";
-
-// Funzione hash deterministica
-function hashString(s){
-  let h=0;
-  for(let i=0;i<s.length;i++){
-    h=(h<<5)-h+s.charCodeAt(i);
-    h|=0;
-  }
-  return Math.abs(h);
-}
-
-function generaCarta(personaggio){
-  const seed = hashString(personaggio);
-  const cardNumber = String(seed).padEnd(16,'0').slice(0,16).match(/.{1,4}/g).join(" ");
-  const iban = "IT60X" + String(seed).padEnd(20,'0').slice(0,20);
-  const cvv = String(seed).slice(0,3).padStart(3,'0');
-  const expire = "12/30";
-  return {cardNumber, iban, cvv, expire};
-}
-
-const carta = generaCarta(personaggio);
-
-// Mostra dati carta
-document.getElementById("cardNumber").innerText = carta.cardNumber;
-document.getElementById("iban").innerText = carta.iban;
-document.getElementById("cvv").innerText = carta.cvv;
-document.getElementById("expire").innerText = carta.expire;
-
-// Flip carta
-document.getElementById("card").onclick = ()=>{
-  document.getElementById("card").classList.toggle("flip");
-}
-</script>
 
 </body>
 </html>
