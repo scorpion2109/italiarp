@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -17,7 +18,7 @@ color:white;
 /* NAVBAR */
 
 .navbar{
-background:#0a0a0a;
+background:#0b0b0b;
 padding:15px 30px;
 display:flex;
 align-items:center;
@@ -34,58 +35,86 @@ border-radius:6px;
 font-weight:bold;
 }
 
-/* CONTENUTO */
+/* CONTENITORE */
 
 .container{
 display:flex;
 justify-content:center;
-margin-top:80px;
+margin-top:100px;
 }
 
 /* CARTA */
 
-.card{
+.card-container{
 width:420px;
-height:250px;
+height:260px;
+perspective:1000px;
+cursor:pointer;
+}
+
+.card{
+width:100%;
+height:100%;
+position:relative;
+transform-style:preserve-3d;
+transition:transform 0.8s;
+}
+
+.card.flipped{
+transform:rotateY(180deg);
+}
+
+/* LATO CARTA */
+
+.card-face{
+position:absolute;
+width:100%;
+height:100%;
 border-radius:18px;
+backface-visibility:hidden;
+overflow:hidden;
+box-shadow:0 15px 40px rgba(0,0,0,0.7);
+}
+
+/* FRONTE */
+
+.card-front{
+background:linear-gradient(135deg,#2b2b2b,#0f0f0f);
 padding:25px;
-background:linear-gradient(135deg,#1f1f1f,#0d0d0d);
-box-shadow:0 10px 30px rgba(0,0,0,0.8);
 position:relative;
 }
 
-/* CHIP */
+/* CHIP REALISTICO */
 
 .chip{
-width:60px;
+width:65px;
 height:45px;
 background:linear-gradient(145deg,#d4af37,#b8962e);
 border-radius:8px;
 margin-top:20px;
-box-shadow: inset 0 0 8px rgba(0,0,0,0.5);
 position:relative;
-}
-
-.chip:before,
-.chip:after{
-content:"";
-position:absolute;
-background:#a8892b;
+box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
 }
 
 .chip:before{
+content:"";
+position:absolute;
 width:100%;
 height:2px;
 top:50%;
+background:#9c7c1f;
 }
 
 .chip:after{
+content:"";
+position:absolute;
 height:100%;
 width:2px;
 left:50%;
+background:#9c7c1f;
 }
 
-/* LOGO BANCA */
+/* LOGO */
 
 .bank{
 position:absolute;
@@ -93,16 +122,16 @@ top:20px;
 right:25px;
 font-size:22px;
 font-weight:bold;
-letter-spacing:2px;
+letter-spacing:3px;
 }
 
 /* NOME */
 
 .name{
 position:absolute;
-top:80px;
+top:100px;
 left:25px;
-font-size:18px;
+font-size:20px;
 letter-spacing:2px;
 }
 
@@ -119,26 +148,26 @@ letter-spacing:2px;
 /* RETRO */
 
 .card-back{
-width:420px;
-height:250px;
-border-radius:18px;
-background:#eaeaea;
-margin-left:40px;
-position:relative;
-overflow:hidden;
+background:#f1f1f1;
+transform:rotateY(180deg);
+color:black;
 }
 
+/* STRISCIA NERA */
+
 .black-strip{
-height:50px;
+height:60px;
 background:black;
 margin-top:20px;
 }
 
-.cvv-box{
+/* AREA FIRMA */
+
+.signature{
 background:white;
-width:90%;
+width:85%;
 height:40px;
-margin:40px auto;
+margin:30px auto;
 display:flex;
 align-items:center;
 justify-content:flex-end;
@@ -147,12 +176,13 @@ font-size:18px;
 letter-spacing:3px;
 }
 
+/* SCADENZA */
+
 .exp{
 position:absolute;
-bottom:25px;
+bottom:20px;
 right:30px;
 font-size:16px;
-color:black;
 }
 
 </style>
@@ -166,15 +196,19 @@ color:black;
 
 <div class="container">
 
+<div class="card-container" onclick="flipCard()">
+
+<div class="card" id="card">
+
 <!-- FRONTE -->
 
-<div class="card">
+<div class="card-face card-front">
 
 <div class="bank">ITALIA RP</div>
 
 <div class="chip"></div>
 
-<div class="name" id="nomeCarta">
+<div class="name">
 Mario Rossi
 </div>
 
@@ -186,11 +220,11 @@ IT60 X054 2811 1010 0000 0123 456
 
 <!-- RETRO -->
 
-<div class="card-back">
+<div class="card-face card-back">
 
 <div class="black-strip"></div>
 
-<div class="cvv-box">
+<div class="signature">
 123
 </div>
 
@@ -201,6 +235,18 @@ IT60 X054 2811 1010 0000 0123 456
 </div>
 
 </div>
+</div>
+
+</div>
+
+<script>
+
+function flipCard(){
+document.getElementById("card").classList.toggle("flipped");
+}
+
+</script>
 
 </body>
 </html>
+```
