@@ -3,53 +3,65 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<title>Banca - Italia RP</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Italia RP - Banca</title>
 
 <style>
 
 body{
 margin:0;
-font-family:Arial;
+font-family:'Segoe UI',sans-serif;
+color:white;
+
+/* STESSO SFONDO DELLA HOME */
 background:url("sfondo.jpg");
 background-size:cover;
-color:white;
+background-position:center;
+background-attachment:fixed;
 }
 
-/* NAVBAR */
+/* ===== HEADER ===== */
 
-.navbar{
-background:#0b0b0b;
-padding:15px 30px;
+.header{
 display:flex;
+justify-content:space-between;
 align-items:center;
+padding:15px 30px;
+background:#000000cc;
+backdrop-filter:blur(10px);
 }
 
 .logo{
-width:160px;
-height:40px;
-background:#222;
 display:flex;
 align-items:center;
-justify-content:center;
-border-radius:6px;
+gap:10px;
+cursor:pointer;
+}
+
+.logo img{
+height:40px;
+}
+
+.clock{
 font-weight:bold;
 }
 
-/* CONTENITORE */
-
-.container{
+.menu{
 display:flex;
-justify-content:center;
-margin-top:100px;
+gap:25px;
 }
 
-/* CARTA */
+.menu div{
+cursor:pointer;
+}
+
+/* ===== CARD ===== */
 
 .card-container{
-width:420px;
+width:430px;
 height:260px;
-perspective:1000px;
-cursor:pointer;
+margin:80px auto;
+perspective:2000px;
 }
 
 .card{
@@ -57,132 +69,181 @@ width:100%;
 height:100%;
 position:relative;
 transform-style:preserve-3d;
-transition:transform 0.8s;
+transition:1s;
+cursor:pointer;
 }
 
-.card.flipped{
+.card.flip{
 transform:rotateY(180deg);
 }
 
-/* LATO CARTA */
-
-.card-face{
+.front,.back{
 position:absolute;
 width:100%;
 height:100%;
 border-radius:18px;
 backface-visibility:hidden;
-overflow:hidden;
-box-shadow:0 15px 40px rgba(0,0,0,0.7);
-}
-
-/* FRONTE */
-
-.card-front{
-background:linear-gradient(135deg,#2b2b2b,#0f0f0f);
 padding:25px;
-position:relative;
+box-sizing:border-box;
+box-shadow:0 30px 70px rgba(0,0,0,0.8);
 }
 
-/* CHIP REALISTICO */
+/* ===== FRONTE ===== */
 
-.chip{
-width:65px;
-height:45px;
-background:linear-gradient(145deg,#d4af37,#b8962e);
-border-radius:8px;
-margin-top:20px;
-position:relative;
-box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+.front{
+background:#ffd400;
+color:#111;
 }
 
-.chip:before{
-content:"";
+/* banda dorata */
+
+.gold-strip{
 position:absolute;
-width:100%;
-height:2px;
-top:50%;
-background:#9c7c1f;
-}
-
-.chip:after{
-content:"";
-position:absolute;
+left:0;
+top:0;
+width:90px;
 height:100%;
-width:2px;
-left:50%;
-background:#9c7c1f;
+background:linear-gradient(45deg,#b8962e,#e6c45f,#a68020);
+border-top-left-radius:18px;
+border-bottom-left-radius:18px;
 }
 
-/* LOGO */
-
-.bank{
+.postepay{
 position:absolute;
 top:20px;
-right:25px;
-font-size:22px;
+left:110px;
 font-weight:bold;
+font-size:22px;
+}
+
+.chip{
+position:absolute;
+top:70px;
+left:110px;
+width:65px;
+height:45px;
+border-radius:6px;
+background:linear-gradient(135deg,#d4af37,#f7e27b,#b8860b);
+box-shadow:inset 0 0 5px rgba(0,0,0,0.6);
+}
+
+.contactless{
+position:absolute;
+top:70px;
+left:190px;
+font-size:22px;
+transform:rotate(90deg);
+}
+
+.poste{
+position:absolute;
+top:120px;
+left:110px;
+font-size:14px;
+font-weight:bold;
+}
+
+.card-number{
+position:absolute;
+top:160px;
+left:110px;
+font-size:22px;
 letter-spacing:3px;
+font-weight:bold;
 }
 
-/* NOME */
-
-.name{
+.expire{
 position:absolute;
-top:100px;
-left:25px;
-font-size:20px;
-letter-spacing:2px;
+top:200px;
+left:200px;
+font-size:13px;
 }
 
-/* IBAN */
-
-.iban{
+.iban-front{
 position:absolute;
-bottom:20px;
-left:25px;
-font-size:16px;
+bottom:15px;
+left:110px;
+font-size:12px;
 letter-spacing:2px;
+font-weight:bold;
 }
 
-/* RETRO */
-
-.card-back{
-background:#f1f1f1;
-transform:rotateY(180deg);
-color:black;
-}
-
-/* STRISCIA NERA */
-
-.black-strip{
-height:60px;
-background:black;
-margin-top:20px;
-}
-
-/* AREA FIRMA */
-
-.signature{
-background:white;
-width:85%;
+.mastercard{
+position:absolute;
+bottom:15px;
+right:25px;
+width:60px;
 height:40px;
-margin:30px auto;
-display:flex;
-align-items:center;
-justify-content:flex-end;
-padding-right:20px;
-font-size:18px;
-letter-spacing:3px;
 }
 
-/* SCADENZA */
-
-.exp{
+.m1,.m2{
 position:absolute;
-bottom:20px;
-right:30px;
-font-size:16px;
+width:35px;
+height:35px;
+border-radius:50%;
+}
+
+.m1{
+background:#eb001b;
+left:0;
+}
+
+.m2{
+background:#f79e1b;
+right:0;
+opacity:0.9;
+}
+
+/* ===== RETRO ===== */
+
+.back{
+background:#ffd400;
+transform:rotateY(180deg);
+}
+
+.stripe{
+background:black;
+height:50px;
+margin-top:30px;
+border-radius:4px;
+}
+
+.cvv-box{
+background:white;
+width:80px;
+padding:6px;
+margin-top:25px;
+text-align:right;
+font-weight:bold;
+border-radius:4px;
+}
+
+/* ===== BOX ===== */
+
+.box{
+width:430px;
+margin:20px auto;
+background:#000000aa;
+padding:20px;
+border-radius:10px;
+}
+
+input,select,button{
+width:100%;
+padding:10px;
+margin-top:10px;
+border-radius:6px;
+border:none;
+}
+
+button{
+background:#00aa44;
+color:white;
+cursor:pointer;
+}
+
+button:hover{
+opacity:0.8;
 }
 
 </style>
@@ -190,60 +251,153 @@ font-size:16px;
 
 <body>
 
-<div class="navbar">
-<div class="logo">LOGO BANCA</div>
+<div class="header">
+
+<div class="logo" onclick="window.location.href='home.html'">
+<img src="logo-banca.png">
 </div>
 
-<div class="container">
+<div class="clock" id="clock"></div>
 
-<div class="card-container" onclick="flipCard()">
+<div class="menu">
+<div onclick="window.location.href='documento.html'">Documento</div>
+<div>Impostazioni</div>
+</div>
+
+</div>
+
+
+<div class="card-container">
 
 <div class="card" id="card">
 
-<!-- FRONTE -->
+<div class="front">
 
-<div class="card-face card-front">
+<div class="gold-strip"></div>
 
-<div class="bank">ITALIA RP</div>
+<div class="postepay">POSTEPAY</div>
 
 <div class="chip"></div>
 
-<div class="name">
-Mario Rossi
+<div class="contactless">)))</div>
+
+<div class="poste">POSTE ITALIANE</div>
+
+<div class="card-number" id="cardNumber"></div>
+
+<div class="expire">
+VALID THRU <span id="expireDate"></span>
 </div>
 
-<div class="iban">
-IT60 X054 2811 1010 0000 0123 456
-</div>
+<div class="iban-front" id="iban"></div>
 
-</div>
-
-<!-- RETRO -->
-
-<div class="card-face card-back">
-
-<div class="black-strip"></div>
-
-<div class="signature">
-123
-</div>
-
-<div class="exp">
-12/30
+<div class="mastercard">
+<div class="m1"></div>
+<div class="m2"></div>
 </div>
 
 </div>
 
-</div>
+<div class="back">
+
+<div class="stripe"></div>
+
+<div class="cvv-box">
+CVV <span id="cvv"></span>
 </div>
 
 </div>
 
-<script>
+</div>
 
-function flipCard(){
-document.getElementById("card").classList.toggle("flipped");
+</div>
+
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc }
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+
+apiKey: "APIKEY",
+authDomain: "sito-rp.firebaseapp.com",
+projectId: "sito-rp"
+
+};
+
+const app=initializeApp(firebaseConfig);
+const db=getFirestore(app);
+
+let uid=sessionStorage.getItem("discord_uid");
+
+let userRef=doc(db,"users",uid);
+
+function generaNumero(l){
+
+let r='';
+for(let i=0;i<l;i++) r+=Math.floor(Math.random()*10);
+
+return r;
+
 }
+
+async function caricaUtente(){
+
+let snap=await getDoc(userRef);
+
+let user;
+
+if(!snap.exists()){
+
+user={
+cardNumber:generaNumero(16),
+cvv:generaNumero(3),
+expire:"12/30",
+iban:"IT60X"+generaNumero(20)
+};
+
+await setDoc(userRef,user);
+
+}else{
+
+user=snap.data();
+
+}
+
+document.getElementById("cardNumber").innerText=
+user.cardNumber.match(/.{1,4}/g).join(" ");
+
+document.getElementById("cvv").innerText=user.cvv;
+document.getElementById("expireDate").innerText=user.expire;
+document.getElementById("iban").innerText=user.iban;
+
+}
+
+caricaUtente();
+
+/* FLIP CARD */
+
+document.getElementById("card").onclick=()=>{
+
+document.getElementById("card").classList.toggle("flip");
+
+}
+
+/* CLOCK */
+
+setInterval(()=>{
+
+let now=new Date();
+
+document.getElementById("clock").innerText=
+
+now.getHours().toString().padStart(2,"0")+":"+
+now.getMinutes().toString().padStart(2,"0")+":"+
+now.getSeconds().toString().padStart(2,"0");
+
+},1000);
 
 </script>
 
