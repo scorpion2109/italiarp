@@ -3,143 +3,86 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Italia RP - Banca</title>
+<title>Italia RP - Carta Realistica</title>
 <style>
-body{
+body {
   margin:0;
-  font-family:'Segoe UI',sans-serif;
-  background:linear-gradient(180deg,#1c102b,#2a1b3f);
-  color:white;
+  background:#1c102b;
+  font-family:'Roboto', sans-serif;
   display:flex;
   justify-content:center;
   align-items:center;
   min-height:100vh;
 }
-
-/* CARTA */
-.card-container{
+.card-container {
   width:420px;
   max-width:90vw;
   height:260px;
   perspective:2000px;
 }
-.card{
+.card {
   width:100%;
   height:100%;
   position:relative;
   transform-style:preserve-3d;
   transition:1s;
   cursor:pointer;
+  border-radius:18px;
 }
-.card.flip{
+.card.flip {
   transform:rotateY(180deg);
 }
-.front,.back{
+.front, .back {
   position:absolute;
   width:100%;
   height:100%;
   border-radius:18px;
   backface-visibility:hidden;
-  box-shadow:0 15px 40px rgba(0,0,0,0.8);
-}
-
-/* FRONTE */
-.front{
-  background:linear-gradient(135deg,#ffd400,#f2c200);
-  color:#111;
-  padding:25px;
-  box-sizing:border-box;
   overflow:hidden;
-  font-family:'Roboto Mono', monospace;
 }
-.gold-bar{
-  position:absolute;
-  left:0;
-  top:0;
-  width:50px;
-  height:100%;
-  background:linear-gradient(#b38b00,#ffd700,#a67c00);
-  border-radius:18px 0 0 18px;
+/* FRONTE */
+.front {
+  background-image: url('assets/postepay_front.png'); /* Immagine reale della Postepay */
+  background-size: cover;
+  background-position: center;
 }
-.postepay-logo{
+.front-text {
   position:absolute;
-  top:15px;
   left:70px;
-  width:120px;
-}
-.chip{
-  margin-top:60px;
-  margin-left:70px;
-  width:60px;
-  height:45px;
-  border-radius:6px;
-  background:linear-gradient(135deg,#d4af37,#f7e27b,#b8860b);
-  box-shadow:inset 0 0 5px rgba(0,0,0,0.5),0 3px 5px rgba(0,0,0,0.3);
-}
-.contactless{
-  position:absolute;
-  top:75px;
-  left:150px;
-  font-size:18px;
-  color:#333;
-}
-.card-number{
-  margin-top:50px;
+  top:60px;
+  color:#fff;
+  font-family:'OCR A Std', monospace;
   font-size:22px;
   letter-spacing:3px;
-  margin-left:70px;
   font-weight:bold;
 }
-.expire{
-  margin-left:70px;
-  margin-top:15px;
-  font-size:14px;
-}
-.iban{
+.expire-text {
   position:absolute;
-  bottom:20px;
   left:70px;
+  bottom:60px;
+  font-size:14px;
+  font-weight:bold;
+}
+.iban-text {
+  position:absolute;
+  left:70px;
+  bottom:30px;
   font-size:13px;
   font-weight:bold;
-  letter-spacing:1px;
 }
-.mastercard{
-  position:absolute;
-  bottom:15px;
-  right:25px;
-  display:flex;
-  gap:-10px;
-}
-.mc1,.mc2{
-  width:35px;
-  height:35px;
-  border-radius:50%;
-}
-.mc1{background:#eb001b;}
-.mc2{background:#f79e1b;opacity:0.9;}
-
 /* RETRO */
-.back{
-  background:linear-gradient(135deg,#ffd400,#f2c200);
-  transform:rotateY(180deg);
-  padding:20px;
-  box-sizing:border-box;
-  font-family:'Roboto Mono', monospace;
+.back {
+  background-image: url('assets/postepay_back.png'); /* Retro reale */
+  background-size: cover;
+  background-position: center;
 }
-.stripe{
-  background:black;
-  height:50px;
-  margin-top:30px;
-  border-radius:4px;
-}
-.cvv{
-  margin-top:20px;
-  background:white;
-  width:80px;
-  padding:6px;
-  text-align:right;
+.cvv-text {
+  position:absolute;
+  right:50px;
+  top:100px;
+  font-size:14px;
   font-weight:bold;
-  border-radius:4px;
+  color:#000;
 }
 </style>
 </head>
@@ -148,30 +91,21 @@ body{
 <div class="card-container">
   <div class="card" id="card">
     <div class="front">
-      <div class="gold-bar"></div>
-      <img src="assets/logo-postepay.png" class="postepay-logo">
-      <div class="chip"></div>
-      <div class="contactless">📶</div>
-      <div class="card-number" id="cardNumber"></div>
-      <div class="expire">VALID THRU <span id="expire"></span></div>
-      <div class="iban" id="iban"></div>
-      <div class="mastercard">
-        <div class="mc1"></div>
-        <div class="mc2"></div>
-      </div>
+      <div class="front-text" id="cardNumber"></div>
+      <div class="expire-text">VALID THRU <span id="expire"></span></div>
+      <div class="iban-text" id="iban"></div>
     </div>
     <div class="back">
-      <div class="stripe"></div>
-      <div class="cvv">CVV <span id="cvv"></span></div>
+      <div class="cvv-text">CVV <span id="cvv"></span></div>
     </div>
   </div>
 </div>
 
 <script>
-// Personaggio selezionato
+// Nome del personaggio
 const personaggio = "Mario";
 
-// Funzione hash per generare dati deterministici
+// Funzione hash deterministica
 function hashString(s){
   let h=0;
   for(let i=0;i<s.length;i++){
@@ -192,13 +126,13 @@ function generaCarta(personaggio){
 
 const carta = generaCarta(personaggio);
 
-// Mostra la carta
+// Mostra dati carta
 document.getElementById("cardNumber").innerText = carta.cardNumber;
 document.getElementById("iban").innerText = carta.iban;
 document.getElementById("cvv").innerText = carta.cvv;
 document.getElementById("expire").innerText = carta.expire;
 
-// Flip carta al click
+// Flip carta
 document.getElementById("card").onclick = ()=>{
   document.getElementById("card").classList.toggle("flip");
 }
