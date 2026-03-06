@@ -3,14 +3,61 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Poste Italiane - Banca</title>
+<title>Banca - Italia RP</title>
 
 <style>
-body{margin:0;font-family:'Segoe UI',sans-serif;background:#0f0f0f;color:white}
-.header{display:flex;justify-content:space-between;align-items:center;padding:15px 30px;background:#111}
-.logo{font-weight:bold;cursor:pointer}
-.clock{font-weight:bold}
-.menu{display:flex;gap:20px;cursor:pointer}
+body{
+    min-height:100vh;
+    margin:0;
+    font-family:'Segoe UI',sans-serif;
+    color:white;
+    display:flex;
+    flex-direction:column;
+    background-image:url("assets/sfondo.webp");
+    background-size:cover;
+    background-position:center;
+    background-attachment:fixed;
+}
+
+/* Overlay per leggibilità */
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.35);
+    z-index:-1;
+}
+
+/* ===== HEADER ===== */
+.header{
+    height:75px;
+    backdrop-filter:blur(8px);
+    background:rgba(15,15,15,0.95);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 30px;
+    border-bottom:1px solid rgba(255,255,255,0.15);
+    z-index:100;
+    position:relative;
+}
+
+.logo img{
+    height:55px;
+    cursor:pointer;
+}
+
+.clock{
+    font-size:22px;
+    font-weight:600;
+    letter-spacing:2px;
+}
+
+.menu{
+    display:flex;
+    gap:20px;
+    cursor:pointer;
+}
 
 /* ===== CARTA ===== */
 .card-container {
@@ -31,12 +78,10 @@ body{margin:0;font-family:'Segoe UI',sans-serif;background:#0f0f0f;color:white}
     box-shadow:0 25px 60px rgba(0,0,0,0.7);
 }
 
-/* Hover: inclinazione 3D */
 .card-container:hover .card {
     transform: rotateX(5deg) rotateY(10deg);
 }
 
-/* Flip al click */
 .card.flip {
     transform: rotateY(180deg);
 }
@@ -181,41 +226,37 @@ button:hover{opacity:0.8}
 <body>
 
 <div class="header">
-<div class="logo" onclick="window.location.href='home.html'">POSTE ITALIANE</div>
-<div class="clock" id="clock"></div>
-<div class="menu">
-<div onclick="window.location.href='documento.html'">Documento</div>
-<div>Impostazioni</div>
-</div>
+    <div class="logo">
+        <img src="assets/logo-banca.png" alt="Logo Banca" onclick="window.location.href='home.html'">
+    </div>
+    <div class="clock" id="clock"></div>
+    <div class="menu">
+        <div onclick="window.location.href='documento.html'">Documento</div>
+        <div>Impostazioni</div>
+    </div>
 </div>
 
 <!-- CARTA -->
 <div class="card-container">
 <div class="card" id="card">
-
-<div class="front">
-<div class="logo-poste">POSTEPAY</div>
-
-<div class="circuit">
-<div class="c1"></div>
-<div class="c2"></div>
-</div>
-
-<div class="chip"></div>
-
-<div class="card-name" id="cardName"></div> <!-- Nome Cognome -->
-<div class="card-number" id="cardNumber"></div>
-<div class="card-info">VALID THRU <span id="expireDate"></span></div>
-<div class="card-iban-front">IT60X12345678901234567890</div> <!-- IBAN Fisso -->
-<div class="card-holder" id="cardHolder"></div>
-</div>
-
-<div class="back">
-<div class="stripe"></div>
-<div class="cvv-box">CVV <span id="cvv"></span></div>
-<div class="iban" id="iban"></div>
-</div>
-
+    <div class="front">
+        <div class="logo-poste">POSTEPAY</div>
+        <div class="circuit">
+            <div class="c1"></div>
+            <div class="c2"></div>
+        </div>
+        <div class="chip"></div>
+        <div class="card-name" id="cardName"></div>
+        <div class="card-number" id="cardNumber"></div>
+        <div class="card-info">VALID THRU <span id="expireDate"></span></div>
+        <div class="card-iban-front">IT60X12345678901234567890</div>
+        <div class="card-holder" id="cardHolder"></div>
+    </div>
+    <div class="back">
+        <div class="stripe"></div>
+        <div class="cvv-box">CVV <span id="cvv"></span></div>
+        <div class="iban" id="iban"></div>
+    </div>
 </div>
 </div>
 
@@ -261,7 +302,6 @@ button:hover{opacity:0.8}
 </div>
 
 <script type="module">
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
@@ -288,7 +328,6 @@ function generaNumero(l){let r='';for(let i=0;i<l;i++)r+=Math.floor(Math.random(
 
 async function caricaUtente(){
     let snap = await getDoc(userRef);
-
     if(!snap.exists()){
         userData = {
             bank:20000,
@@ -301,7 +340,6 @@ async function caricaUtente(){
         };
         await setDoc(userRef,userData);
     } else {userData = snap.data();}
-
     aggiornaUI();
 }
 
@@ -342,12 +380,9 @@ setInterval(()=>{
 },1000);
 
 const card = document.getElementById("card");
-card.onclick = () => {
-    card.classList.toggle("flip");
-}
+card.onclick = () => card.classList.toggle("flip");
 
 caricaUtente();
-
 </script>
 </body>
 </html>
