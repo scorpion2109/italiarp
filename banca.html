@@ -88,9 +88,28 @@ body{
 /* contactless */
 .contactless{
     position:absolute;
-    top:116px; /* alzata */
-    left:135px; /* avvicinata al chip */
+    top:118px; /* leggermente staccata dal chip */
+    left:125px; /* avvicinata al chip */
     width:30px;
+}
+
+/* scritta accanto contactless */
+.contact-text{
+    position:absolute;
+    top:118px; /* allineata al contactless */
+    left:160px; /* accanto al contactless */
+    font-size:10px;
+    line-height:12px;
+}
+
+.contact-text .grey-bold{
+    color:grey;
+    font-weight:bold;
+}
+
+.contact-text .grey-normal{
+    color:grey;
+    font-weight:400;
 }
 
 /* ITALIA RP */
@@ -124,6 +143,10 @@ body{
 
     <img src="assets/chip.png" class="chip">
     <img src="assets/contactless.png" class="contactless">
+
+    <div class="contact-text">
+        <span class="grey-bold">POSTE CICIOTTA </span><span class="grey-normal">ITALIANE</span>
+    </div>
 
     <div class="rp-box">ITALIA RP</div>
 
