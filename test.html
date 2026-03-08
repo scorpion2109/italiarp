@@ -1,416 +1,249 @@
+```html
 <!DOCTYPE html>
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Italia RP</title>
+<title>Carta Bancaria</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
 
 body{
-  background:radial-gradient(circle at 50% 20%,#2a1b3f,#0f0818);
-  color:white;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  min-height:100vh;
+margin:0;
+background:#161832;
+font-family:Arial;
+display:flex;
+flex-direction:column;
+align-items:center;
+padding-top:60px;
+color:white;
 }
 
-/* ===== PROFILO DISCORD ===== */
-.discord-profile{
-  position:fixed;
-  top:20px;
-  right:20px;
-  background:rgba(255,255,255,0.1);
-  backdrop-filter:blur(10px);
-  padding:10px 15px;
-  border-radius:15px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.4);
-}
+/* CARTA */
 
-.discord-profile img{
-  width:45px;
-  height:45px;
-  border-radius:50%;
-  border:2px solid white;
-}
-
-.dc-info{
-  display:flex;
-  flex-direction:column;
-  font-size:14px;
-}
-
-.dc-info button{
-  margin-top:5px;
-  padding:4px 8px;
-  font-size:12px;
-  background:#ED4245;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-}
-
-.container{margin-top:20px;width:90%;max-width:700px;}
-
-button{
-  padding:10px 20px;
-  background:#5865F2;
-  border:none;
-  border-radius:10px;
-  color:white;
-  cursor:pointer;
-  margin:10px 0;
-}
-
-.personaggio{
-  background:rgba(255,255,255,0.1);
-  padding:10px;
-  border-radius:12px;
-  margin-bottom:10px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-
-.personaggio-info{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.personaggio img{
-  width:50px;
-  height:50px;
-  border-radius:50%;
-  object-fit:cover;
-  border:2px solid white;
-  cursor:pointer;
-}
-
-.actions{
-  display:flex;
-  gap:10px;
-  font-size:20px;
-  cursor:pointer;
-}
-
-form{
-  display:none;
-  flex-direction:column;
-  gap:10px;
-  margin-top:15px;
-}
-
-input{
-  padding:8px;
-  border-radius:8px;
-  border:none;
-}
-
-/* ===== CARTA ===== */
-.wrapper{
-  perspective:2500px;
-  margin-top:30px;
-  display:none;
+.card-container{
+width:420px;
+height:260px;
+perspective:1000px;
 }
 
 .card{
-  width:540px;
-  height:340px;
-  position:relative;
-  transform-style:preserve-3d;
-  transition:1.2s cubic-bezier(.2,.8,.2,1);
-  cursor:pointer;
+width:100%;
+height:100%;
+position:relative;
+transform-style:preserve-3d;
+transition:transform 0.8s;
+cursor:pointer;
 }
 
-.card.flipped{
-  transform:rotateY(180deg);
+.card.flip{
+transform:rotateY(180deg);
 }
 
-.face{
-  position:absolute;
-  width:100%;
-  height:100%;
-  border-radius:18px;
-  backface-visibility:hidden;
-  overflow:hidden;
-  box-shadow:0 40px 80px rgba(0,0,0,0.8);
+.front,.back{
+position:absolute;
+width:100%;
+height:100%;
+border-radius:20px;
+backface-visibility:hidden;
+box-shadow:0 20px 60px rgba(0,0,0,0.7);
 }
 
 .front{
-  background:linear-gradient(135deg,#fdfdfd,#f1f1f1);
-  padding:30px;
-  position:relative;
-  color:black;
-}
-
-.flag{
-  position:absolute;
-  left:0;
-  top:0;
-  width:14px;
-  height:100%;
-  background:linear-gradient(#008C45 33%,#ffffff 33% 66%,#CD212A 66%);
-}
-
-.content{
-  display:flex;
-  margin-top:60px;
-  gap:30px;
-}
-
-.photo{
-  width:150px;
-  height:190px;
-  border-radius:10px;
-  border:2px solid #aaa;
-  overflow:hidden;
-  background:#ddd;
-}
-
-.photo img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-
-.info{flex:1;font-size:15px;}
-.row{margin-bottom:10px;}
-.label{font-weight:700;}
-.signature{
-  margin-top:18px;
-  font-family:"Brush Script MT",cursive;
-  font-size:28px;
-  border-top:1px solid #333;
-  width:260px;
+background:linear-gradient(135deg,#6c6c6c,#bcbcbc,#6c6c6c);
 }
 
 .back{
-  transform:rotateY(180deg);
-  background:linear-gradient(180deg,#cfe3e6,#e8f1f3);
-  padding:30px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  font-size:14px;
-  color:black;
+transform:rotateY(180deg);
+background:linear-gradient(135deg,#6c6c6c,#bcbcbc,#6c6c6c);
 }
+
+/* SALDO */
+
+.balance-box{
+width:420px;
+background:#1f1f1f;
+border-radius:14px;
+padding:20px;
+margin-top:20px;
+box-shadow:0 10px 25px rgba(0,0,0,0.6);
+}
+
+.balance-row{
+display:flex;
+justify-content:space-between;
+padding:10px 0;
+font-size:18px;
+}
+
+.label{
+font-weight:bold;
+}
+
+.amount{
+color:#ffd700;
+font-weight:bold;
+}
+
+/* OPERAZIONI */
+
+.operations-line{
+width:420px;
+border-top:3px solid black;
+margin-top:30px;
+}
+
+.operations-title{
+margin-top:10px;
+margin-bottom:20px;
+font-weight:bold;
+letter-spacing:2px;
+}
+
+.operations{
+width:420px;
+display:flex;
+gap:20px;
+}
+
+.operation-box{
+flex:1;
+background:#222;
+border-radius:12px;
+padding:15px;
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+select,input{
+padding:8px;
+border-radius:6px;
+border:none;
+}
+
+button{
+padding:10px;
+border:none;
+border-radius:6px;
+background:#ffd700;
+font-weight:bold;
+cursor:pointer;
+}
+
+button:hover{
+background:#e6c200;
+}
+
 </style>
 </head>
+
 <body>
 
-<!-- PROFILO DISCORD -->
-<div class="discord-profile" id="discordProfile" style="display:none;">
-  <img id="dc_avatar">
-  <div class="dc-info">
-    <div id="dc_username"></div>
-    <button id="logoutBtn">Logout</button>
-  </div>
-</div>
+<!-- CARTA -->
 
-<div class="container">
-<h2>Selezione Personaggio</h2>
-<div id="lista"></div>
-<button id="btnCrea">Crea Personaggio</button>
+<div class="card-container">
+<div class="card" onclick="this.classList.toggle('flip')">
 
-<form id="form">
-<input type="text" id="nome" placeholder="Nome" required>
-<input type="text" id="cognome" placeholder="Cognome" required>
-<input type="text" id="data" placeholder="Data nascita" required>
-<input type="text" id="occhi" placeholder="Occhi" required>
-<input type="text" id="capelli" placeholder="Capelli" required>
-<input type="text" id="residenza" placeholder="Residenza" required>
-<input type="file" id="fotoInput" accept="image/*" required>
-<button type="submit">Conferma</button>
-</form>
-</div>
+<div class="front"></div>
+<div class="back"></div>
 
-<div class="wrapper">
-<div class="card" id="card">
-<div class="face front">
-<div class="flag"></div>
-<div class="content">
-<div class="photo"><img id="c_foto"></div>
-<div class="info">
-<div class="row"><span class="label">Nome:</span> <span id="c_nome"></span></div>
-<div class="row"><span class="label">Cognome:</span> <span id="c_cognome"></span></div>
-<div class="row"><span class="label">Data Nascita:</span> <span id="c_data"></span></div>
-<div class="row"><span class="label">Occhi:</span> <span id="c_occhi"></span></div>
-<div class="row"><span class="label">Capelli:</span> <span id="c_capelli"></span></div>
-<div class="signature" id="c_firma"></div>
-</div>
 </div>
 </div>
 
-<div class="face back">
-<div>
-<p><b>Codice Fiscale:</b> <span id="c_cf"></span></p>
-<p><b>Residenza:</b> <span id="c_res"></span></p>
+<!-- SALDO -->
+
+<div class="balance-box">
+
+<div class="balance-row">
+<span class="label">BANCA:</span>
+<span id="banca" class="amount">€1000</span>
 </div>
+
+<div class="balance-row">
+<span class="label">CASH:</span>
+<span id="cash" class="amount">€200</span>
 </div>
+
 </div>
+
+<!-- OPERAZIONI -->
+
+<div class="operations-line"></div>
+
+<div class="operations-title">OPERAZIONI</div>
+
+<div class="operations">
+
+<!-- DEPOSITO PRELIEVO -->
+
+<div class="operation-box">
+
+<select id="tipo">
+<option value="deposito">Deposito</option>
+<option value="prelievo">Prelievo</option>
+</select>
+
+<input id="importo1" type="number" placeholder="Quantità">
+
+<button onclick="operazione()">Conferma</button>
+
+</div>
+
+<!-- BONIFICO -->
+
+<div class="operation-box">
+
+<select>
+<option>Mario Rossi</option>
+<option>Luca Bianchi</option>
+<option>Giulia Verdi</option>
+</select>
+
+<input type="number" placeholder="Quantità">
+
+<button>Conferma</button>
+
+</div>
+
 </div>
 
 <script>
-const MAX=2;
-const CODICE="ITALIARP2025";
-const DELETE_PASSWORD="admin123";
-let listaPers=JSON.parse(localStorage.getItem("pers"))||[];
 
-const lista=document.getElementById("lista");
-const form=document.getElementById("form");
-const btn=document.getElementById("btnCrea");
-const wrapper=document.querySelector(".wrapper");
-const card=document.getElementById("card");
+let banca = 1000
+let cash = 200
 
-function salva(){localStorage.setItem("pers",JSON.stringify(listaPers));}
+function operazione(){
 
-function aggiornaLista(){
-lista.innerHTML="";
-listaPers.forEach((p,index)=>{
-let div=document.createElement("div");
-div.className="personaggio";
+let tipo = document.getElementById("tipo").value
+let importo = parseInt(document.getElementById("importo1").value)
 
-let info=document.createElement("div");
-info.className="personaggio-info";
+if(!importo) return
 
-let img=document.createElement("img");
-img.src=p.foto;
-img.onclick=(e)=>{
-  e.stopPropagation();
-  mostraCarta(p);
-};
+if(tipo === "deposito"){
 
-let nome=document.createElement("div");
-nome.textContent=p.nome+" "+p.cognome;
-nome.style.cursor="pointer";
-nome.onclick=(e)=>{
-  e.stopPropagation();
-  localStorage.setItem("personaggioSelezionato", JSON.stringify(p));
-  window.location.href="home.html";
-};
-
-info.appendChild(img);
-info.appendChild(nome);
-
-let actions=document.createElement("div");
-actions.className="actions";
-
-let edit=document.createElement("span");
-edit.textContent="✏️";
-edit.onclick=()=>modifica(index);
-
-let del=document.createElement("span");
-del.textContent="🗑️";
-del.onclick=()=>{
-let pass=prompt("Inserisci password per eliminare:");
-if(pass===DELETE_PASSWORD){
-listaPers.splice(index,1);
-salva();
-aggiornaLista();
-wrapper.style.display="none";
-}else{
-alert("Password errata");
-}
-};
-
-actions.appendChild(edit);
-actions.appendChild(del);
-
-div.appendChild(info);
-div.appendChild(actions);
-lista.appendChild(div);
-});
-}
-aggiornaLista();
-
-btn.onclick=()=>{
-if(listaPers.length>=MAX){alert("Massimo 2 personaggi");return;}
-if(listaPers.length===1){
-let c=prompt("Inserisci codice:");
-if(c!==CODICE){alert("Codice errato");return;}
-}
-form.style.display="flex";
-};
-
-function generaCF(p){
-return p.cognome.substring(0,3).toUpperCase()+
-p.nome.substring(0,3).toUpperCase()+"25X0";
+if(cash >= importo){
+cash -= importo
+banca += importo
 }
 
-form.onsubmit=e=>{
-e.preventDefault();
-let reader=new FileReader();
-reader.onload=function(){
-let p={
-nome:nome.value,
-cognome:cognome.value,
-data:data.value,
-occhi:occhi.value,
-capelli:capelli.value,
-residenza:residenza.value,
-foto:reader.result
-};
-listaPers.push(p);
-salva();
-aggiornaLista();
-mostraCarta(p);
-form.reset();
-form.style.display="none";
-};
-reader.readAsDataURL(fotoInput.files[0]);
-};
-
-function modifica(index){
-let p=listaPers[index];
-nome.value=p.nome;
-cognome.value=p.cognome;
-data.value=p.data;
-occhi.value=p.occhi;
-capelli.value=p.capelli;
-residenza.value=p.residenza;
-form.style.display="flex";
-listaPers.splice(index,1);
-salva();
-aggiornaLista();
 }
 
-function mostraCarta(p){
-wrapper.style.display="block";
-card.classList.remove("flipped");
+if(tipo === "prelievo"){
 
-c_nome.textContent=p.nome;
-c_cognome.textContent=p.cognome;
-c_data.textContent=p.data;
-c_occhi.textContent=p.occhi;
-c_capelli.textContent=p.capelli;
-c_res.textContent=p.residenza;
-c_firma.textContent=p.nome+" "+p.cognome;
-c_cf.textContent=generaCF(p);
-c_foto.src=p.foto;
-
-card.onclick=()=>card.classList.toggle("flipped");
+if(banca >= importo){
+banca -= importo
+cash += importo
 }
 
-/* ===== PROFILO DISCORD ===== */
-const discordData = JSON.parse(localStorage.getItem("discordUser"));
-
-if(discordData){
-  document.getElementById("discordProfile").style.display="flex";
-  document.getElementById("dc_username").textContent=discordData.username;
-  document.getElementById("dc_avatar").src=discordData.avatar;
 }
 
-document.getElementById("logoutBtn").onclick=function(){
-  localStorage.removeItem("discordUser");
-  location.reload();
-};
+document.getElementById("banca").innerText = "€" + banca
+document.getElementById("cash").innerText = "€" + cash
+
+}
+
 </script>
 
 </body>
 </html>
+```
