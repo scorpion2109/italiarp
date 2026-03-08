@@ -114,12 +114,32 @@ color:#444;
 /* NUMERO CARTA */
 .card-number{
 position:absolute;
-bottom:60px;
+bottom:70px;
 left:75px;
 font-size:20px;
 letter-spacing:3px;
 font-weight:bold;
 color:#e6e6e6;
+}
+
+/* SCADENZA */
+.expiry{
+position:absolute;
+bottom:22px;
+right:90px;
+text-align:right;
+color:#e6e6e6;
+}
+
+.expiry .label{
+font-size:9px;
+letter-spacing:1px;
+opacity:0.8;
+}
+
+.expiry .date{
+font-size:16px;
+font-weight:bold;
 }
 
 /* LOGO CARTA */
@@ -175,6 +195,12 @@ letter-spacing:1px;
 <!-- NUMERO CARTA -->
 <div class="card-number">
 1234 5678 9012 3456
+</div>
+
+<!-- SCADENZA -->
+<div class="expiry">
+<div class="label">VALID THRU</div>
+<div class="date">12/29</div>
 </div>
 
 <!-- LOGO CARTA -->
