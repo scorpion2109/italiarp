@@ -17,13 +17,43 @@ background:#161832;
 font-family:Arial, sans-serif;
 }
 
-.card{
+/* contenitore flip */
+.card-container{
 width:420px;
 height:260px;
-border-radius:20px;
-position:relative;
-overflow:hidden;
+perspective:1000px;
+}
 
+/* carta */
+.card{
+width:100%;
+height:100%;
+position:relative;
+transform-style:preserve-3d;
+transition:transform 0.8s;
+cursor:pointer;
+}
+
+.card.flip{
+transform:rotateY(180deg);
+}
+
+/* facce */
+.front, .back{
+position:absolute;
+width:100%;
+height:100%;
+border-radius:20px;
+backface-visibility:hidden;
+overflow:hidden;
+box-shadow:
+0 30px 80px rgba(0,0,0,0.8),
+inset 0 2px 6px rgba(255,255,255,0.2);
+}
+
+/* ----------- FRONTE ----------- */
+
+.front{
 background:linear-gradient(
 135deg,
 #5f5f5f,
@@ -32,13 +62,8 @@ background:linear-gradient(
 #bcbcbc,
 #6a6a6a
 );
-
-box-shadow:
-0 30px 80px rgba(0,0,0,0.8),
-inset 0 2px 6px rgba(255,255,255,0.2);
 }
 
-/* barra oro */
 .gold-bar{
 position:absolute;
 left:0;
@@ -56,7 +81,6 @@ background:linear-gradient(
 );
 }
 
-/* POSTEPAY */
 .postepay{
 position:absolute;
 top:22px;
@@ -64,20 +88,16 @@ left:75px;
 color:#ffd700;
 font-weight:900;
 font-size:28px;
-letter-spacing:1px;
 }
 
-/* evolution */
 .evolution{
 position:absolute;
 top:58px;
 left:190px;
 color:#ffd700;
 font-size:13px;
-letter-spacing:1px;
 }
 
-/* chip */
 .chip{
 position:absolute;
 top:100px;
@@ -85,7 +105,6 @@ left:75px;
 width:65px;
 }
 
-/* contactless */
 .contactless{
 position:absolute;
 top:117px;
@@ -93,25 +112,17 @@ left:130px;
 width:30px;
 }
 
-/* POSTEITALIANE */
 .posteitaliane{
 position:absolute;
 top:117px;
 left:165px;
 font-size:19px;
 font-weight:900;
-letter-spacing:1px;
 }
 
-.posteitaliane .poste{
-color:#cfcfcf;
-}
+.poste{color:#cfcfcf;}
+.italiane{color:#444;}
 
-.posteitaliane .italiane{
-color:#444;
-}
-
-/* NUMERO CARTA */
 .card-number{
 position:absolute;
 bottom:70px;
@@ -122,19 +133,16 @@ font-weight:bold;
 color:#e6e6e6;
 }
 
-/* SCADENZA */
 .expiry{
 position:absolute;
 bottom:22px;
 right:90px;
-text-align:right;
 color:#e6e6e6;
+text-align:right;
 }
 
 .expiry .label{
 font-size:9px;
-letter-spacing:1px;
-opacity:0.8;
 }
 
 .expiry .date{
@@ -142,7 +150,6 @@ font-size:16px;
 font-weight:bold;
 }
 
-/* LOGO CARTA */
 .card-logo{
 position:absolute;
 bottom:20px;
@@ -154,21 +161,74 @@ width:55px;
 width:100%;
 }
 
-/* ITALIA RP */
 .rp-box{
 position:absolute;
 top:22px;
 right:20px;
 padding:6px 14px;
 border-radius:6px;
-
 background:rgba(0,0,0,0.35);
 border:1px solid rgba(255,255,255,0.25);
-
 color:white;
 font-weight:700;
 font-size:12px;
-letter-spacing:1px;
+}
+
+/* ----------- RETRO ----------- */
+
+.back{
+background:linear-gradient(
+135deg,
+#5f5f5f,
+#a0a0a0,
+#7a7a7a,
+#bcbcbc,
+#6a6a6a
+);
+transform:rotateY(180deg);
+}
+
+.magnetic{
+position:absolute;
+top:25px;
+left:0;
+width:100%;
+height:45px;
+background:black;
+}
+
+.name{
+position:absolute;
+top:95px;
+left:30px;
+font-weight:bold;
+font-size:16px;
+color:#111;
+}
+
+.cvv-bar{
+position:absolute;
+top:135px;
+left:30px;
+width:220px;
+height:35px;
+background:white;
+border-radius:4px;
+display:flex;
+align-items:center;
+justify-content:flex-end;
+padding-right:10px;
+font-weight:bold;
+letter-spacing:2px;
+}
+
+.iban{
+position:absolute;
+bottom:20px;
+left:30px;
+font-size:14px;
+font-weight:bold;
+color:#222;
 }
 
 </style>
@@ -176,7 +236,11 @@ letter-spacing:1px;
 
 <body>
 
-<div class="card">
+<div class="card-container">
+<div class="card" onclick="this.classList.toggle('flip')">
+
+<!-- FRONTE -->
+<div class="front">
 
 <div class="gold-bar"></div>
 
@@ -192,22 +256,41 @@ letter-spacing:1px;
 
 <div class="rp-box">ITALIA RP</div>
 
-<!-- NUMERO CARTA -->
 <div class="card-number">
 1234 5678 9012 3456
 </div>
 
-<!-- SCADENZA -->
 <div class="expiry">
 <div class="label">VALID THRU</div>
 <div class="date">12/29</div>
 </div>
 
-<!-- LOGO CARTA -->
 <div class="card-logo">
 <img src="assets/mastercard.png">
 </div>
 
+</div>
+
+<!-- RETRO -->
+<div class="back">
+
+<div class="magnetic"></div>
+
+<div class="name">
+MARIO ROSSI
+</div>
+
+<div class="cvv-bar">
+123
+</div>
+
+<div class="iban">
+IT60 X054 2811 1010 0000 0123 456
+</div>
+
+</div>
+
+</div>
 </div>
 
 </body>
