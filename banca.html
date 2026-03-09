@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Carta RP</title>
@@ -11,23 +10,18 @@
 body{
 margin:0;
 height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
+font-family:Arial, sans-serif;
 background:url("assets/sfondo.webp");
 background-size:cover;
 background-position:center;
-font-family:Arial, sans-serif;
 }
 
 /* ---------------- TOP BAR ---------------- */
 
 .topbar{
-
 position:fixed;
 top:0;
 left:0;
-
 width:100%;
 height:60px;
 
@@ -42,7 +36,6 @@ backdrop-filter:blur(10px);
 
 box-sizing:border-box;
 z-index:1000;
-
 }
 
 .logo{
@@ -73,9 +66,17 @@ transform:scale(1.15);
 /* ---------------- CARTA ---------------- */
 
 .card-container{
+
+position:absolute;
+top:110px;
+left:50%;
+transform:translateX(-50%);
+
 width:420px;
 height:260px;
+
 perspective:1200px;
+
 }
 
 /* carta */
@@ -318,6 +319,59 @@ font-weight:bold;
 color:#222;
 }
 
+/* ---------------- BOX SOLDI ---------------- */
+
+.account-box{
+
+position:absolute;
+top:420px;
+left:50%;
+transform:translateX(-50%);
+
+width:320px;
+
+padding:18px 25px;
+
+border-radius:16px;
+
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(14px);
+
+border:1px solid rgba(255,255,255,0.15);
+
+box-shadow:
+0 15px 35px rgba(0,0,0,0.45);
+
+display:flex;
+align-items:center;
+justify-content:space-between;
+
+color:white;
+}
+
+.balance-item{
+display:flex;
+flex-direction:column;
+}
+
+.balance-label{
+font-size:12px;
+opacity:0.7;
+letter-spacing:1px;
+}
+
+.balance-value{
+font-size:20px;
+font-weight:700;
+margin-top:4px;
+}
+
+.divider{
+width:1px;
+height:35px;
+background:rgba(255,255,255,0.2);
+}
+
 </style>
 </head>
 
@@ -329,24 +383,20 @@ color:#222;
 
 <img src="assets/logo.png" class="logo">
 
-<div class="clock" id="clock">
-00:00
-</div>
+<div class="clock" id="clock">00:00</div>
 
 <div class="icons">
-
-<img src="assets/home.png" class="icon" onclick="openPage('home.html')">
-<img src="assets/settings.png" class="icon" onclick="openPage('settings.html')">
-
+<img src="assets/home.png" class="icon">
+<img src="assets/settings.png" class="icon">
 </div>
 
 </div>
 
+
+<!-- CARTA -->
 
 <div class="card-container">
 <div class="card" onclick="this.classList.toggle('flip')">
-
-<!-- FRONTE -->
 
 <div class="front">
 
@@ -379,7 +429,6 @@ color:#222;
 
 </div>
 
-<!-- RETRO -->
 
 <div class="back">
 
@@ -403,25 +452,36 @@ IT60 X054 2811 1010 0000 0123 456
 </div>
 
 
+<!-- SOLDI -->
+
+<div class="account-box">
+
+<div class="balance-item">
+<span class="balance-label">BANCA</span>
+<span class="balance-value">€ 2.450</span>
+</div>
+
+<div class="divider"></div>
+
+<div class="balance-item">
+<span class="balance-label">CASH</span>
+<span class="balance-value">€ 320</span>
+</div>
+
+</div>
+
+
 <script>
 
 function updateClock(){
-
 let now = new Date();
-
 let h = String(now.getHours()).padStart(2,'0');
 let m = String(now.getMinutes()).padStart(2,'0');
-
 document.getElementById("clock").innerText = h + ":" + m;
-
 }
 
 setInterval(updateClock,1000);
 updateClock();
-
-function openPage(page){
-window.location.href = page;
-}
 
 </script>
 
