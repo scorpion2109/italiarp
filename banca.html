@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="it">
-
 <head>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Carta RP</title>
 
 <style>
@@ -16,17 +14,13 @@ height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-flex-direction:column;
-
-font-family:Arial, sans-serif;
-
-background:url("assets/sfondo.jpg");
+background:url("assets/sfondo.webp");
 background-size:cover;
 background-position:center;
+font-family:Arial, sans-serif;
 }
 
-
-/* TOP BAR */
+/* ---------------- TOP BAR ---------------- */
 
 .topbar{
 
@@ -37,14 +31,15 @@ left:0;
 width:100%;
 height:60px;
 
-background:rgba(0,0,0,0.35);
-backdrop-filter:blur(10px);
-
 display:flex;
 align-items:center;
 justify-content:space-between;
 
 padding:0 20px;
+
+background:rgba(0,0,0,0.35);
+backdrop-filter:blur(10px);
+
 box-sizing:border-box;
 z-index:1000;
 
@@ -54,13 +49,13 @@ z-index:1000;
 height:32px;
 }
 
-.top-center{
+.clock{
 color:white;
-font-weight:bold;
 font-size:18px;
+font-weight:bold;
 }
 
-.top-right{
+.icons{
 display:flex;
 gap:15px;
 }
@@ -75,56 +70,15 @@ transition:0.2s;
 transform:scale(1.15);
 }
 
-
-/* MONEY BOX */
-
-.money-box{
-
-position:absolute;
-top:90px;
-left:50%;
-transform:translateX(-50%);
-
-width:320px;
-padding:20px;
-
-border-radius:18px;
-
-background:rgba(255,255,255,0.08);
-
-backdrop-filter:blur(15px);
-
-border:1px solid rgba(255,255,255,0.18);
-
-box-shadow:
-0 10px 30px rgba(0,0,0,0.4),
-inset 0 1px 1px rgba(255,255,255,0.2);
-
-text-align:center;
-color:white;
-
-}
-
-.money-label{
-font-size:13px;
-opacity:0.7;
-}
-
-.money-amount{
-font-size:28px;
-font-weight:bold;
-margin-top:5px;
-}
-
-
-/* CARTA */
+/* ---------------- CARTA ---------------- */
 
 .card-container{
-margin-top:120px;
 width:420px;
 height:260px;
 perspective:1200px;
 }
+
+/* carta */
 
 .card{
 width:100%;
@@ -139,37 +93,30 @@ cursor:pointer;
 transform:rotateY(180deg);
 }
 
-.front, .back{
+/* facce */
 
+.front, .back{
 position:absolute;
 width:100%;
 height:100%;
-
 border-radius:20px;
-
 backface-visibility:hidden;
-
 overflow:hidden;
 
 box-shadow:
 0 35px 90px rgba(0,0,0,0.85),
 0 10px 20px rgba(0,0,0,0.5),
 inset 0 3px 8px rgba(255,255,255,0.25);
-
 }
 
-
-/* effetto plastica */
+/* riflesso plastica */
 
 .front::after,
 .back::after{
-
 content:"";
 position:absolute;
-
 top:0;
 left:0;
-
 width:100%;
 height:100%;
 
@@ -180,13 +127,12 @@ rgba(255,255,255,0.05) 40%,
 transparent 60%
 );
 
+pointer-events:none;
 }
 
-
-/* FRONTE */
+/* -------- FRONTE -------- */
 
 .front{
-
 background:linear-gradient(
 135deg,
 #5f5f5f,
@@ -195,15 +141,12 @@ background:linear-gradient(
 #bcbcbc,
 #6a6a6a
 );
-
 }
 
 .gold-bar{
-
 position:absolute;
 left:0;
 top:0;
-
 height:100%;
 width:55px;
 
@@ -215,89 +158,108 @@ background:linear-gradient(
 #cfa600,
 #7a5a00
 );
-
 }
 
 .postepay{
-
 position:absolute;
 top:22px;
 left:75px;
-
 color:#ffd700;
 font-weight:900;
 font-size:28px;
-
 }
 
 .evolution{
-
 position:absolute;
 top:58px;
 left:190px;
-
 color:#ffd700;
 font-size:13px;
-
 }
 
 .chip{
-
 position:absolute;
 top:100px;
 left:75px;
 width:65px;
-
 }
 
 .contactless{
-
 position:absolute;
 top:117px;
 left:130px;
 width:30px;
-
 }
 
-.card-number{
+.posteitaliane{
+position:absolute;
+top:117px;
+left:165px;
+font-size:19px;
+font-weight:900;
+}
 
+.poste{color:#cfcfcf;}
+.italiane{color:#444;}
+
+.card-number{
 position:absolute;
 bottom:70px;
 left:75px;
-
 font-size:20px;
 letter-spacing:3px;
-
 font-weight:700;
 color:#f1f1f1;
 
+text-shadow:
+1px 1px 0 #aaa,
+2px 2px 2px rgba(0,0,0,0.6);
 }
 
 .expiry{
-
 position:absolute;
 bottom:22px;
 right:90px;
-
 color:#e6e6e6;
 text-align:right;
+}
 
+.expiry .label{
+font-size:9px;
+}
+
+.expiry .date{
+font-size:16px;
+font-weight:bold;
 }
 
 .card-logo{
-
 position:absolute;
 bottom:20px;
 right:20px;
 width:55px;
-
 }
 
+.card-logo img{
+width:100%;
+}
 
-/* RETRO */
+.rp-box{
+position:absolute;
+top:22px;
+right:20px;
+padding:6px 14px;
+border-radius:6px;
+background:rgba(0,0,0,0.35);
+border:1px solid rgba(255,255,255,0.25);
+color:white;
+font-weight:700;
+font-size:12px;
+}
+
+/* -------- RETRO -------- */
 
 .back{
-
 background:linear-gradient(
 135deg,
 #5f5f5f,
@@ -306,73 +268,60 @@ background:linear-gradient(
 #bcbcbc,
 #6a6a6a
 );
-
 transform:rotateY(180deg);
-
 }
 
 .magnetic{
-
 position:absolute;
 top:25px;
-
+left:0;
 width:100%;
 height:45px;
-
 background:black;
-
 }
 
 .name{
-
 position:absolute;
 top:95px;
 left:30px;
-
 font-weight:700;
 font-size:16px;
+color:#111;
 
+text-shadow:
+1px 1px 0 #bbb,
+2px 2px 3px rgba(0,0,0,0.5);
 }
 
 .cvv-bar{
-
 position:absolute;
 top:135px;
 left:30px;
-
 width:220px;
 height:35px;
-
 background:white;
-
+border-radius:4px;
 display:flex;
 align-items:center;
 justify-content:flex-end;
-
 padding-right:10px;
-
 font-weight:bold;
-
+letter-spacing:2px;
 }
 
 .iban{
-
 position:absolute;
 bottom:20px;
 left:30px;
-
 font-size:14px;
 font-weight:bold;
-
+color:#222;
 }
 
 </style>
-
 </head>
 
-
 <body>
-
 
 <!-- TOP BAR -->
 
@@ -380,14 +329,13 @@ font-weight:bold;
 
 <img src="assets/logo.png" class="logo">
 
-<div class="top-center" id="clock">
+<div class="clock" id="clock">
 00:00
 </div>
 
-<div class="top-right">
+<div class="icons">
 
 <img src="assets/home.png" class="icon" onclick="openPage('home.html')">
-<img src="assets/bank.png" class="icon" onclick="openPage('bank.html')">
 <img src="assets/settings.png" class="icon" onclick="openPage('settings.html')">
 
 </div>
@@ -395,28 +343,10 @@ font-weight:bold;
 </div>
 
 
-<!-- SALDO -->
-
-<div class="money-box">
-
-<div class="money-label">
-Saldo disponibile
-</div>
-
-<div class="money-amount">
-€ 2.450,00
-</div>
-
-</div>
-
-
-
-<!-- CARTA -->
-
 <div class="card-container">
-
 <div class="card" onclick="this.classList.toggle('flip')">
 
+<!-- FRONTE -->
 
 <div class="front">
 
@@ -428,12 +358,19 @@ Saldo disponibile
 <img src="assets/chip.png" class="chip">
 <img src="assets/contactless.png" class="contactless">
 
+<div class="posteitaliane">
+<span class="poste">POSTE</span><span class="italiane">ITALIANE</span>
+</div>
+
+<div class="rp-box">ITALIA RP</div>
+
 <div class="card-number">
 1234 5678 9012 3456
 </div>
 
 <div class="expiry">
-VALID THRU<br>12/29
+<div class="label">VALID THRU</div>
+<div class="date">12/29</div>
 </div>
 
 <div class="card-logo">
@@ -442,6 +379,7 @@ VALID THRU<br>12/29
 
 </div>
 
+<!-- RETRO -->
 
 <div class="back">
 
@@ -462,13 +400,10 @@ IT60 X054 2811 1010 0000 0123 456
 </div>
 
 </div>
-
 </div>
 
 
 <script>
-
-/* orario */
 
 function updateClock(){
 
@@ -484,17 +419,11 @@ document.getElementById("clock").innerText = h + ":" + m;
 setInterval(updateClock,1000);
 updateClock();
 
-
-/* apri pagine */
-
 function openPage(page){
-
 window.location.href = page;
-
 }
 
 </script>
-
 
 </body>
   </html>
