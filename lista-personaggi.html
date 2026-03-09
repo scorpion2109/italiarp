@@ -55,94 +55,66 @@ input{padding:8px;border-radius:8px;border:none;}
 <input type="file" id="fotoInput" accept="image/*" required>
 <button type="submit">Conferma</button>
 </form>
-
 </div>
-
 
 <div class="wrapper">
 <div class="card" id="card">
 
 <div class="face front">
-
 <div class="flag"></div>
-
 <img src="assets/logo.png" class="logo">
 
 <div class="content">
-
 <div class="photo">
 <img id="c_foto">
 </div>
 
 <div class="info">
-
 <div class="row"><span class="label">Nome:</span> <span id="c_nome"></span></div>
 <div class="row"><span class="label">Cognome:</span> <span id="c_cognome"></span></div>
 <div class="row"><span class="label">Data Nascita:</span> <span id="c_data"></span></div>
 <div class="row"><span class="label">Occhi:</span> <span id="c_occhi"></span></div>
 <div class="row"><span class="label">Capelli:</span> <span id="c_capelli"></span></div>
-
 <div class="signature" id="c_firma"></div>
-
 </div>
-
 </div>
 
 <div class="hologram"></div>
-
 </div>
 
-
 <div class="face back">
-
 <div>
 <p><b>Codice Fiscale:</b> <span id="c_cf"></span></p>
 <p><b>Residenza:</b> <span id="c_res"></span></p>
 </div>
-
 </div>
 
 </div>
 </div>
-
 
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
-
-import {
-getFirestore,
-doc,
-getDoc,
-setDoc
-} from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
-
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
 
 const firebaseConfig = {
-
 apiKey: "AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
 authDomain: "sito-rp.firebaseapp.com",
 projectId: "sito-rp",
 storageBucket: "sito-rp.appspot.com",
 messagingSenderId: "234781749995",
 appId: "1:234781749995:web:6954473363659fe38b04ae"
-
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-
 const uid = sessionStorage.getItem("discord_uid");
 
 if(!uid){
-
 alert("Utente non loggato!");
-
 window.location.href="index.html";
-
 }
-
 
 const lista=document.getElementById("lista");
 const form=document.getElementById("form");
@@ -150,52 +122,32 @@ const btn=document.getElementById("btnCrea");
 const wrapper=document.querySelector(".wrapper");
 const card=document.getElementById("card");
 
-
 let listaPers = [];
-
 const MAX=2;
-
 const CODICE="ITALIARP2025";
-
 const DELETE_PASSWORD="admin123";
-
 let editingIndex = null;
-
-
 
 async function inizializzaUtente(){
 
 const docRef = doc(db,"users",uid);
-
 const docSnap = await getDoc(docRef);
 
 if(docSnap.exists()){
-
 listaPers = docSnap.data().personaggi || [];
-
 }else{
-
 await setDoc(docRef,{ personaggi:[] });
-
 listaPers=[];
-
 }
 
 aggiornaLista();
-
 }
 
 inizializzaUtente();
 
-
-
 function salvaFirestore(){
-
 setDoc(doc(db,"users",uid),{ personaggi: listaPers },{ merge:true });
-
 }
-
-
 
 function aggiornaLista(){
 
@@ -204,128 +156,77 @@ lista.innerHTML="";
 listaPers.forEach((p,index)=>{
 
 let div=document.createElement("div");
-
 div.className="personaggio";
 
 let info=document.createElement("div");
-
 info.className="personaggio-info";
-
 info.onclick=()=>mostraCarta(p);
 
 let img=document.createElement("img");
-
 img.src=p.foto;
 
 let nome=document.createElement("div");
-
 nome.textContent=p.nome+" "+p.cognome;
-
 nome.style.cursor="pointer";
 
 nome.onclick = ()=>{
-
 sessionStorage.setItem("personaggio_index", index);
-
+sessionStorage.setItem("personaggio_id", index); /* AGGIUNTA */
 window.location.href="home.html";
-
 };
 
 info.appendChild(img);
-
 info.appendChild(nome);
 
-
 let actions=document.createElement("div");
-
 actions.className="actions";
 
-
 let edit=document.createElement("span");
-
 edit.textContent="✏️";
-
 edit.onclick=()=>modificaPersonaggio(index);
 
-
 let del=document.createElement("span");
-
 del.textContent="🗑️";
-
 del.onclick=()=>{
-
 let pass=prompt("Inserisci password per eliminare:");
-
 if(pass===DELETE_PASSWORD){
-
 listaPers.splice(index,1);
-
 salvaFirestore();
-
 aggiornaLista();
-
 wrapper.style.display="none";
-
 }else{
-
 alert("Password errata");
-
 }
-
 };
 
-
 actions.appendChild(edit);
-
 actions.appendChild(del);
 
-
 div.appendChild(info);
-
 div.appendChild(actions);
-
 lista.appendChild(div);
 
 });
 
 }
 
-
-
 btn.onclick=()=>{
-
 if(listaPers.length>=MAX){
-
 alert("Massimo 2 personaggi");
-
 return;
-
 }
-
 if(listaPers.length===1){
-
 let c = prompt("Inserisci codice:");
-
 if(c!==CODICE){
-
 alert("Codice errato");
-
 return;
-
 }
-
 }
-
 form.style.display="flex";
-
 editingIndex = null;
-
 };
 
-
-
 form.onsubmit = e=>{
-
 e.preventDefault();
 
 let reader = new FileReader();
@@ -333,115 +234,70 @@ let reader = new FileReader();
 reader.onload = function(){
 
 let p = {
-
 nome:nome.value,
-
 cognome:cognome.value,
-
 data:data.value,
-
 occhi:occhi.value,
-
 capelli:capelli.value,
-
 residenza:residenza.value,
-
 foto:reader.result,
-
 barcode: Math.floor(Math.random()*1000000000),
-
 firma: nome.value+" "+cognome.value,
-
 banca:2500,
-
 contanti:300
-
 };
 
-
 if(editingIndex!==null){
-
 listaPers[editingIndex]=p;
-
 }else{
-
 listaPers.push(p);
-
 }
 
 salvaFirestore();
-
 aggiornaLista();
-
 mostraCarta(p);
-
 form.reset();
-
 form.style.display="none";
-
 editingIndex=null;
-
 };
 
 reader.readAsDataURL(fotoInput.files[0]);
 
 };
 
-
-
 function modificaPersonaggio(index){
 
 let p = listaPers[index];
 
 nome.value=p.nome;
-
 cognome.value=p.cognome;
-
 data.value=p.data;
-
 occhi.value=p.occhi;
-
 capelli.value=p.capelli;
-
 residenza.value=p.residenza;
 
 form.style.display="flex";
-
 editingIndex = index;
 
 }
 
-
-
 function generaCF(p){
-
 return p.cognome.substring(0,3).toUpperCase()+p.nome.substring(0,3).toUpperCase()+"25X0";
-
 }
-
 
 function mostraCarta(p){
 
 wrapper.style.display="block";
-
 card.classList.remove("flipped");
 
 c_nome.textContent=p.nome;
-
 c_cognome.textContent=p.cognome;
-
 c_data.textContent=p.data;
-
 c_occhi.textContent=p.occhi;
-
 c_capelli.textContent=p.capelli;
-
 c_res.textContent=p.residenza;
-
 c_firma.textContent=p.firma;
-
 c_cf.textContent=generaCF(p);
-
 c_foto.src=p.foto;
 
 card.onclick=()=>card.classList.toggle("flipped");
@@ -451,5 +307,6 @@ card.onclick=()=>card.classList.toggle("flipped");
 </script>
 
 </body>
-  </html>
+</html>
+
 
