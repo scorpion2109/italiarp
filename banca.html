@@ -16,7 +16,7 @@ background-size:cover;
 background-position:center;
 }
 
-/* ---------------- TOP BAR ---------------- */
+/* TOP BAR */
 
 .topbar{
 position:fixed;
@@ -24,23 +24,16 @@ top:0;
 left:0;
 width:100%;
 height:60px;
-
 display:flex;
 align-items:center;
 justify-content:space-between;
-
 padding:0 20px;
-
 background:rgba(0,0,0,0.35);
 backdrop-filter:blur(10px);
-
-box-sizing:border-box;
 z-index:1000;
 }
 
-.logo{
-height:32px;
-}
+.logo{height:32px;}
 
 .clock{
 color:white;
@@ -63,23 +56,17 @@ transition:0.2s;
 transform:scale(1.15);
 }
 
-/* ---------------- CARTA ---------------- */
+/* CARTA */
 
 .card-container{
-
 position:absolute;
 top:110px;
 left:50%;
 transform:translateX(-50%);
-
 width:420px;
 height:260px;
-
 perspective:1200px;
-
 }
-
-/* carta */
 
 .card{
 width:100%;
@@ -94,44 +81,34 @@ cursor:pointer;
 transform:rotateY(180deg);
 }
 
-/* facce */
-
-.front, .back{
+.front,.back{
 position:absolute;
 width:100%;
 height:100%;
 border-radius:20px;
 backface-visibility:hidden;
 overflow:hidden;
-
 box-shadow:
 0 35px 90px rgba(0,0,0,0.85),
 0 10px 20px rgba(0,0,0,0.5),
 inset 0 3px 8px rgba(255,255,255,0.25);
 }
 
-/* riflesso plastica */
-
-.front::after,
-.back::after{
+.front::after,.back::after{
 content:"";
 position:absolute;
 top:0;
 left:0;
 width:100%;
 height:100%;
-
 background:linear-gradient(
 120deg,
-rgba(255,255,255,0.25) 0%,
-rgba(255,255,255,0.05) 40%,
-transparent 60%
-);
-
-pointer-events:none;
+rgba(255,255,255,0.25),
+rgba(255,255,255,0.05),
+transparent);
 }
 
-/* -------- FRONTE -------- */
+/* FRONTE */
 
 .front{
 background:linear-gradient(
@@ -140,8 +117,7 @@ background:linear-gradient(
 #a0a0a0,
 #7a7a7a,
 #bcbcbc,
-#6a6a6a
-);
+#6a6a6a);
 }
 
 .gold-bar{
@@ -150,15 +126,13 @@ left:0;
 top:0;
 height:100%;
 width:55px;
-
 background:linear-gradient(
 180deg,
 #7a5a00,
 #d4af37,
 #ffd700,
 #cfa600,
-#7a5a00
-);
+#7a5a00);
 }
 
 .postepay{
@@ -192,17 +166,6 @@ left:130px;
 width:30px;
 }
 
-.posteitaliane{
-position:absolute;
-top:117px;
-left:165px;
-font-size:19px;
-font-weight:900;
-}
-
-.poste{color:#cfcfcf;}
-.italiane{color:#444;}
-
 .card-number{
 position:absolute;
 bottom:70px;
@@ -211,10 +174,6 @@ font-size:20px;
 letter-spacing:3px;
 font-weight:700;
 color:#f1f1f1;
-
-text-shadow:
-1px 1px 0 #aaa,
-2px 2px 2px rgba(0,0,0,0.6);
 }
 
 .expiry{
@@ -222,16 +181,6 @@ position:absolute;
 bottom:22px;
 right:90px;
 color:#e6e6e6;
-text-align:right;
-}
-
-.expiry .label{
-font-size:9px;
-}
-
-.expiry .date{
-font-size:16px;
-font-weight:bold;
 }
 
 .card-logo{
@@ -241,24 +190,7 @@ right:20px;
 width:55px;
 }
 
-.card-logo img{
-width:100%;
-}
-
-.rp-box{
-position:absolute;
-top:22px;
-right:20px;
-padding:6px 14px;
-border-radius:6px;
-background:rgba(0,0,0,0.35);
-border:1px solid rgba(255,255,255,0.25);
-color:white;
-font-weight:700;
-font-size:12px;
-}
-
-/* -------- RETRO -------- */
+/* RETRO */
 
 .back{
 background:linear-gradient(
@@ -267,15 +199,13 @@ background:linear-gradient(
 #a0a0a0,
 #7a7a7a,
 #bcbcbc,
-#6a6a6a
-);
+#6a6a6a);
 transform:rotateY(180deg);
 }
 
 .magnetic{
 position:absolute;
 top:25px;
-left:0;
 width:100%;
 height:45px;
 background:black;
@@ -287,11 +217,6 @@ top:95px;
 left:30px;
 font-weight:700;
 font-size:16px;
-color:#111;
-
-text-shadow:
-1px 1px 0 #bbb,
-2px 2px 3px rgba(0,0,0,0.5);
 }
 
 .cvv-bar{
@@ -301,13 +226,11 @@ left:30px;
 width:220px;
 height:35px;
 background:white;
-border-radius:4px;
 display:flex;
 align-items:center;
 justify-content:flex-end;
 padding-right:10px;
 font-weight:bold;
-letter-spacing:2px;
 }
 
 .iban{
@@ -316,36 +239,24 @@ bottom:20px;
 left:30px;
 font-size:14px;
 font-weight:bold;
-color:#222;
 }
 
-/* ---------------- BOX SOLDI ---------------- */
+/* SALDO */
 
 .account-box{
-
 position:absolute;
 top:420px;
 left:50%;
 transform:translateX(-50%);
-
 width:320px;
-
 padding:18px 25px;
-
 border-radius:16px;
-
 background:rgba(255,255,255,0.08);
 backdrop-filter:blur(14px);
-
 border:1px solid rgba(255,255,255,0.15);
-
-box-shadow:
-0 15px 35px rgba(0,0,0,0.45);
-
+box-shadow:0 15px 35px rgba(0,0,0,0.45);
 display:flex;
-align-items:center;
 justify-content:space-between;
-
 color:white;
 }
 
@@ -357,19 +268,79 @@ flex-direction:column;
 .balance-label{
 font-size:12px;
 opacity:0.7;
-letter-spacing:1px;
 }
 
 .balance-value{
 font-size:20px;
 font-weight:700;
-margin-top:4px;
 }
 
-.divider{
-width:1px;
-height:35px;
-background:rgba(255,255,255,0.2);
+/* OPERAZIONI */
+
+.operation-box{
+position:absolute;
+top:520px;
+left:50%;
+transform:translateX(-50%);
+width:320px;
+padding:25px;
+border-radius:18px;
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(14px);
+border:1px solid rgba(255,255,255,0.15);
+box-shadow:0 15px 40px rgba(0,0,0,0.5);
+display:flex;
+flex-direction:column;
+gap:15px;
+text-align:center;
+color:white;
+}
+
+.operation-title{
+font-weight:bold;
+letter-spacing:2px;
+font-size:14px;
+}
+
+.operation-select{
+padding:12px;
+border-radius:12px;
+border:none;
+background:rgba(255,255,255,0.12);
+color:white;
+font-size:16px;
+outline:none;
+}
+
+.operation-input{
+padding:14px;
+border-radius:12px;
+border:none;
+background:rgba(255,255,255,0.12);
+color:white;
+font-size:18px;
+text-align:center;
+outline:none;
+}
+
+.confirm-btn{
+padding:14px;
+border-radius:14px;
+border:none;
+font-weight:bold;
+font-size:16px;
+cursor:pointer;
+color:white;
+background:linear-gradient(
+90deg,
+#009246,
+#ffffff,
+#ce2b37);
+transition:0.25s;
+}
+
+.confirm-btn:hover{
+transform:scale(1.05);
 }
 
 </style>
@@ -377,107 +348,72 @@ background:rgba(255,255,255,0.2);
 
 <body>
 
-<!-- TOP BAR -->
-
 <div class="topbar">
-
 <img src="assets/logo.png" class="logo">
-
 <div class="clock" id="clock">00:00</div>
-
 <div class="icons">
 <img src="assets/home.png" class="icon">
 <img src="assets/settings.png" class="icon">
 </div>
-
 </div>
-
-
-<!-- CARTA -->
 
 <div class="card-container">
 <div class="card" onclick="this.classList.toggle('flip')">
 
 <div class="front">
-
 <div class="gold-bar"></div>
-
 <div class="postepay">POSTEPAY</div>
 <div class="evolution">evolution</div>
-
 <img src="assets/chip.png" class="chip">
 <img src="assets/contactless.png" class="contactless">
-
-<div class="posteitaliane">
-<span class="poste">POSTE</span><span class="italiane">ITALIANE</span>
+<div class="card-number">1234 5678 9012 3456</div>
+<div class="expiry">12/29</div>
+<div class="card-logo"><img src="assets/mastercard.png"></div>
 </div>
-
-<div class="rp-box">ITALIA RP</div>
-
-<div class="card-number">
-1234 5678 9012 3456
-</div>
-
-<div class="expiry">
-<div class="label">VALID THRU</div>
-<div class="date">12/29</div>
-</div>
-
-<div class="card-logo">
-<img src="assets/mastercard.png">
-</div>
-
-</div>
-
 
 <div class="back">
-
 <div class="magnetic"></div>
-
-<div class="name">
-MARIO ROSSI
-</div>
-
-<div class="cvv-bar">
-123
-</div>
-
-<div class="iban">
-IT60 X054 2811 1010 0000 0123 456
-</div>
-
+<div class="name">MARIO ROSSI</div>
+<div class="cvv-bar">123</div>
+<div class="iban">IT60 X054 2811 1010</div>
 </div>
 
 </div>
 </div>
-
-
-<!-- SOLDI -->
 
 <div class="account-box">
-
 <div class="balance-item">
 <span class="balance-label">BANCA</span>
 <span class="balance-value">€ 2.450</span>
 </div>
-
-<div class="divider"></div>
-
 <div class="balance-item">
 <span class="balance-label">CASH</span>
 <span class="balance-value">€ 320</span>
 </div>
-
 </div>
 
+<div class="operation-box">
+
+<div class="operation-title">OPERAZIONI</div>
+
+<select class="operation-select">
+<option>Preleva</option>
+<option>Deposita</option>
+</select>
+
+<input class="operation-input" type="number" placeholder="Inserisci importo">
+
+<button class="confirm-btn">CONFERMA</button>
+
+</div>
 
 <script>
 
 function updateClock(){
-let now = new Date();
-let h = String(now.getHours()).padStart(2,'0');
-let m = String(now.getMinutes()).padStart(2,'0');
-document.getElementById("clock").innerText = h + ":" + m;
+let now=new Date();
+let h=String(now.getHours()).padStart(2,'0');
+let m=String(now.getMinutes()).padStart(2,'0');
+document.getElementById("clock").innerText=h+":"+m;
 }
 
 setInterval(updateClock,1000);
