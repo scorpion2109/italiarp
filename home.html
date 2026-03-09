@@ -18,15 +18,12 @@ body{
     display:flex;
     flex-direction:column;
     color:white;
-
-    /* METTI QUI IL TUO SFONDO */
     background-image:url("assets/sfondo.webp");
     background-size:cover;
     background-position:center;
     background-attachment:fixed;
 }
 
-/* Overlay leggero SOLO per leggibilità */
 body::before{
     content:"";
     position:fixed;
@@ -35,7 +32,6 @@ body::before{
     z-index:-1;
 }
 
-/* ===== HEADER ===== */
 .header{
     height:75px;
     backdrop-filter:blur(8px);
@@ -72,7 +68,6 @@ body::before{
     transform:scale(1.15);
 }
 
-/* ===== GRID APP ===== */
 .grid{
     flex:1;
     display:grid;
@@ -114,7 +109,6 @@ body::before{
     filter:drop-shadow(0 0 15px rgba(0,255,0,0.7));
 }
 
-/* ===== FOOTER ===== */
 .footer{
     height:50px;
     backdrop-filter:blur(6px);
@@ -126,7 +120,6 @@ body::before{
     border-top:1px solid rgba(255,255,255,0.15);
 }
 
-/* ===== MODALE DOCUMENTI ===== */
 .documenti-overlay{
     position:fixed;
     inset:0;
@@ -183,14 +176,14 @@ body::before{
 
 <div class="header">
     <div class="logo">
-        <img src="assets/logo.png" alt="Logo">
+        <img src="assets/logo.png">
     </div>
 
     <div class="clock" id="clock"></div>
 
     <div class="top-icons">
-        <img src="assets/logo-documento.png" alt="Documenti" id="btnDocumenti">
-        <img src="assets/logo-impostazioni.png" alt="Impostazioni" id="btnImpostazioni">
+        <img src="assets/logo-documento.png" id="btnDocumenti">
+        <img src="assets/logo-impostazioni.png" id="btnImpostazioni">
     </div>
 </div>
 
@@ -218,96 +211,120 @@ body::before{
 
 </div>
 
-<!-- MODALE DOCUMENTI -->
 <div class="documenti-overlay" id="documentiOverlay">
     <div class="documenti-box">
+
         <div class="documenti-header">
             <h2>I Tuoi Documenti</h2>
             <span id="chiudiDocumenti">✖</span>
         </div>
 
         <div class="documenti-content">
-            <p>Qui potrai visualizzare i tuoi documenti RP.</p>
+            <p id="nomePersonaggio"></p>
+
             <button onclick="window.location.href='lista-personaggi.html'">
-                Vai alla Lista Personaggi
+                Cambia Personaggio
             </button>
         </div>
+
     </div>
 </div>
 
 <div class="footer">
-    © 2025 Italia RP - Tutti i diritti riservati
+© 2025 Italia RP - Tutti i diritti riservati
 </div>
 
 <script type="module">
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
-import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
-  authDomain: "sito-rp.firebaseapp.com",
-  projectId: "sito-rp",
-  storageBucket: "sito-rp.firebasestorage.app",
-  messagingSenderId: "234781749995",
-  appId: "1:234781749995:web:6954473363659fe38b04ae",
-  measurementId: "G-R23N60PBYY"
+apiKey: "AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
+authDomain: "sito-rp.firebaseapp.com",
+projectId: "sito-rp",
+storageBucket: "sito-rp.firebasestorage.app",
+messagingSenderId: "234781749995",
+appId: "1:234781749995:web:6954473363659fe38b04ae"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const uid = sessionStorage.getItem("discord_uid");
-if(!uid){
-    window.location.href="index.html";
+const personaggio = sessionStorage.getItem("personaggio_id");
+
+if(!uid || !personaggio){
+window.location.href="index.html";
+}
+
+/* CARICA PERSONAGGIO */
+
+const ref = doc(db,"users",uid,"personaggi",personaggio);
+const snap = await getDoc(ref);
+
+if(snap.exists()){
+
+const data = snap.data();
+
+document.getElementById("nomePersonaggio").innerText =
+data.nome + " " + data.cognome;
+
 }
 
 /* OROLOGIO */
+
 function updateClock(){
-    const now = new Date();
-    document.getElementById("clock").innerText =
-        now.getHours().toString().padStart(2,"0")+":"+
-        now.getMinutes().toString().padStart(2,"0")+":"+
-        now.getSeconds().toString().padStart(2,"0");
+const now = new Date();
+document.getElementById("clock").innerText =
+now.getHours().toString().padStart(2,"0")+":"+
+now.getMinutes().toString().padStart(2,"0")+":"+
+now.getSeconds().toString().padStart(2,"0");
 }
+
 setInterval(updateClock,1000);
 updateClock();
 
-/* DOCUMENTI MODALE */
+/* DOCUMENTI */
+
 const overlay = document.getElementById("documentiOverlay");
-const chiudi = document.getElementById("chiudiDocumenti");
 
 document.getElementById("btnDocumenti").onclick = ()=>{
-    overlay.style.display = "flex";
+overlay.style.display="flex";
 };
 
-chiudi.onclick = ()=>{
-    overlay.style.display = "none";
+document.getElementById("chiudiDocumenti").onclick = ()=>{
+overlay.style.display="none";
 };
 
 overlay.onclick = (e)=>{
-    if(e.target === overlay){
-        overlay.style.display = "none";
-    }
+if(e.target===overlay){
+overlay.style.display="none";
+}
 };
 
-/* IMPOSTAZIONI */
-document.getElementById("btnImpostazioni").onclick = ()=>{
-    alert("Impostazioni in arrivo...");
-};
+/* LOG APP */
 
-/* LOG APERTURA APP */
-document.querySelectorAll(".app").forEach(app=>{
-    app.onclick = async ()=>{
-        const nomeApp = app.dataset.app;
+document.querySelectorAll(".app").forEach(appEl=>{
 
-        await addDoc(collection(db,"users",uid,"logs"),{
-            app:nomeApp,
-            timestamp:serverTimestamp()
-        });
+appEl.onclick = async ()=>{
 
-        alert("Aperto: " + nomeApp);
-    };
+const nomeApp = appEl.dataset.app;
+
+await addDoc(collection(db,"users",uid,"logs"),{
+
+personaggio:personaggio,
+app:nomeApp,
+timestamp:serverTimestamp()
+
 });
+
+alert("Aperto: "+nomeApp);
+
+};
+
+});
+
 </script>
 
 </body>
