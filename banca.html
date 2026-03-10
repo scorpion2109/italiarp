@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -8,16 +7,18 @@
 
 <style>
 
+/* SFONDO */
+
 body{
 margin:0;
-background:url("sfondo.webp") no-repeat center center fixed;
-background-size:cover;
 font-family:Arial, sans-serif;
 display:flex;
 flex-direction:column;
 align-items:center;
 padding-top:40px;
 color:white;
+position:relative;
+min-height:100vh;
 }
 
 body::before{
@@ -27,11 +28,22 @@ top:0;
 left:0;
 width:100%;
 height:100%;
-background:rgba(0,0,0,0.55);
+background:url("sfondo.webp") center/cover no-repeat;
+z-index:-2;
+}
+
+body::after{
+content:"";
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:linear-gradient(rgba(0,0,0,0.55),rgba(0,0,0,0.8));
 z-index:-1;
 }
 
-/* -------- CARTA -------- */
+/* CARTA */
 
 .card-container{
 width:420px;
@@ -53,19 +65,22 @@ cursor:pointer;
 transform:rotateY(180deg);
 }
 
-.front, .back{
+.front,.back{
 position:absolute;
 width:100%;
 height:100%;
 border-radius:20px;
 backface-visibility:hidden;
 overflow:hidden;
-box-shadow:0 35px 90px rgba(0,0,0,0.85),
-0 10px 20px rgba(0,0,0,0.5),
-inset 0 3px 8px rgba(255,255,255,0.25);
+box-shadow:0 35px 90px rgba(0,0,0,0.85);
 }
 
 .front{
+background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);
+}
+
+.back{
+transform:rotateY(180deg);
 background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);
 }
 
@@ -75,7 +90,7 @@ left:0;
 top:0;
 height:100%;
 width:55px;
-background:linear-gradient(180deg,#7a5a00,#d4af37,#ffd700,#cfa600,#7a5a00);
+background:linear-gradient(#7a5a00,#ffd700,#7a5a00);
 }
 
 .postepay{
@@ -85,14 +100,6 @@ left:75px;
 color:#ffd700;
 font-weight:900;
 font-size:28px;
-}
-
-.evolution{
-position:absolute;
-top:58px;
-left:190px;
-color:#ffd700;
-font-size:13px;
 }
 
 .chip{
@@ -109,14 +116,6 @@ left:130px;
 width:30px;
 }
 
-.posteitaliane{
-position:absolute;
-top:117px;
-left:165px;
-font-size:19px;
-font-weight:900;
-}
-
 .card-number{
 position:absolute;
 bottom:70px;
@@ -127,14 +126,6 @@ font-weight:700;
 color:#f1f1f1;
 }
 
-.expiry{
-position:absolute;
-bottom:22px;
-right:90px;
-color:#e6e6e6;
-text-align:right;
-}
-
 .card-logo{
 position:absolute;
 bottom:20px;
@@ -142,84 +133,18 @@ right:20px;
 width:55px;
 }
 
-.card-logo img{width:100%;}
-
-.rp-box{
-position:absolute;
-top:22px;
-right:20px;
-padding:6px 14px;
-border-radius:6px;
-background:rgba(0,0,0,0.35);
-border:1px solid rgba(255,255,255,0.25);
-color:white;
-font-weight:700;
-font-size:12px;
-}
-
-/* RETRO */
-
-.back{
-transform:rotateY(180deg);
-background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);
-}
-
-.magnetic{
-position:absolute;
-top:25px;
-left:0;
-width:100%;
-height:45px;
-background:black;
-}
-
-.name{
-position:absolute;
-top:95px;
-left:30px;
-font-weight:700;
-font-size:16px;
-color:#111;
-}
-
-.cvv-bar{
-position:absolute;
-top:135px;
-left:30px;
-width:220px;
-height:35px;
-background:white;
-border-radius:4px;
-display:flex;
-align-items:center;
-justify-content:flex-end;
-padding-right:10px;
-font-weight:bold;
-}
-
-.iban{
-position:absolute;
-bottom:20px;
-left:30px;
-font-size:14px;
-font-weight:bold;
-color:#222;
-}
-
-/* -------- SALDO -------- */
-
 .balance-box{
 width:420px;
 background:rgba(0,0,0,0.6);
 border-radius:16px;
 padding:20px;
-box-shadow:0 10px 30px rgba(0,0,0,0.8);
+margin-bottom:20px;
 }
 
 .balance-row{
 display:flex;
 justify-content:space-between;
-padding:12px 0;
+padding:10px 0;
 font-size:18px;
 }
 
@@ -228,17 +153,16 @@ color:#ffd700;
 font-weight:bold;
 }
 
-/* -------- OPERAZIONI -------- */
+/* OPERAZIONI */
 
 .operations{
 width:420px;
 display:flex;
-gap:20px;
-margin-top:20px;
+flex-direction:column;
+gap:15px;
 }
 
 .operation-box{
-flex:1;
 background:rgba(0,0,0,0.6);
 border-radius:12px;
 padding:15px;
@@ -247,7 +171,7 @@ flex-direction:column;
 gap:10px;
 }
 
-select,input{
+input,select{
 padding:8px;
 border-radius:6px;
 border:none;
@@ -266,12 +190,48 @@ button:hover{
 background:#e6c200;
 }
 
+/* LISTA GIOCATORI */
+
+#playerList{
+max-height:120px;
+overflow:auto;
+background:rgba(0,0,0,0.7);
+border-radius:6px;
+}
+
+.playerItem{
+padding:8px;
+cursor:pointer;
+border-bottom:1px solid rgba(255,255,255,0.1);
+}
+
+.playerItem:hover{
+background:rgba(255,255,255,0.1);
+}
+
+/* STORICO */
+
+.history-box{
+width:420px;
+margin-top:20px;
+background:rgba(0,0,0,0.6);
+border-radius:12px;
+padding:15px;
+max-height:250px;
+overflow:auto;
+}
+
+.transazione{
+display:flex;
+justify-content:space-between;
+padding:6px 0;
+border-bottom:1px solid rgba(255,255,255,0.1);
+}
+
 </style>
 </head>
 
 <body>
-
-<!-- CARTA -->
 
 <div class="card-container">
 <div class="card" onclick="this.classList.toggle('flip')">
@@ -279,34 +239,23 @@ background:#e6c200;
 <div class="front">
 <div class="gold-bar"></div>
 <div class="postepay">POSTEPAY</div>
-<div class="evolution">evolution</div>
 <img src="assets/chip.png" class="chip">
 <img src="assets/contactless.png" class="contactless">
-<div class="posteitaliane">POSTE ITALIANE</div>
-<div class="rp-box">ITALIA RP</div>
 <div class="card-number">1234 5678 9012 3456</div>
-<div class="expiry">12/29</div>
-<div class="card-logo"><img src="assets/mastercard.png"></div>
-</div>
-
-<div class="back">
-<div class="magnetic"></div>
-<div class="name">NOME RP</div>
-<div class="cvv-bar">123</div>
-<div class="iban">IT60 X054 2811 1010 0000 0123 456</div>
-</div>
-
+<div class="card-logo">
+<img src="assets/mastercard.png">
 </div>
 </div>
 
-<!-- SALDO -->
+<div class="back"></div>
+
+</div>
+</div>
 
 <div class="balance-box">
 <div class="balance-row">BANCA <span id="banca" class="amount">€0</span></div>
 <div class="balance-row">CASH <span id="cash" class="amount">€0</span></div>
 </div>
-
-<!-- OPERAZIONI -->
 
 <div class="operations">
 
@@ -323,9 +272,9 @@ background:#e6c200;
 
 <div class="operation-box">
 
-<select id="destinatario">
-<option value="">Seleziona giocatore</option>
-</select>
+<input id="searchPlayer" placeholder="Cerca giocatore RP">
+
+<div id="playerList"></div>
 
 <input id="importo2" type="number" placeholder="Quantità">
 
@@ -335,10 +284,15 @@ background:#e6c200;
 
 </div>
 
+<div class="history-box">
+<h3>Storico transazioni</h3>
+<div id="storico"></div>
+</div>
+
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, doc, getDoc, updateDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, updateDoc, getDoc, collection, getDocs, onSnapshot, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
 apiKey: "AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
@@ -352,109 +306,196 @@ appId: "1:234781749995:web:6954473363659fe38b04ae"
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const userId = "982317367596032010";
-const userRef = doc(db,"users",userId);
+const userId="982317367596032010";
+const userRef=doc(db,"users",userId);
 
-let banca = 0;
-let cash = 0;
+let banca=0
+let cash=0
 
-async function caricaSaldo(){
+let players=[]
+let selectedPlayer=null
 
-const snap = await getDoc(userRef);
+onSnapshot(userRef,(snap)=>{
 
-if(snap.exists()){
+let data=snap.data()
 
-banca = snap.data().bank;
-cash = snap.data().cash;
+banca=data.bank||0
+cash=data.cash||0
 
-document.getElementById("banca").innerText="€"+banca;
-document.getElementById("cash").innerText="€"+cash;
+document.getElementById("banca").innerText="€"+banca
+document.getElementById("cash").innerText="€"+cash
 
-}
+mostraStorico(data.transactions||[])
 
-}
+})
 
-async function caricaNomi(){
+async function caricaGiocatori(){
 
-const snapshot = await getDocs(collection(db,"users"));
-const select=document.getElementById("destinatario");
+const snapshot=await getDocs(collection(db,"users"))
 
 snapshot.forEach(docSnap=>{
 
-let data=docSnap.data();
+let data=docSnap.data()
 
 if(data.personaggi){
 
 data.personaggi.forEach(p=>{
 
-let nome=p.nome+" "+p.cognome;
+players.push({
+id:docSnap.id,
+nome:p.nome+" "+p.cognome
+})
 
-let option=document.createElement("option");
-option.value=docSnap.id;
-option.textContent=nome;
-
-select.appendChild(option);
-
-});
+})
 
 }
 
-});
+})
 
 }
+
+caricaGiocatori()
+
+document.getElementById("searchPlayer").addEventListener("input",function(){
+
+let query=this.value.toLowerCase()
+
+let lista=document.getElementById("playerList")
+
+lista.innerHTML=""
+
+players.filter(p=>p.nome.toLowerCase().includes(query)).forEach(p=>{
+
+let div=document.createElement("div")
+
+div.className="playerItem"
+div.innerText=p.nome
+
+div.onclick=()=>{
+selectedPlayer=p
+document.getElementById("searchPlayer").value=p.nome
+lista.innerHTML=""
+}
+
+lista.appendChild(div)
+
+})
+
+})
 
 window.operazione=async function(){
 
-let tipo=document.getElementById("tipo").value;
-let importo=Number(document.getElementById("importo1").value);
+let tipo=document.getElementById("tipo").value
+let importo=Number(document.getElementById("importo1").value)
 
-if(importo<=0) return;
+if(importo<=0)return
 
-if(tipo==="deposito" && cash>=importo){
-cash-=importo;
-banca+=importo;
+if(tipo==="deposito"&&cash>=importo){
+cash-=importo
+banca+=importo
 }
 
-if(tipo==="prelievo" && banca>=importo){
-banca-=importo;
-cash+=importo;
+if(tipo==="prelievo"&&banca>=importo){
+banca-=importo
+cash+=importo
 }
 
-await updateDoc(userRef,{bank:banca,cash:cash});
-
-document.getElementById("banca").innerText="€"+banca;
-document.getElementById("cash").innerText="€"+cash;
+await updateDoc(userRef,{
+bank:banca,
+cash:cash,
+transactions:arrayUnion({
+tipo:tipo,
+importo:importo,
+data:Date.now()
+})
+})
 
 }
 
 window.bonifico=async function(){
 
-let dest=document.getElementById("destinatario").value;
-let importo=Number(document.getElementById("importo2").value);
+if(!selectedPlayer)return
 
-if(importo<=0) return;
-if(banca<importo) return;
+let importo=Number(document.getElementById("importo2").value)
 
-const destRef=doc(db,"users",dest);
-const snap=await getDoc(destRef);
+if(importo<=0)return
+if(banca<importo)return
 
-let destBank=snap.data().bank||0;
+const destRef=doc(db,"users",selectedPlayer.id)
 
-banca-=importo;
-destBank+=importo;
+const snap=await getDoc(destRef)
 
-await updateDoc(userRef,{bank:banca});
-await updateDoc(destRef,{bank:destBank});
+let destBank=snap.data().bank||0
 
-document.getElementById("banca").innerText="€"+banca;
+banca-=importo
+destBank+=importo
+
+await updateDoc(userRef,{
+bank:banca,
+transactions:arrayUnion({
+tipo:"bonifico inviato",
+importo:importo,
+a:selectedPlayer.nome,
+data:Date.now()
+})
+})
+
+await updateDoc(destRef,{
+bank:destBank,
+transactions:arrayUnion({
+tipo:"bonifico ricevuto",
+importo:importo,
+da:userId,
+data:Date.now()
+})
+})
+
+notifica("Bonifico inviato")
 
 }
 
-caricaSaldo();
-caricaNomi();
+function mostraStorico(lista){
+
+let storico=document.getElementById("storico")
+
+storico.innerHTML=""
+
+lista.slice().reverse().forEach(t=>{
+
+let div=document.createElement("div")
+
+div.className="transazione"
+
+div.innerHTML=`<span>${t.tipo}</span><span>€${t.importo}</span>`
+
+storico.appendChild(div)
+
+})
+
+}
+
+function notifica(testo){
+
+let div=document.createElement("div")
+
+div.style.position="fixed"
+div.style.top="20px"
+div.style.right="20px"
+div.style.background="#ffd700"
+div.style.color="black"
+div.style.padding="10px 20px"
+div.style.borderRadius="8px"
+div.style.fontWeight="bold"
+
+div.innerText=testo
+
+document.body.appendChild(div)
+
+setTimeout(()=>{div.remove()},4000)
+
+}
 
 </script>
 
 </body>
-</html>
-```
+  </html>
