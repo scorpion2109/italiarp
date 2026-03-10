@@ -9,13 +9,12 @@
 
 body{
 margin:0;
-font-family:Arial, sans-serif;
+font-family:Arial;
 display:flex;
 flex-direction:column;
 align-items:center;
 padding-top:40px;
 color:white;
-position:relative;
 min-height:100vh;
 }
 
@@ -37,17 +36,16 @@ top:0;
 left:0;
 width:100%;
 height:100%;
-background:linear-gradient(rgba(0,0,0,0.55),rgba(0,0,0,0.8));
+background:rgba(0,0,0,0.7);
 z-index:-1;
 }
 
-/* -------- CARTA (LA TUA ORIGINALE) -------- */
+/* CARTA */
 
 .card-container{
 width:420px;
 height:260px;
 perspective:1200px;
-margin-bottom:30px;
 }
 
 .card{
@@ -55,7 +53,7 @@ width:100%;
 height:100%;
 position:relative;
 transform-style:preserve-3d;
-transition:transform 0.8s;
+transition:0.8s;
 cursor:pointer;
 }
 
@@ -63,36 +61,21 @@ cursor:pointer;
 transform:rotateY(180deg);
 }
 
-.front, .back{
+.front,.back{
 position:absolute;
 width:100%;
 height:100%;
 border-radius:20px;
 backface-visibility:hidden;
 overflow:hidden;
-box-shadow:0 35px 90px rgba(0,0,0,0.85),
-0 10px 20px rgba(0,0,0,0.5),
-inset 0 3px 8px rgba(255,255,255,0.25);
-}
-
-.front::after,
-.back::after{
-content:"";
-position:absolute;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:linear-gradient(
-120deg,
-rgba(255,255,255,0.25) 0%,
-rgba(255,255,255,0.05) 40%,
-transparent 60%
-);
-pointer-events:none;
 }
 
 .front{
+background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);
+}
+
+.back{
+transform:rotateY(180deg);
 background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);
 }
 
@@ -155,19 +138,14 @@ font-size:20px;
 letter-spacing:3px;
 font-weight:700;
 color:#f1f1f1;
-text-shadow:1px 1px 0 #aaa,2px 2px 2px rgba(0,0,0,0.6);
 }
 
 .expiry{
 position:absolute;
 bottom:22px;
 right:90px;
-color:#e6e6e6;
 text-align:right;
 }
-
-.expiry .label{font-size:9px;}
-.expiry .date{font-size:16px;font-weight:bold;}
 
 .card-logo{
 position:absolute;
@@ -176,8 +154,6 @@ right:20px;
 width:55px;
 }
 
-.card-logo img{width:100%;}
-
 .rp-box{
 position:absolute;
 top:22px;
@@ -185,15 +161,6 @@ right:20px;
 padding:6px 14px;
 border-radius:6px;
 background:rgba(0,0,0,0.35);
-border:1px solid rgba(255,255,255,0.25);
-color:white;
-font-weight:700;
-font-size:12px;
-}
-
-.back{
-transform:rotateY(180deg);
-background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);
 }
 
 .magnetic{
@@ -211,8 +178,7 @@ top:95px;
 left:30px;
 font-weight:700;
 font-size:16px;
-color:#111;
-text-shadow:1px 1px 0 #bbb,2px 2px 3px rgba(0,0,0,0.5);
+color:black;
 }
 
 .cvv-bar{
@@ -222,13 +188,11 @@ left:30px;
 width:220px;
 height:35px;
 background:white;
-border-radius:4px;
 display:flex;
 align-items:center;
 justify-content:flex-end;
 padding-right:10px;
 font-weight:bold;
-letter-spacing:2px;
 }
 
 .iban{
@@ -253,11 +217,13 @@ margin-top:20px;
 .balance-row{
 display:flex;
 justify-content:space-between;
-padding:10px 0;
-font-size:18px;
+padding:8px 0;
 }
 
-.amount{color:#ffd700;font-weight:bold;}
+.amount{
+color:#ffd700;
+font-weight:bold;
+}
 
 /* OPERAZIONI */
 
@@ -293,42 +259,36 @@ font-weight:bold;
 cursor:pointer;
 }
 
-/* LISTA GIOCATORI */
-
-#playerList{
-max-height:120px;
-overflow:auto;
-background:rgba(0,0,0,0.7);
-border-radius:6px;
-}
-
-.playerItem{
-padding:8px;
-cursor:pointer;
-border-bottom:1px solid rgba(255,255,255,0.1);
-}
-
-.playerItem:hover{
-background:rgba(255,255,255,0.1);
-}
-
 /* STORICO */
 
 .history-box{
 width:420px;
-margin-top:20px;
 background:rgba(0,0,0,0.6);
 border-radius:12px;
 padding:15px;
-max-height:250px;
+margin-top:20px;
+max-height:200px;
 overflow:auto;
 }
 
 .transazione{
 display:flex;
 justify-content:space-between;
-padding:6px 0;
+padding:5px 0;
 border-bottom:1px solid rgba(255,255,255,0.1);
+}
+
+/* PRESTITO */
+
+.loan-box{
+width:420px;
+background:rgba(0,0,0,0.6);
+border-radius:12px;
+padding:15px;
+margin-top:20px;
+display:flex;
+flex-direction:column;
+gap:10px;
 }
 
 </style>
@@ -336,72 +296,103 @@ border-bottom:1px solid rgba(255,255,255,0.1);
 
 <body>
 
-<!-- CARTA -->
-
 <div class="card-container">
 <div class="card" onclick="this.classList.toggle('flip')">
 
 <div class="front">
+
 <div class="gold-bar"></div>
 <div class="postepay">POSTEPAY</div>
 <div class="evolution">evolution</div>
+
 <img src="assets/chip.png" class="chip">
 <img src="assets/contactless.png" class="contactless">
-<div class="posteitaliane"><span class="poste">POSTE</span><span class="italiane">ITALIANE</span></div>
+
+<div class="posteitaliane">
+<span class="poste">POSTE</span>
+<span class="italiane">ITALIANE</span>
+</div>
+
 <div class="rp-box">ITALIA RP</div>
+
 <div class="card-number">1234 5678 9012 3456</div>
-<div class="expiry"><div class="label">VALID THRU</div><div class="date">12/29</div></div>
-<div class="card-logo"><img src="assets/mastercard.png"></div>
+
+<div class="expiry">
+<div class="label">VALID THRU</div>
+<div class="date">12/29</div>
+</div>
+
+<div class="card-logo">
+<img src="assets/mastercard.png">
+</div>
+
 </div>
 
 <div class="back">
+
 <div class="magnetic"></div>
-<div class="name">MARIO ROSSI</div>
+
+<div id="cardName" class="name">Caricamento...</div>
+
 <div class="cvv-bar">123</div>
+
 <div class="iban">IT60 X054 2811 1010 0000 0123 456</div>
+
 </div>
 
 </div>
 </div>
-
-<!-- SALDO -->
 
 <div class="balance-box">
-<div class="balance-row"><span>BANCA</span><span id="banca" class="amount">€0</span></div>
-<div class="balance-row"><span>CASH</span><span id="cash" class="amount">€0</span></div>
+<div class="balance-row">BANCA <span id="banca" class="amount">€0</span></div>
+<div class="balance-row">CASH <span id="cash" class="amount">€0</span></div>
 </div>
-
-<!-- OPERAZIONI -->
 
 <div class="operations">
 
 <div class="operation-box">
+
 <select id="tipo">
 <option value="deposito">Deposito</option>
 <option value="prelievo">Prelievo</option>
 </select>
-<input id="importo1" type="number" placeholder="Quantità">
-<button onclick="operazione()">Conferma</button>
-</div>
 
-<div class="operation-box">
-<input id="searchPlayer" placeholder="Cerca giocatore RP">
-<div id="playerList"></div>
-<input id="importo2" type="number" placeholder="Quantità">
-<button onclick="bonifico()">Bonifico</button>
+<input id="importo1" type="number" placeholder="Quantità">
+
+<button onclick="operazione()">Conferma</button>
+
 </div>
 
 </div>
 
 <div class="history-box">
+
 <h3>Storico transazioni</h3>
+
 <div id="storico"></div>
+
+</div>
+
+<div class="loan-box">
+
+<h3>Prestito Bancario</h3>
+
+<div>Prestito massimo: <b>500.000€</b></div>
+<div>Interesse banca: <b>18%</b></div>
+
+<div id="debitoAttuale">Debito: €0</div>
+
+<input id="loanAmount" type="number" placeholder="Importo prestito">
+
+<button onclick="richiediPrestito()">Richiedi prestito</button>
+<button onclick="ripagaPrestito()">Ripaga prestito</button>
+
 </div>
 
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, doc, updateDoc, getDoc, collection, getDocs, onSnapshot, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, updateDoc, getDoc, onSnapshot, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
 apiKey:"AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
@@ -412,16 +403,30 @@ messagingSenderId:"234781749995",
 appId:"1:234781749995:web:6954473363659fe38b04ae"
 };
 
-const app=initializeApp(firebaseConfig);
-const db=getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-const userId="982317367596032010";
+const userId="USER_ID";
 const userRef=doc(db,"users",userId);
 
 let banca=0
 let cash=0
-let players=[]
-let selectedPlayer=null
+
+const TAX_INTERVAL=7200000
+const MAX_LOAN=500000
+const LOAN_INTEREST=0.18
+
+async function salvaStorico(tipo,importo){
+
+await updateDoc(userRef,{
+transactions:arrayUnion({
+tipo:tipo,
+importo:importo,
+data:Date.now()
+})
+})
+
+}
 
 onSnapshot(userRef,(snap)=>{
 
@@ -433,62 +438,48 @@ cash=data.cash||0
 document.getElementById("banca").innerText="€"+banca
 document.getElementById("cash").innerText="€"+cash
 
+document.getElementById("debitoAttuale").innerText="Debito: €"+(data.loan||0)
+
+if(data.personaggioAttivo){
+
+document.getElementById("cardName").innerText=
+data.personaggioAttivo.nome+" "+data.personaggioAttivo.cognome
+
+}
+
+controllaTassa(data)
+
 mostraStorico(data.transactions||[])
 
 })
 
-async function caricaGiocatori(){
+async function controllaTassa(data){
 
-const snapshot=await getDocs(collection(db,"users"))
+let now=Date.now()
 
-snapshot.forEach(docSnap=>{
+if(!data.lastTax){
+await updateDoc(userRef,{lastTax:now})
+return
+}
 
-let data=docSnap.data()
+if(now-data.lastTax>=TAX_INTERVAL){
 
-if(data.personaggi){
+let tassa=Math.floor(Math.max(100,banca*0.02))
 
-data.personaggi.forEach(p=>{
+banca-=tassa
 
-players.push({
-id:docSnap.id,
-nome:p.nome+" "+p.cognome
+if(banca<0)banca=0
+
+await updateDoc(userRef,{
+bank:banca,
+lastTax:now
 })
 
-})
+salvaStorico("Tassa bancaria",tassa)
 
 }
 
-})
-
 }
-
-caricaGiocatori()
-
-document.getElementById("searchPlayer").addEventListener("input",function(){
-
-let query=this.value.toLowerCase()
-let lista=document.getElementById("playerList")
-
-lista.innerHTML=""
-
-players.filter(p=>p.nome.toLowerCase().includes(query)).forEach(p=>{
-
-let div=document.createElement("div")
-
-div.className="playerItem"
-div.innerText=p.nome
-
-div.onclick=()=>{
-selectedPlayer=p
-document.getElementById("searchPlayer").value=p.nome
-lista.innerHTML=""
-}
-
-lista.appendChild(div)
-
-})
-
-})
 
 window.operazione=async function(){
 
@@ -498,77 +489,80 @@ let importo=Number(document.getElementById("importo1").value)
 if(importo<=0)return
 
 if(tipo==="deposito"&&cash>=importo){
+
 cash-=importo
 banca+=importo
+
 }
 
 if(tipo==="prelievo"&&banca>=importo){
+
 banca-=importo
 cash+=importo
+
 }
 
 await updateDoc(userRef,{
 bank:banca,
-cash:cash,
-transactions:arrayUnion({
-tipo:tipo,
-importo:importo,
-data:Date.now()
+cash:cash
 })
-})
+
+salvaStorico(tipo,importo)
 
 }
 
-window.bonifico=async function(){
+window.richiediPrestito=async function(){
 
-if(!selectedPlayer)return
+let amount=Number(document.getElementById("loanAmount").value)
 
-let importo=Number(document.getElementById("importo2").value)
+if(amount<=0)return
+if(amount>MAX_LOAN)return
 
-if(importo<=0)return
-if(banca<importo)return
+let totale=Math.floor(amount*(1+LOAN_INTEREST))
 
-const destRef=doc(db,"users",selectedPlayer.id)
-const snap=await getDoc(destRef)
-
-let destBank=snap.data().bank||0
-
-banca-=importo
-destBank+=importo
+banca+=amount
 
 await updateDoc(userRef,{
 bank:banca,
-transactions:arrayUnion({
-tipo:"bonifico inviato",
-importo:importo,
-a:selectedPlayer.nome,
-data:Date.now()
-})
+loan:totale
 })
 
-await updateDoc(destRef,{
-bank:destBank,
-transactions:arrayUnion({
-tipo:"bonifico ricevuto",
-importo:importo,
-da:userId,
-data:Date.now()
-})
+salvaStorico("Prestito ricevuto",amount)
+
+}
+
+window.ripagaPrestito=async function(){
+
+const snap=await getDoc(userRef)
+
+let loan=snap.data().loan||0
+
+if(loan<=0)return
+if(banca<loan)return
+
+banca-=loan
+
+await updateDoc(userRef,{
+bank:banca,
+loan:0
 })
 
-notifica("Bonifico inviato")
+salvaStorico("Prestito ripagato",loan)
 
 }
 
 function mostraStorico(lista){
 
 let storico=document.getElementById("storico")
+
 storico.innerHTML=""
 
 lista.slice().reverse().forEach(t=>{
 
 let div=document.createElement("div")
+
 div.className="transazione"
+
 div.innerHTML=`<span>${t.tipo}</span><span>€${t.importo}</span>`
 
 storico.appendChild(div)
@@ -577,28 +571,7 @@ storico.appendChild(div)
 
 }
 
-function notifica(testo){
-
-let div=document.createElement("div")
-
-div.style.position="fixed"
-div.style.top="20px"
-div.style.right="20px"
-div.style.background="#ffd700"
-div.style.color="black"
-div.style.padding="10px 20px"
-div.style.borderRadius="8px"
-div.style.fontWeight="bold"
-
-div.innerText=testo
-
-document.body.appendChild(div)
-
-setTimeout(()=>{div.remove()},4000)
-
-}
-
 </script>
 
 </body>
-                                            </html>
+  </html>
