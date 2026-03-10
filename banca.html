@@ -25,7 +25,7 @@ top:0;
 left:0;
 width:100%;
 height:100%;
-background:url("sfondo.webp") center/cover no-repeat;
+background:url("asset/sfondo.webp") center/cover no-repeat;
 z-index:-2;
 }
 
@@ -40,12 +40,13 @@ background:rgba(0,0,0,0.7);
 z-index:-1;
 }
 
-/* CARTA */
+/* CARTA ORIGINALE */
 
 .card-container{
 width:420px;
 height:260px;
 perspective:1200px;
+margin-bottom:30px;
 }
 
 .card{
@@ -53,7 +54,7 @@ width:100%;
 height:100%;
 position:relative;
 transform-style:preserve-3d;
-transition:0.8s;
+transition:transform 0.8s;
 cursor:pointer;
 }
 
@@ -68,6 +69,7 @@ height:100%;
 border-radius:20px;
 backface-visibility:hidden;
 overflow:hidden;
+box-shadow:0 35px 90px rgba(0,0,0,0.85);
 }
 
 .front{
@@ -178,7 +180,7 @@ top:95px;
 left:30px;
 font-weight:700;
 font-size:16px;
-color:black;
+color:#111;
 }
 
 .cvv-bar{
@@ -211,7 +213,6 @@ width:420px;
 background:rgba(0,0,0,0.6);
 border-radius:14px;
 padding:20px;
-margin-top:20px;
 }
 
 .balance-row{
@@ -230,12 +231,12 @@ font-weight:bold;
 .operations{
 width:420px;
 display:flex;
-flex-direction:column;
-gap:15px;
+gap:20px;
 margin-top:20px;
 }
 
 .operation-box{
+flex:1;
 background:rgba(0,0,0,0.6);
 border-radius:12px;
 padding:15px;
@@ -263,10 +264,10 @@ cursor:pointer;
 
 .history-box{
 width:420px;
+margin-top:20px;
 background:rgba(0,0,0,0.6);
 border-radius:12px;
 padding:15px;
-margin-top:20px;
 max-height:200px;
 overflow:auto;
 }
@@ -274,21 +275,8 @@ overflow:auto;
 .transazione{
 display:flex;
 justify-content:space-between;
-padding:5px 0;
+padding:6px 0;
 border-bottom:1px solid rgba(255,255,255,0.1);
-}
-
-/* PRESTITO */
-
-.loan-box{
-width:420px;
-background:rgba(0,0,0,0.6);
-border-radius:12px;
-padding:15px;
-margin-top:20px;
-display:flex;
-flex-direction:column;
-gap:10px;
 }
 
 </style>
@@ -296,11 +284,12 @@ gap:10px;
 
 <body>
 
+<!-- CARTA -->
+
 <div class="card-container">
 <div class="card" onclick="this.classList.toggle('flip')">
 
 <div class="front">
-
 <div class="gold-bar"></div>
 <div class="postepay">POSTEPAY</div>
 <div class="evolution">evolution</div>
@@ -363,6 +352,16 @@ gap:10px;
 
 </div>
 
+<div class="operation-box">
+
+<select id="listaGiocatori"></select>
+
+<input id="importo2" type="number" placeholder="Quantità">
+
+<button onclick="bonifico()">Bonifico</button>
+
+</div>
+
 </div>
 
 <div class="history-box">
@@ -373,26 +372,10 @@ gap:10px;
 
 </div>
 
-<div class="loan-box">
-
-<h3>Prestito Bancario</h3>
-
-<div>Prestito massimo: <b>500.000€</b></div>
-<div>Interesse banca: <b>18%</b></div>
-
-<div id="debitoAttuale">Debito: €0</div>
-
-<input id="loanAmount" type="number" placeholder="Importo prestito">
-
-<button onclick="richiediPrestito()">Richiedi prestito</button>
-<button onclick="ripagaPrestito()">Ripaga prestito</button>
-
-</div>
-
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, doc, updateDoc, getDoc, onSnapshot, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, updateDoc, getDoc, getDocs, collection, onSnapshot, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
 apiKey:"AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
@@ -412,22 +395,6 @@ const userRef=doc(db,"users",userId);
 let banca=0
 let cash=0
 
-const TAX_INTERVAL=7200000
-const MAX_LOAN=500000
-const LOAN_INTEREST=0.18
-
-async function salvaStorico(tipo,importo){
-
-await updateDoc(userRef,{
-transactions:arrayUnion({
-tipo:tipo,
-importo:importo,
-data:Date.now()
-})
-})
-
-}
-
 onSnapshot(userRef,(snap)=>{
 
 let data=snap.data()
@@ -438,8 +405,6 @@ cash=data.cash||0
 document.getElementById("banca").innerText="€"+banca
 document.getElementById("cash").innerText="€"+cash
 
-document.getElementById("debitoAttuale").innerText="Debito: €"+(data.loan||0)
-
 if(data.personaggioAttivo){
 
 document.getElementById("cardName").innerText=
@@ -447,39 +412,36 @@ data.personaggioAttivo.nome+" "+data.personaggioAttivo.cognome
 
 }
 
-controllaTassa(data)
-
 mostraStorico(data.transactions||[])
 
 })
 
-async function controllaTassa(data){
+async function caricaGiocatori(){
 
-let now=Date.now()
+const snapshot=await getDocs(collection(db,"users"))
 
-if(!data.lastTax){
-await updateDoc(userRef,{lastTax:now})
-return
+let select=document.getElementById("listaGiocatori")
+
+snapshot.forEach(docSnap=>{
+
+let data=docSnap.data()
+
+if(data.personaggioAttivo){
+
+let opt=document.createElement("option")
+
+opt.value=docSnap.id
+opt.innerText=data.personaggioAttivo.nome+" "+data.personaggioAttivo.cognome
+
+select.appendChild(opt)
+
 }
 
-if(now-data.lastTax>=TAX_INTERVAL){
-
-let tassa=Math.floor(Math.max(100,banca*0.02))
-
-banca-=tassa
-
-if(banca<0)banca=0
-
-await updateDoc(userRef,{
-bank:banca,
-lastTax:now
 })
 
-salvaStorico("Tassa bancaria",tassa)
-
 }
 
-}
+caricaGiocatori()
 
 window.operazione=async function(){
 
@@ -504,50 +466,49 @@ cash+=importo
 
 await updateDoc(userRef,{
 bank:banca,
-cash:cash
+cash:cash,
+transactions:arrayUnion({
+tipo:tipo,
+importo:importo,
+data:Date.now()
 })
-
-salvaStorico(tipo,importo)
+})
 
 }
 
-window.richiediPrestito=async function(){
+window.bonifico=async function(){
 
-let amount=Number(document.getElementById("loanAmount").value)
+let target=document.getElementById("listaGiocatori").value
+let importo=Number(document.getElementById("importo2").value)
 
-if(amount<=0)return
-if(amount>MAX_LOAN)return
+if(importo<=0)return
+if(banca<importo)return
 
-let totale=Math.floor(amount*(1+LOAN_INTEREST))
+const targetRef=doc(db,"users",target)
+const snap=await getDoc(targetRef)
 
-banca+=amount
+let destBank=snap.data().bank||0
 
-await updateDoc(userRef,{
-bank:banca,
-loan:totale
-})
-
-salvaStorico("Prestito ricevuto",amount)
-
-}
-
-window.ripagaPrestito=async function(){
-
-const snap=await getDoc(userRef)
-
-let loan=snap.data().loan||0
-
-if(loan<=0)return
-if(banca<loan)return
-
-banca-=loan
+banca-=importo
+destBank+=importo
 
 await updateDoc(userRef,{
 bank:banca,
-loan:0
+transactions:arrayUnion({
+tipo:"bonifico inviato",
+importo:importo,
+data:Date.now()
+})
 })
 
-salvaStorico("Prestito ripagato",loan)
+await updateDoc(targetRef,{
+bank:destBank,
+transactions:arrayUnion({
+tipo:"bonifico ricevuto",
+importo:importo,
+data:Date.now()
+})
+})
 
 }
 
