@@ -40,7 +40,7 @@ background:rgba(0,0,0,0.7);
 z-index:-1;
 }
 
-/* CARTA ORIGINALE */
+/* CARTA */
 
 .card-container{
 width:420px;
@@ -54,7 +54,7 @@ width:100%;
 height:100%;
 position:relative;
 transform-style:preserve-3d;
-transition:transform 0.8s;
+transition:0.8s;
 cursor:pointer;
 }
 
@@ -69,7 +69,7 @@ height:100%;
 border-radius:20px;
 backface-visibility:hidden;
 overflow:hidden;
-box-shadow:0 35px 90px rgba(0,0,0,0.85);
+box-shadow:0 30px 70px rgba(0,0,0,0.8);
 }
 
 .front{
@@ -231,12 +231,12 @@ font-weight:bold;
 .operations{
 width:420px;
 display:flex;
-gap:20px;
+flex-direction:column;
+gap:15px;
 margin-top:20px;
 }
 
 .operation-box{
-flex:1;
 background:rgba(0,0,0,0.6);
 border-radius:12px;
 padding:15px;
@@ -275,8 +275,21 @@ overflow:auto;
 .transazione{
 display:flex;
 justify-content:space-between;
-padding:6px 0;
+padding:5px 0;
 border-bottom:1px solid rgba(255,255,255,0.1);
+}
+
+/* PRESTITO */
+
+.loan-box{
+width:420px;
+margin-top:20px;
+background:rgba(0,0,0,0.6);
+border-radius:12px;
+padding:15px;
+display:flex;
+flex-direction:column;
+gap:10px;
 }
 
 </style>
@@ -284,12 +297,11 @@ border-bottom:1px solid rgba(255,255,255,0.1);
 
 <body>
 
-<!-- CARTA -->
-
 <div class="card-container">
 <div class="card" onclick="this.classList.toggle('flip')">
 
 <div class="front">
+
 <div class="gold-bar"></div>
 <div class="postepay">POSTEPAY</div>
 <div class="evolution">evolution</div>
@@ -325,7 +337,7 @@ border-bottom:1px solid rgba(255,255,255,0.1);
 
 <div class="cvv-bar">123</div>
 
-<div class="iban">IT60 X054 2811 1010 0000 0123 456</div>
+<div class="iban">IT60 RP00 0000 0000 0000 0000</div>
 
 </div>
 
@@ -346,7 +358,7 @@ border-bottom:1px solid rgba(255,255,255,0.1);
 <option value="prelievo">Prelievo</option>
 </select>
 
-<input id="importo1" type="number" placeholder="Quantità">
+<input id="importo1" type="number" placeholder="Importo">
 
 <button onclick="operazione()">Conferma</button>
 
@@ -356,9 +368,9 @@ border-bottom:1px solid rgba(255,255,255,0.1);
 
 <select id="listaGiocatori"></select>
 
-<input id="importo2" type="number" placeholder="Quantità">
+<input id="importo2" type="number" placeholder="Importo bonifico">
 
-<button onclick="bonifico()">Bonifico</button>
+<button onclick="bonifico()">Invia Bonifico</button>
 
 </div>
 
@@ -366,9 +378,25 @@ border-bottom:1px solid rgba(255,255,255,0.1);
 
 <div class="history-box">
 
-<h3>Storico transazioni</h3>
+<h3>Storico</h3>
 
 <div id="storico"></div>
+
+</div>
+
+<div class="loan-box">
+
+<h3>Prestito</h3>
+
+<div>Prestito massimo: <b>500.000€</b></div>
+<div>Interesse banca: <b>18%</b></div>
+
+<div id="debitoAttuale">Debito: €0</div>
+
+<input id="loanAmount" type="number" placeholder="Importo prestito">
+
+<button onclick="richiediPrestito()">Richiedi prestito</button>
+<button onclick="ripagaPrestito()">Ripaga prestito</button>
 
 </div>
 
@@ -407,10 +435,13 @@ document.getElementById("cash").innerText="€"+cash
 
 if(data.personaggioAttivo){
 
-document.getElementById("cardName").innerText=
+document.getElementById("cardName").innerText =
 data.personaggioAttivo.nome+" "+data.personaggioAttivo.cognome
 
 }
+
+document.getElementById("debitoAttuale").innerText =
+"Debito: €"+(data.loan||0)
 
 mostraStorico(data.transactions||[])
 
@@ -450,28 +481,20 @@ let importo=Number(document.getElementById("importo1").value)
 
 if(importo<=0)return
 
-if(tipo==="deposito"&&cash>=importo){
-
+if(tipo==="deposito" && cash>=importo){
 cash-=importo
 banca+=importo
-
 }
 
-if(tipo==="prelievo"&&banca>=importo){
-
+if(tipo==="prelievo" && banca>=importo){
 banca-=importo
 cash+=importo
-
 }
 
 await updateDoc(userRef,{
 bank:banca,
 cash:cash,
-transactions:arrayUnion({
-tipo:tipo,
-importo:importo,
-data:Date.now()
-})
+transactions:arrayUnion({tipo:tipo,importo:importo,data:Date.now()})
 })
 
 }
@@ -494,20 +517,48 @@ destBank+=importo
 
 await updateDoc(userRef,{
 bank:banca,
-transactions:arrayUnion({
-tipo:"bonifico inviato",
-importo:importo,
-data:Date.now()
-})
+transactions:arrayUnion({tipo:"Bonifico inviato",importo:importo,data:Date.now()})
 })
 
 await updateDoc(targetRef,{
 bank:destBank,
-transactions:arrayUnion({
-tipo:"bonifico ricevuto",
-importo:importo,
-data:Date.now()
+transactions:arrayUnion({tipo:"Bonifico ricevuto",importo:importo,data:Date.now()})
 })
+
+}
+
+window.richiediPrestito=async function(){
+
+let amount=Number(document.getElementById("loanAmount").value)
+
+if(amount<=0)return
+if(amount>500000)return
+
+let totale=Math.floor(amount*1.18)
+
+banca+=amount
+
+await updateDoc(userRef,{
+bank:banca,
+loan:totale
+})
+
+}
+
+window.ripagaPrestito=async function(){
+
+const snap=await getDoc(userRef)
+
+let loan=snap.data().loan||0
+
+if(loan<=0)return
+if(banca<loan)return
+
+banca-=loan
+
+await updateDoc(userRef,{
+bank:banca,
+loan:0
 })
 
 }
@@ -515,7 +566,6 @@ data:Date.now()
 function mostraStorico(lista){
 
 let storico=document.getElementById("storico")
-
 storico.innerHTML=""
 
 lista.slice().reverse().forEach(t=>{
