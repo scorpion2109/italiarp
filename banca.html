@@ -7,8 +7,6 @@
 
 <style>
 
-/* SFONDO */
-
 body{
 margin:0;
 font-family:Arial, sans-serif;
@@ -43,7 +41,7 @@ background:linear-gradient(rgba(0,0,0,0.55),rgba(0,0,0,0.8));
 z-index:-1;
 }
 
-/* CARTA */
+/* -------- CARTA (LA TUA ORIGINALE) -------- */
 
 .card-container{
 width:420px;
@@ -65,22 +63,36 @@ cursor:pointer;
 transform:rotateY(180deg);
 }
 
-.front,.back{
+.front, .back{
 position:absolute;
 width:100%;
 height:100%;
 border-radius:20px;
 backface-visibility:hidden;
 overflow:hidden;
-box-shadow:0 35px 90px rgba(0,0,0,0.85);
+box-shadow:0 35px 90px rgba(0,0,0,0.85),
+0 10px 20px rgba(0,0,0,0.5),
+inset 0 3px 8px rgba(255,255,255,0.25);
+}
+
+.front::after,
+.back::after{
+content:"";
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:linear-gradient(
+120deg,
+rgba(255,255,255,0.25) 0%,
+rgba(255,255,255,0.05) 40%,
+transparent 60%
+);
+pointer-events:none;
 }
 
 .front{
-background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);
-}
-
-.back{
-transform:rotateY(180deg);
 background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);
 }
 
@@ -90,7 +102,7 @@ left:0;
 top:0;
 height:100%;
 width:55px;
-background:linear-gradient(#7a5a00,#ffd700,#7a5a00);
+background:linear-gradient(180deg,#7a5a00,#d4af37,#ffd700,#cfa600,#7a5a00);
 }
 
 .postepay{
@@ -100,6 +112,14 @@ left:75px;
 color:#ffd700;
 font-weight:900;
 font-size:28px;
+}
+
+.evolution{
+position:absolute;
+top:58px;
+left:190px;
+color:#ffd700;
+font-size:13px;
 }
 
 .chip{
@@ -116,6 +136,17 @@ left:130px;
 width:30px;
 }
 
+.posteitaliane{
+position:absolute;
+top:117px;
+left:165px;
+font-size:19px;
+font-weight:900;
+}
+
+.poste{color:#cfcfcf;}
+.italiane{color:#444;}
+
 .card-number{
 position:absolute;
 bottom:70px;
@@ -124,7 +155,19 @@ font-size:20px;
 letter-spacing:3px;
 font-weight:700;
 color:#f1f1f1;
+text-shadow:1px 1px 0 #aaa,2px 2px 2px rgba(0,0,0,0.6);
 }
+
+.expiry{
+position:absolute;
+bottom:22px;
+right:90px;
+color:#e6e6e6;
+text-align:right;
+}
+
+.expiry .label{font-size:9px;}
+.expiry .date{font-size:16px;font-weight:bold;}
 
 .card-logo{
 position:absolute;
@@ -133,12 +176,78 @@ right:20px;
 width:55px;
 }
 
+.card-logo img{width:100%;}
+
+.rp-box{
+position:absolute;
+top:22px;
+right:20px;
+padding:6px 14px;
+border-radius:6px;
+background:rgba(0,0,0,0.35);
+border:1px solid rgba(255,255,255,0.25);
+color:white;
+font-weight:700;
+font-size:12px;
+}
+
+.back{
+transform:rotateY(180deg);
+background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);
+}
+
+.magnetic{
+position:absolute;
+top:25px;
+left:0;
+width:100%;
+height:45px;
+background:black;
+}
+
+.name{
+position:absolute;
+top:95px;
+left:30px;
+font-weight:700;
+font-size:16px;
+color:#111;
+text-shadow:1px 1px 0 #bbb,2px 2px 3px rgba(0,0,0,0.5);
+}
+
+.cvv-bar{
+position:absolute;
+top:135px;
+left:30px;
+width:220px;
+height:35px;
+background:white;
+border-radius:4px;
+display:flex;
+align-items:center;
+justify-content:flex-end;
+padding-right:10px;
+font-weight:bold;
+letter-spacing:2px;
+}
+
+.iban{
+position:absolute;
+bottom:20px;
+left:30px;
+font-size:14px;
+font-weight:bold;
+color:#222;
+}
+
+/* SALDO */
+
 .balance-box{
 width:420px;
 background:rgba(0,0,0,0.6);
-border-radius:16px;
+border-radius:14px;
 padding:20px;
-margin-bottom:20px;
+margin-top:20px;
 }
 
 .balance-row{
@@ -148,10 +257,7 @@ padding:10px 0;
 font-size:18px;
 }
 
-.amount{
-color:#ffd700;
-font-weight:bold;
-}
+.amount{color:#ffd700;font-weight:bold;}
 
 /* OPERAZIONI */
 
@@ -160,6 +266,7 @@ width:420px;
 display:flex;
 flex-direction:column;
 gap:15px;
+margin-top:20px;
 }
 
 .operation-box{
@@ -184,10 +291,6 @@ border-radius:6px;
 background:#ffd700;
 font-weight:bold;
 cursor:pointer;
-}
-
-button:hover{
-background:#e6c200;
 }
 
 /* LISTA GIOCATORI */
@@ -233,29 +336,42 @@ border-bottom:1px solid rgba(255,255,255,0.1);
 
 <body>
 
+<!-- CARTA -->
+
 <div class="card-container">
 <div class="card" onclick="this.classList.toggle('flip')">
 
 <div class="front">
 <div class="gold-bar"></div>
 <div class="postepay">POSTEPAY</div>
+<div class="evolution">evolution</div>
 <img src="assets/chip.png" class="chip">
 <img src="assets/contactless.png" class="contactless">
+<div class="posteitaliane"><span class="poste">POSTE</span><span class="italiane">ITALIANE</span></div>
+<div class="rp-box">ITALIA RP</div>
 <div class="card-number">1234 5678 9012 3456</div>
-<div class="card-logo">
-<img src="assets/mastercard.png">
+<div class="expiry"><div class="label">VALID THRU</div><div class="date">12/29</div></div>
+<div class="card-logo"><img src="assets/mastercard.png"></div>
+</div>
+
+<div class="back">
+<div class="magnetic"></div>
+<div class="name">MARIO ROSSI</div>
+<div class="cvv-bar">123</div>
+<div class="iban">IT60 X054 2811 1010 0000 0123 456</div>
+</div>
+
 </div>
 </div>
 
-<div class="back"></div>
-
-</div>
-</div>
+<!-- SALDO -->
 
 <div class="balance-box">
-<div class="balance-row">BANCA <span id="banca" class="amount">€0</span></div>
-<div class="balance-row">CASH <span id="cash" class="amount">€0</span></div>
+<div class="balance-row"><span>BANCA</span><span id="banca" class="amount">€0</span></div>
+<div class="balance-row"><span>CASH</span><span id="cash" class="amount">€0</span></div>
 </div>
+
+<!-- OPERAZIONI -->
 
 <div class="operations">
 
@@ -264,22 +380,15 @@ border-bottom:1px solid rgba(255,255,255,0.1);
 <option value="deposito">Deposito</option>
 <option value="prelievo">Prelievo</option>
 </select>
-
 <input id="importo1" type="number" placeholder="Quantità">
-
 <button onclick="operazione()">Conferma</button>
 </div>
 
 <div class="operation-box">
-
 <input id="searchPlayer" placeholder="Cerca giocatore RP">
-
 <div id="playerList"></div>
-
 <input id="importo2" type="number" placeholder="Quantità">
-
 <button onclick="bonifico()">Bonifico</button>
-
 </div>
 
 </div>
@@ -295,23 +404,22 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { getFirestore, doc, updateDoc, getDoc, collection, getDocs, onSnapshot, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
-apiKey: "AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
-authDomain: "sito-rp.firebaseapp.com",
-projectId: "sito-rp",
-storageBucket: "sito-rp.firebasestorage.app",
-messagingSenderId: "234781749995",
-appId: "1:234781749995:web:6954473363659fe38b04ae"
+apiKey:"AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
+authDomain:"sito-rp.firebaseapp.com",
+projectId:"sito-rp",
+storageBucket:"sito-rp.firebasestorage.app",
+messagingSenderId:"234781749995",
+appId:"1:234781749995:web:6954473363659fe38b04ae"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const app=initializeApp(firebaseConfig);
+const db=getFirestore(app);
 
 const userId="982317367596032010";
 const userRef=doc(db,"users",userId);
 
 let banca=0
 let cash=0
-
 let players=[]
 let selectedPlayer=null
 
@@ -359,7 +467,6 @@ caricaGiocatori()
 document.getElementById("searchPlayer").addEventListener("input",function(){
 
 let query=this.value.toLowerCase()
-
 let lista=document.getElementById("playerList")
 
 lista.innerHTML=""
@@ -422,7 +529,6 @@ if(importo<=0)return
 if(banca<importo)return
 
 const destRef=doc(db,"users",selectedPlayer.id)
-
 const snap=await getDoc(destRef)
 
 let destBank=snap.data().bank||0
@@ -457,15 +563,12 @@ notifica("Bonifico inviato")
 function mostraStorico(lista){
 
 let storico=document.getElementById("storico")
-
 storico.innerHTML=""
 
 lista.slice().reverse().forEach(t=>{
 
 let div=document.createElement("div")
-
 div.className="transazione"
-
 div.innerHTML=`<span>${t.tipo}</span><span>€${t.importo}</span>`
 
 storico.appendChild(div)
@@ -498,4 +601,4 @@ setTimeout(()=>{div.remove()},4000)
 </script>
 
 </body>
-  </html>
+                                            </html>
