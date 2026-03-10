@@ -69,54 +69,11 @@ object-fit:cover;
 border:2px solid white;
 }
 
-.wrapper{
-perspective:2500px;
-margin-top:30px;
-display:none;
-}
-
-.card{
-width:540px;
-height:340px;
-position:relative;
-transform-style:preserve-3d;
-transition:1.2s;
+.actions{
+display:flex;
+gap:10px;
+font-size:18px;
 cursor:pointer;
-}
-
-.card.flipped{
-transform:rotateY(180deg);
-}
-
-.face{
-position:absolute;
-width:100%;
-height:100%;
-border-radius:18px;
-backface-visibility:hidden;
-overflow:hidden;
-background:white;
-color:black;
-padding:25px;
-}
-
-.back{
-transform:rotateY(180deg);
-background:#e8f1f3;
-}
-
-.photo{
-width:120px;
-height:160px;
-border-radius:10px;
-overflow:hidden;
-margin-bottom:10px;
-}
-
-.photo img{
-width:100%;
-height:100%;
-object-fit:cover;
 }
 
 form{
@@ -130,13 +87,6 @@ input{
 padding:8px;
 border-radius:8px;
 border:none;
-}
-
-.actions{
-display:flex;
-gap:10px;
-font-size:18px;
-cursor:pointer;
 }
 
 </style>
@@ -168,47 +118,10 @@ cursor:pointer;
 
 </div>
 
-
-<div class="wrapper">
-
-<div class="card" id="card">
-
-<div class="face front">
-
-<div class="photo">
-<img id="c_foto">
-</div>
-
-<p><b>Nome:</b> <span id="c_nome"></span></p>
-<p><b>Cognome:</b> <span id="c_cognome"></span></p>
-<p><b>Data:</b> <span id="c_data"></span></p>
-<p><b>Occhi:</b> <span id="c_occhi"></span></p>
-<p><b>Capelli:</b> <span id="c_capelli"></span></p>
-
-</div>
-
-<div class="face back">
-
-<p><b>Codice Fiscale:</b> <span id="c_cf"></span></p>
-<p><b>Residenza:</b> <span id="c_res"></span></p>
-
-</div>
-
-</div>
-
-</div>
-
-
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
-
-import {
-getFirestore,
-doc,
-getDoc,
-setDoc
-} from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
 
 const firebaseConfig = {
 
@@ -233,18 +146,18 @@ window.location.href="index.html";
 
 }
 
-const lista = document.getElementById("lista");
-const form = document.getElementById("form");
-const btn = document.getElementById("btnCrea");
+const lista=document.getElementById("lista");
+const form=document.getElementById("form");
+const btn=document.getElementById("btnCrea");
 
-const wrapper = document.querySelector(".wrapper");
-const card = document.getElementById("card");
+let listaPers=[];
+let editingIndex=null;
 
-let listaPers = [];
+const MAX=2;
 
-const MAX = 2;
-
-let editingIndex = null;
+window.onload = async () => {
+await inizializzaUtente();
+};
 
 async function inizializzaUtente(){
 
@@ -258,7 +171,7 @@ listaPers = snap.data().personaggi || [];
 }else{
 
 await setDoc(ref,{personaggi:[]});
-listaPers = [];
+listaPers=[];
 
 }
 
@@ -266,11 +179,11 @@ aggiornaLista();
 
 }
 
-inizializzaUtente();
+async function salva(){
 
-function salva(){
-
-setDoc(doc(db,"users",uid),{personaggi:listaPers},{merge:true});
+await setDoc(doc(db,"users",uid),{
+personaggi:listaPers
+},{merge:true});
 
 }
 
@@ -285,8 +198,6 @@ div.className="personaggio";
 
 let info=document.createElement("div");
 info.className="personaggio-info";
-
-info.onclick=()=>mostraCarta(p);
 
 let img=document.createElement("img");
 img.src=p.foto;
@@ -313,12 +224,12 @@ edit.onclick=()=>modifica(index);
 
 let del=document.createElement("span");
 del.innerText="🗑️";
-del.onclick=()=>{
+del.onclick=async ()=>{
 
 if(confirm("Eliminare personaggio?")){
 
 listaPers.splice(index,1);
-salva();
+await salva();
 aggiornaLista();
 
 }
@@ -351,22 +262,22 @@ editingIndex=null;
 
 };
 
-form.onsubmit=e=>{
+form.onsubmit=async e=>{
 
 e.preventDefault();
 
-let reader=new FileReader();
+const reader=new FileReader();
 
-reader.onload=function(){
+reader.onload=async function(){
 
 let p={
 
-nome:nome.value,
-cognome:cognome.value,
-data:data.value,
-occhi:occhi.value,
-capelli:capelli.value,
-residenza:residenza.value,
+nome:document.getElementById("nome").value,
+cognome:document.getElementById("cognome").value,
+data:document.getElementById("data").value,
+occhi:document.getElementById("occhi").value,
+capelli:document.getElementById("capelli").value,
+residenza:document.getElementById("residenza").value,
 foto:reader.result
 
 };
@@ -381,16 +292,15 @@ listaPers.push(p);
 
 }
 
-salva();
+await salva();
 aggiornaLista();
-mostraCarta(p);
 
 form.reset();
 form.style.display="none";
 
 };
 
-reader.readAsDataURL(fotoInput.files[0]);
+reader.readAsDataURL(document.getElementById("fotoInput").files[0]);
 
 };
 
@@ -398,39 +308,16 @@ function modifica(index){
 
 let p=listaPers[index];
 
-nome.value=p.nome;
-cognome.value=p.cognome;
-data.value=p.data;
-occhi.value=p.occhi;
-capelli.value=p.capelli;
-residenza.value=p.residenza;
+document.getElementById("nome").value=p.nome;
+document.getElementById("cognome").value=p.cognome;
+document.getElementById("data").value=p.data;
+document.getElementById("occhi").value=p.occhi;
+document.getElementById("capelli").value=p.capelli;
+document.getElementById("residenza").value=p.residenza;
 
 editingIndex=index;
+
 form.style.display="flex";
-
-}
-
-function generaCF(p){
-
-return p.cognome.substring(0,3).toUpperCase()+
-p.nome.substring(0,3).toUpperCase()+"25X0";
-
-}
-
-function mostraCarta(p){
-
-wrapper.style.display="block";
-
-c_nome.innerText=p.nome;
-c_cognome.innerText=p.cognome;
-c_data.innerText=p.data;
-c_occhi.innerText=p.occhi;
-c_capelli.innerText=p.capelli;
-c_res.innerText=p.residenza;
-c_cf.innerText=generaCF(p);
-c_foto.src=p.foto;
-
-card.onclick=()=>card.classList.toggle("flipped");
 
 }
 
@@ -438,3 +325,4 @@ card.onclick=()=>card.classList.toggle("flipped");
 
 </body>
   </html>
+
