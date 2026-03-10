@@ -4,7 +4,6 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Italia RP - Home</title>
 
 <style>
@@ -185,10 +184,8 @@ color:white;
 <div class="clock" id="clock"></div>
 
 <div class="top-icons">
-
 <img src="assets/logo-documento.png" id="btnDocumenti">
 <img src="assets/logo-impostazioni.png">
-
 </div>
 
 </div>
@@ -222,11 +219,8 @@ color:white;
 <div class="documenti-box">
 
 <div class="documenti-header">
-
 <h2>I Tuoi Documenti</h2>
-
 <span id="chiudiDocumenti">✖</span>
-
 </div>
 
 <div class="documenti-content">
@@ -244,9 +238,7 @@ Cambia Personaggio
 </div>
 
 <div class="footer">
-
 © 2025 Italia RP
-
 </div>
 
 <script type="module">
@@ -255,14 +247,12 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebas
 import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
 
 const firebaseConfig = {
-
 apiKey: "AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
 authDomain: "sito-rp.firebaseapp.com",
 projectId: "sito-rp",
 storageBucket: "sito-rp.appspot.com",
 messagingSenderId: "234781749995",
 appId: "1:234781749995:web:6954473363659fe38b04ae"
-
 };
 
 const app = initializeApp(firebaseConfig);
@@ -272,9 +262,7 @@ const uid = sessionStorage.getItem("discord_uid");
 const personaggioIndex = sessionStorage.getItem("personaggio_index");
 
 if(!uid || personaggioIndex === null){
-
 window.location.href="index.html";
-
 }
 
 /* CARICA PERSONAGGIO */
@@ -288,16 +276,13 @@ if(snap.exists()){
 
 const data = snap.data();
 const lista = data.personaggi || [];
-
 personaggio = lista[personaggioIndex];
 
 }
 
 if(!personaggio){
-
 alert("Personaggio non trovato");
 window.location.href="lista-personaggi.html";
-
 }
 
 document.getElementById("nomePersonaggio").innerText =
@@ -324,28 +309,20 @@ updateClock();
 const overlay = document.getElementById("documentiOverlay");
 
 document.getElementById("btnDocumenti").onclick = ()=>{
-
 overlay.style.display="flex";
-
 };
 
 document.getElementById("chiudiDocumenti").onclick = ()=>{
-
 overlay.style.display="none";
-
 };
 
 overlay.onclick = (e)=>{
-
 if(e.target===overlay){
-
 overlay.style.display="none";
-
 }
-
 };
 
-/* LOG APERTURA APP */
+/* APERTURA APP */
 
 document.querySelectorAll(".app").forEach(appEl=>{
 
@@ -360,6 +337,13 @@ app:nomeApp,
 timestamp:serverTimestamp()
 
 });
+
+/* collegamento banca */
+
+if(nomeApp === "Banca"){
+window.location.href="banca.html";
+return;
+}
 
 alert("Aperto: "+nomeApp);
 
