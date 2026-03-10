@@ -1,237 +1,252 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Italia RP - Home</title>
 
 <style>
+
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Segoe UI',sans-serif;
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
 }
 
 body{
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
-    color:white;
-    background-image:url("assets/sfondo.webp");
-    background-size:cover;
-    background-position:center;
-    background-attachment:fixed;
+min-height:100vh;
+display:flex;
+flex-direction:column;
+color:white;
+background-image:url("assets/sfondo.webp");
+background-size:cover;
+background-position:center;
+background-attachment:fixed;
 }
 
 body::before{
-    content:"";
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.35);
-    z-index:-1;
+content:"";
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.35);
+z-index:-1;
 }
 
 .header{
-    height:75px;
-    backdrop-filter:blur(8px);
-    background:rgba(15,15,15,0.55);
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 30px;
-    border-bottom:1px solid rgba(255,255,255,0.15);
+height:75px;
+backdrop-filter:blur(8px);
+background:rgba(15,15,15,0.55);
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 30px;
+border-bottom:1px solid rgba(255,255,255,0.15);
 }
 
 .logo img{
-    width:55px;
+width:55px;
 }
 
 .clock{
-    font-size:22px;
-    font-weight:600;
-    letter-spacing:2px;
+font-size:22px;
+font-weight:600;
+letter-spacing:2px;
 }
 
 .top-icons{
-    display:flex;
-    gap:20px;
+display:flex;
+gap:20px;
 }
 
 .top-icons img{
-    width:26px;
-    cursor:pointer;
-    transition:0.2s ease;
+width:26px;
+cursor:pointer;
+transition:0.2s;
 }
 
 .top-icons img:hover{
-    transform:scale(1.15);
+transform:scale(1.15);
 }
 
 .grid{
-    flex:1;
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:70px;
-    padding:80px 60px;
-    justify-items:center;
+flex:1;
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:70px;
+padding:80px 60px;
+justify-items:center;
 }
 
 @media(max-width:900px){
-    .grid{
-        grid-template-columns:repeat(2,1fr);
-    }
+
+.grid{
+grid-template-columns:repeat(2,1fr);
+}
+
 }
 
 .app{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    cursor:pointer;
-    transition:0.3s ease;
+display:flex;
+flex-direction:column;
+align-items:center;
+cursor:pointer;
+transition:0.3s;
 }
 
 .app img{
-    width:85px;
-    height:85px;
-    object-fit:contain;
-    margin-bottom:12px;
+width:85px;
+height:85px;
+object-fit:contain;
+margin-bottom:12px;
 }
 
 .app span{
-    font-size:15px;
-    font-weight:500;
-    text-align:center;
+font-size:15px;
+font-weight:500;
+text-align:center;
 }
 
 .app:hover{
-    transform:scale(1.12);
-    filter:drop-shadow(0 0 15px rgba(0,255,0,0.7));
+transform:scale(1.12);
+filter:drop-shadow(0 0 15px rgba(0,255,0,0.7));
 }
 
 .footer{
-    height:50px;
-    backdrop-filter:blur(6px);
-    background:rgba(0,0,0,0.5);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:14px;
-    border-top:1px solid rgba(255,255,255,0.15);
+height:50px;
+backdrop-filter:blur(6px);
+background:rgba(0,0,0,0.5);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:14px;
+border-top:1px solid rgba(255,255,255,0.15);
 }
 
 .documenti-overlay{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.6);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    z-index:1000;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.6);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:1000;
 }
 
 .documenti-box{
-    width:400px;
-    max-width:90%;
-    background:rgba(20,20,20,0.95);
-    border-radius:20px;
-    padding:25px;
-    animation:fadeIn 0.3s ease;
-    backdrop-filter:blur(10px);
+width:400px;
+max-width:90%;
+background:rgba(20,20,20,0.95);
+border-radius:20px;
+padding:25px;
+backdrop-filter:blur(10px);
 }
 
 .documenti-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:20px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
 }
 
 .documenti-header span{
-    cursor:pointer;
-    font-size:18px;
+cursor:pointer;
+font-size:18px;
 }
 
 .documenti-content{
-    text-align:center;
+text-align:center;
 }
 
 .documenti-content button{
-    margin-top:15px;
-    padding:10px 20px;
-    border:none;
-    border-radius:10px;
-    cursor:pointer;
-    background:#00aa44;
-    color:white;
+margin-top:15px;
+padding:10px 20px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+background:#00aa44;
+color:white;
 }
 
-@keyframes fadeIn{
-    from{opacity:0; transform:scale(0.9);}
-    to{opacity:1; transform:scale(1);}
-}
 </style>
+
 </head>
+
 <body>
 
 <div class="header">
-    <div class="logo">
-        <img src="assets/logo.png">
-    </div>
 
-    <div class="clock" id="clock"></div>
+<div class="logo">
+<img src="assets/logo.png">
+</div>
 
-    <div class="top-icons">
-        <img src="assets/logo-documento.png" id="btnDocumenti">
-        <img src="assets/logo-impostazioni.png" id="btnImpostazioni">
-    </div>
+<div class="clock" id="clock"></div>
+
+<div class="top-icons">
+
+<img src="assets/logo-documento.png" id="btnDocumenti">
+<img src="assets/logo-impostazioni.png">
+
+</div>
+
 </div>
 
 <div class="grid">
 
-    <div class="app" data-app="Comune">
-        <img src="assets/comune.png">
-        <span>Comune</span>
-    </div>
+<div class="app" data-app="Comune">
+<img src="assets/comune.png">
+<span>Comune</span>
+</div>
 
-    <div class="app" data-app="Banca">
-        <img src="assets/banca.png">
-        <span>Banca</span>
-    </div>
+<div class="app" data-app="Banca">
+<img src="assets/banca.png">
+<span>Banca</span>
+</div>
 
-    <div class="app" data-app="Whatsapp">
-        <img src="assets/whatsapp.png">
-        <span>Whatsapp</span>
-    </div>
+<div class="app" data-app="Whatsapp">
+<img src="assets/whatsapp.png">
+<span>Whatsapp</span>
+</div>
 
-    <div class="app" data-app="Instagram">
-        <img src="assets/instagram.png">
-        <span>Instagram</span>
-    </div>
+<div class="app" data-app="Instagram">
+<img src="assets/instagram.png">
+<span>Instagram</span>
+</div>
 
 </div>
 
 <div class="documenti-overlay" id="documentiOverlay">
-    <div class="documenti-box">
 
-        <div class="documenti-header">
-            <h2>I Tuoi Documenti</h2>
-            <span id="chiudiDocumenti">✖</span>
-        </div>
+<div class="documenti-box">
 
-        <div class="documenti-content">
-            <p id="nomePersonaggio"></p>
+<div class="documenti-header">
 
-            <button onclick="window.location.href='lista-personaggi.html'">
-                Cambia Personaggio
-            </button>
-        </div>
+<h2>I Tuoi Documenti</h2>
 
-    </div>
+<span id="chiudiDocumenti">✖</span>
+
+</div>
+
+<div class="documenti-content">
+
+<p id="nomePersonaggio"></p>
+
+<button onclick="window.location.href='lista-personaggi.html'">
+Cambia Personaggio
+</button>
+
+</div>
+
+</div>
+
 </div>
 
 <div class="footer">
-© 2025 Italia RP - Tutti i diritti riservati
+
+© 2025 Italia RP
+
 </div>
 
 <script type="module">
@@ -240,46 +255,65 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebas
 import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
 
 const firebaseConfig = {
+
 apiKey: "AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
 authDomain: "sito-rp.firebaseapp.com",
 projectId: "sito-rp",
-storageBucket: "sito-rp.firebasestorage.app",
+storageBucket: "sito-rp.appspot.com",
 messagingSenderId: "234781749995",
 appId: "1:234781749995:web:6954473363659fe38b04ae"
+
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const uid = sessionStorage.getItem("discord_uid");
-const personaggio = sessionStorage.getItem("personaggio_id");
+const personaggioIndex = sessionStorage.getItem("personaggio_index");
 
-if(!uid || !personaggio){
+if(!uid || personaggioIndex === null){
+
 window.location.href="index.html";
+
 }
 
 /* CARICA PERSONAGGIO */
 
-const ref = doc(db,"users",uid,"personaggi",personaggio);
+const ref = doc(db,"users",uid);
 const snap = await getDoc(ref);
+
+let personaggio = null;
 
 if(snap.exists()){
 
 const data = snap.data();
+const lista = data.personaggi || [];
 
-document.getElementById("nomePersonaggio").innerText =
-data.nome + " " + data.cognome;
+personaggio = lista[personaggioIndex];
 
 }
+
+if(!personaggio){
+
+alert("Personaggio non trovato");
+window.location.href="lista-personaggi.html";
+
+}
+
+document.getElementById("nomePersonaggio").innerText =
+personaggio.nome + " " + personaggio.cognome;
 
 /* OROLOGIO */
 
 function updateClock(){
+
 const now = new Date();
+
 document.getElementById("clock").innerText =
 now.getHours().toString().padStart(2,"0")+":"+
 now.getMinutes().toString().padStart(2,"0")+":"+
 now.getSeconds().toString().padStart(2,"0");
+
 }
 
 setInterval(updateClock,1000);
@@ -290,20 +324,28 @@ updateClock();
 const overlay = document.getElementById("documentiOverlay");
 
 document.getElementById("btnDocumenti").onclick = ()=>{
+
 overlay.style.display="flex";
+
 };
 
 document.getElementById("chiudiDocumenti").onclick = ()=>{
+
 overlay.style.display="none";
+
 };
 
 overlay.onclick = (e)=>{
+
 if(e.target===overlay){
+
 overlay.style.display="none";
+
 }
+
 };
 
-/* LOG APP */
+/* LOG APERTURA APP */
 
 document.querySelectorAll(".app").forEach(appEl=>{
 
@@ -313,7 +355,7 @@ const nomeApp = appEl.dataset.app;
 
 await addDoc(collection(db,"users",uid,"logs"),{
 
-personaggio:personaggio,
+personaggio:personaggio.nome + " " + personaggio.cognome,
 app:nomeApp,
 timestamp:serverTimestamp()
 
@@ -328,4 +370,4 @@ alert("Aperto: "+nomeApp);
 </script>
 
 </body>
-</html>
+    </html>
