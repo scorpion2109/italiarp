@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Italia RP - Login</title>
+
 <style>
 body {
     background: linear-gradient(180deg,#1c102b,#2a1b3f);
@@ -15,6 +16,7 @@ body {
     min-height:100vh;
     font-family:'Segoe UI',sans-serif;
 }
+
 button {
     padding:10px 20px;
     background:#5865F2;
@@ -26,53 +28,81 @@ button {
     margin-top:20px;
     transition:0.2s;
 }
-button:hover {transform:scale(1.05);}
-h1 {margin-bottom:20px;}
+
+button:hover {
+    transform:scale(1.05);
+}
+
+h1 {
+    margin-bottom:20px;
+}
 </style>
 </head>
+
 <body>
 
 <h1>Benvenuto su Italia RP</h1>
+
 <button id="login-btn">Accedi con Discord</button>
 
 <script>
-// ==== DISCORD LOGIN ====
+
+// CONFIG
 const clientId = "1475512122330054737";
-const redirectUri = "https://scorpion2109.github.io/italiarp/"; // tuo URL GitHub Pages
-const scope = "identify email";
+const redirectUri = "https://scorpion2109.github.io/italiarp/";
+const scope = "identify";
 
+// LOGIN BUTTON
 document.getElementById("login-btn").onclick = () => {
-    window.location.href =
-        `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${scope}`;
+
+const url =
+`https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${scope}`;
+
+window.location.href = url;
+
 };
 
-// ==== PRENDI TOKEN DAL REDIRECT ====
+// CONTROLLO LOGIN
 window.onload = async () => {
-    const hash = window.location.hash;
-    if(hash.includes("access_token")){
-        const params = new URLSearchParams(hash.substring(1));
-        const accessToken = params.get("access_token");
 
-        try {
-            const res = await fetch("https://discord.com/api/users/@me", {
-                headers: { Authorization: `Bearer ${accessToken}` }
-            });
-            const user = await res.json();
-            console.log("Discord user:", user);
+const hash = window.location.hash;
 
-            // Salva ID utente in sessionStorage
-            sessionStorage.setItem("discord_uid", user.id);
+if(!hash.includes("access_token")) return;
 
-            // Vai a lista-personaggi
-            window.location.href = "lista-personaggi.html";
-        } catch(e) {
-            console.error("Errore login Discord:", e);
-            alert("Errore nel login Discord. Controlla console.");
-        }
-    }
+const params = new URLSearchParams(hash.substring(1));
+const accessToken = params.get("access_token");
+
+try{
+
+const res = await fetch("https://discord.com/api/users/@me",{
+headers:{
+Authorization:`Bearer ${accessToken}`
+}
+});
+
+const user = await res.json();
+
+console.log("Discord user:",user);
+
+// SALVA UID
+sessionStorage.setItem("discord_uid",user.id);
+
+// pulisce url
+history.replaceState(null,null," ");
+
+// REDIRECT
+window.location.href="lista-personaggi.html";
+
+}catch(err){
+
+console.error("Errore login Discord:",err);
+alert("Errore nel login Discord");
+
+}
+
 };
+
 </script>
 
 </body>
 </html>
-
