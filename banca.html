@@ -25,7 +25,7 @@ top:0;
 left:0;
 width:100%;
 height:100%;
-background:url("assets/sfondo.webp") center/cover no-repeat;
+background:url("sfondo.webp") center/cover no-repeat;
 z-index:-2;
 }
 
@@ -36,7 +36,7 @@ top:0;
 left:0;
 width:100%;
 height:100%;
-background:rgba(0,0,0,0.7);
+background:rgba(0,0,0,0.65);
 z-index:-1;
 }
 
@@ -69,7 +69,7 @@ height:100%;
 border-radius:20px;
 backface-visibility:hidden;
 overflow:hidden;
-box-shadow:0 30px 70px rgba(0,0,0,0.8);
+box-shadow:0 30px 80px rgba(0,0,0,0.8);
 }
 
 .front{
@@ -145,15 +145,18 @@ color:#f1f1f1;
 .expiry{
 position:absolute;
 bottom:22px;
-right:90px;
+right:95px;
 text-align:right;
 }
 
 .card-logo{
 position:absolute;
-bottom:20px;
-right:20px;
-width:55px;
+bottom:18px;
+right:18px;
+}
+
+.card-logo img{
+width:65px;
 }
 
 .rp-box{
@@ -275,7 +278,7 @@ overflow:auto;
 .transazione{
 display:flex;
 justify-content:space-between;
-padding:5px 0;
+padding:6px 0;
 border-bottom:1px solid rgba(255,255,255,0.1);
 }
 
@@ -337,7 +340,7 @@ gap:10px;
 
 <div class="cvv-bar">123</div>
 
-<div class="iban">IT60 RP00 0000 0000 0000 0000</div>
+<div class="iban">IT60 RP00 0000 0000 0000</div>
 
 </div>
 
@@ -400,189 +403,5 @@ gap:10px;
 
 </div>
 
-<script type="module">
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, doc, updateDoc, getDoc, getDocs, collection, onSnapshot, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-const firebaseConfig = {
-apiKey:"AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
-authDomain:"sito-rp.firebaseapp.com",
-projectId:"sito-rp",
-storageBucket:"sito-rp.firebasestorage.app",
-messagingSenderId:"234781749995",
-appId:"1:234781749995:web:6954473363659fe38b04ae"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-const userId="USER_ID";
-const userRef=doc(db,"users",userId);
-
-let banca=0
-let cash=0
-
-onSnapshot(userRef,(snap)=>{
-
-let data=snap.data()
-
-banca=data.bank||0
-cash=data.cash||0
-
-document.getElementById("banca").innerText="€"+banca
-document.getElementById("cash").innerText="€"+cash
-
-if(data.personaggioAttivo){
-
-document.getElementById("cardName").innerText =
-data.personaggioAttivo.nome+" "+data.personaggioAttivo.cognome
-
-}
-
-document.getElementById("debitoAttuale").innerText =
-"Debito: €"+(data.loan||0)
-
-mostraStorico(data.transactions||[])
-
-})
-
-async function caricaGiocatori(){
-
-const snapshot=await getDocs(collection(db,"users"))
-
-let select=document.getElementById("listaGiocatori")
-
-snapshot.forEach(docSnap=>{
-
-let data=docSnap.data()
-
-if(data.personaggioAttivo){
-
-let opt=document.createElement("option")
-
-opt.value=docSnap.id
-opt.innerText=data.personaggioAttivo.nome+" "+data.personaggioAttivo.cognome
-
-select.appendChild(opt)
-
-}
-
-})
-
-}
-
-caricaGiocatori()
-
-window.operazione=async function(){
-
-let tipo=document.getElementById("tipo").value
-let importo=Number(document.getElementById("importo1").value)
-
-if(importo<=0)return
-
-if(tipo==="deposito" && cash>=importo){
-cash-=importo
-banca+=importo
-}
-
-if(tipo==="prelievo" && banca>=importo){
-banca-=importo
-cash+=importo
-}
-
-await updateDoc(userRef,{
-bank:banca,
-cash:cash,
-transactions:arrayUnion({tipo:tipo,importo:importo,data:Date.now()})
-})
-
-}
-
-window.bonifico=async function(){
-
-let target=document.getElementById("listaGiocatori").value
-let importo=Number(document.getElementById("importo2").value)
-
-if(importo<=0)return
-if(banca<importo)return
-
-const targetRef=doc(db,"users",target)
-const snap=await getDoc(targetRef)
-
-let destBank=snap.data().bank||0
-
-banca-=importo
-destBank+=importo
-
-await updateDoc(userRef,{
-bank:banca,
-transactions:arrayUnion({tipo:"Bonifico inviato",importo:importo,data:Date.now()})
-})
-
-await updateDoc(targetRef,{
-bank:destBank,
-transactions:arrayUnion({tipo:"Bonifico ricevuto",importo:importo,data:Date.now()})
-})
-
-}
-
-window.richiediPrestito=async function(){
-
-let amount=Number(document.getElementById("loanAmount").value)
-
-if(amount<=0)return
-if(amount>500000)return
-
-let totale=Math.floor(amount*1.18)
-
-banca+=amount
-
-await updateDoc(userRef,{
-bank:banca,
-loan:totale
-})
-
-}
-
-window.ripagaPrestito=async function(){
-
-const snap=await getDoc(userRef)
-
-let loan=snap.data().loan||0
-
-if(loan<=0)return
-if(banca<loan)return
-
-banca-=loan
-
-await updateDoc(userRef,{
-bank:banca,
-loan:0
-})
-
-}
-
-function mostraStorico(lista){
-
-let storico=document.getElementById("storico")
-storico.innerHTML=""
-
-lista.slice().reverse().forEach(t=>{
-
-let div=document.createElement("div")
-
-div.className="transazione"
-
-div.innerHTML=`<span>${t.tipo}</span><span>€${t.importo}</span>`
-
-storico.appendChild(div)
-
-})
-
-}
-
-</script>
-
 </body>
-  </html>
+</html>
