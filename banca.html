@@ -9,7 +9,7 @@
 
 body{
 margin:0;
-background:url("sfondo.webp") center/cover no-repeat fixed;
+background:url("assets/sfondo.webp") center/cover no-repeat fixed;
 font-family:Arial;
 display:flex;
 flex-direction:column;
@@ -18,7 +18,7 @@ padding-top:40px;
 color:white;
 }
 
-/* CARTA */
+/* -------- CARTA -------- */
 
 .card-container{
 width:420px;
@@ -47,37 +47,105 @@ height:100%;
 border-radius:20px;
 backface-visibility:hidden;
 overflow:hidden;
-box-shadow:0 20px 40px rgba(0,0,0,0.7);
+box-shadow:0 35px 90px rgba(0,0,0,0.85);
 }
 
 .front{
-background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a);
+background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);
 }
 
 .back{
 transform:rotateY(180deg);
-background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a);
+background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);
 }
 
-.name{
+.gold-bar{
 position:absolute;
-top:95px;
-left:30px;
-font-weight:bold;
-font-size:16px;
-color:black;
-}
-
-.magnetic{
-position:absolute;
-top:25px;
 left:0;
-width:100%;
-height:45px;
-background:black;
+top:0;
+height:100%;
+width:55px;
+background:linear-gradient(180deg,#7a5a00,#d4af37,#ffd700,#cfa600,#7a5a00);
 }
 
-/* SALDO */
+.postepay{
+position:absolute;
+top:22px;
+left:75px;
+color:#ffd700;
+font-weight:900;
+font-size:28px;
+}
+
+.evolution{
+position:absolute;
+top:58px;
+left:190px;
+color:#ffd700;
+font-size:13px;
+}
+
+.chip{
+position:absolute;
+top:100px;
+left:75px;
+width:65px;
+}
+
+.contactless{
+position:absolute;
+top:117px;
+left:130px;
+width:30px;
+}
+
+.posteitaliane{
+position:absolute;
+top:117px;
+left:165px;
+font-size:19px;
+font-weight:900;
+}
+
+.poste{color:#cfcfcf;}
+.italiane{color:#444;}
+
+.card-number{
+position:absolute;
+bottom:70px;
+left:75px;
+font-size:20px;
+letter-spacing:3px;
+font-weight:700;
+color:#f1f1f1;
+}
+
+.expiry{
+position:absolute;
+bottom:22px;
+right:90px;
+color:#e6e6e6;
+text-align:right;
+}
+
+.card-logo{
+position:absolute;
+bottom:20px;
+right:20px;
+width:55px;
+}
+
+.rp-box{
+position:absolute;
+top:22px;
+right:20px;
+padding:6px 14px;
+border-radius:6px;
+background:rgba(0,0,0,0.35);
+border:1px solid rgba(255,255,255,0.25);
+}
+
+/* -------- SALDO -------- */
 
 .balance-box{
 width:420px;
@@ -133,17 +201,26 @@ font-weight:bold;
 cursor:pointer;
 }
 
-button:hover{
-background:#e6c200;
+/* storico */
+
+#storico div{
+padding:6px;
+border-bottom:1px solid rgba(255,255,255,0.1);
 }
 
-/* RISULTATI RICERCA */
+/* fatture */
+
+.fattura-item{
+display:flex;
+justify-content:space-between;
+padding:8px;
+border-bottom:1px solid rgba(255,255,255,0.1);
+}
 
 #risultati{
+background:#111;
 max-height:120px;
 overflow:auto;
-background:#111;
-border-radius:6px;
 }
 
 .player{
@@ -155,37 +232,55 @@ cursor:pointer;
 background:#333;
 }
 
-/* STORICO */
-
-#storico div{
-padding:6px;
-border-bottom:1px solid rgba(255,255,255,0.1);
-}
-
-/* FATTURE */
-
-.fattura-item{
-display:flex;
-justify-content:space-between;
-padding:8px;
-border-bottom:1px solid rgba(255,255,255,0.1);
-}
-
 </style>
 </head>
 
 <body>
 
 <!-- CARTA -->
+
 <div class="card-container">
 <div class="card" onclick="this.classList.toggle('flip')">
 
 <div class="front">
-<div class="name" id="nomeCarta">Nome</div>
+
+<div class="gold-bar"></div>
+<div class="postepay">POSTEPAY</div>
+<div class="evolution">evolution</div>
+
+<img src="assets/chip.png" class="chip">
+<img src="assets/contactless.png" class="contactless">
+
+<div class="posteitaliane">
+<span class="poste">POSTE</span>
+<span class="italiane">ITALIANE</span>
+</div>
+
+<div class="rp-box">ITALIA RP</div>
+
+<div class="card-number">1234 5678 9012 3456</div>
+
+<div class="expiry">
+<div>VALID THRU</div>
+<div>12/29</div>
+</div>
+
+<div class="card-logo">
+<img src="assets/mastercard.png">
+</div>
+
 </div>
 
 <div class="back">
+
 <div class="magnetic"></div>
+
+<div class="name" id="nomeCarta">Nome Cognome</div>
+
+<div class="cvv-bar">123</div>
+
+<div class="iban">IT60 RP00 0000 0000 0000</div>
+
 </div>
 
 </div>
@@ -194,8 +289,15 @@ border-bottom:1px solid rgba(255,255,255,0.1);
 <!-- SALDO -->
 
 <div class="balance-box">
-<div class="balance-row">BANCA <span id="banca" class="amount">€0</span></div>
-<div class="balance-row">CASH <span id="cash" class="amount">€0</span></div>
+
+<div class="balance-row">
+BANCA <span id="banca" class="amount">€0</span>
+</div>
+
+<div class="balance-row">
+CASH <span id="cash" class="amount">€0</span>
+</div>
+
 </div>
 
 <!-- OPERAZIONI -->
@@ -252,9 +354,7 @@ border-bottom:1px solid rgba(255,255,255,0.1);
 
 <script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore,doc,getDoc,setDoc,getDocs,collection } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
+/* QUI DEVI INSERIRE LA CONFIG FIREBASE */
 const firebaseConfig = {
   apiKey: "AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
   authDomain: "sito-rp.firebaseapp.com",
@@ -264,298 +364,6 @@ const firebaseConfig = {
   appId: "1:234781749995:web:6954473363659fe38b04ae",
   measurementId: "G-R23N60PBYY"
 }
-
-const app = initializeApp(firebaseConfig)
-const db = getFirestore(app)
-
-/* caricamento personaggio */
-
-let uid = localStorage.getItem("uid")
-let index = localStorage.getItem("personaggio")
-
-let p = {}
-let userRef
-
-async function carica(){
-
-userRef = doc(db,"users",uid)
-
-const snap = await getDoc(userRef)
-
-let data = snap.data()
-
-p = data.personaggi[index]
-
-if(!p.storico) p.storico=[]
-if(!p.fatture) p.fatture=[]
-if(!p.multe) p.multe=[]
-if(!p.ultimaTassa) p.ultimaTassa=0
-if(!p.ultimoStipendio) p.ultimoStipendio=0
-
-aggiorna()
-
-tassaGiornaliera()
-stipendioAutomatico()
-
-}
-
-function aggiorna(){
-
-nomeCarta.innerText = p.nome+" "+p.cognome
-
-banca.innerText = "€"+p.banca
-cash.innerText = "€"+p.contanti
-
-/* storico */
-
-let h=""
-p.storico.slice().reverse().forEach(s=>{
-h+="<div>"+s+"</div>"
-})
-storico.innerHTML=h
-
-/* fatture */
-
-let f=""
-p.fatture.forEach((x,i)=>{
-f+=`<div class="fattura-item">${x.nome} €${x.importo}
-<button onclick="pagaFattura(${i})">PAGA</button></div>`
-})
-fatture.innerHTML=f
-
-/* multe */
-
-let m=""
-p.multe.forEach((x,i)=>{
-m+=`<div class="fattura-item">${x.nome} €${x.importo}
-<button onclick="pagaMulta(${i})">PAGA</button></div>`
-})
-multe.innerHTML=m
-
-}
-
-/* salva firebase */
-
-async function salva(){
-
-const snap = await getDoc(userRef)
-
-let data = snap.data()
-
-data.personaggi[index] = p
-
-await setDoc(userRef,data)
-
-}
-
-/* deposito / prelievo */
-
-window.operazione = async function(){
-
-let tipo = tipo.value
-let importo = Number(importo1.value)
-
-if(tipo==="deposito" && p.contanti>=importo){
-
-p.contanti -= importo
-p.banca += importo
-p.storico.push("💰 Deposito +"+importo+"€")
-
-}
-
-if(tipo==="prelievo" && p.banca>=importo){
-
-p.banca -= importo
-p.contanti += importo
-p.storico.push("💵 Prelievo -"+importo+"€")
-
-}
-
-await salva()
-aggiorna()
-
-}
-
-/* bonifico ricerca */
-
-ricerca.oninput = async function(){
-
-let testo = this.value.toLowerCase()
-
-const query = await getDocs(collection(db,"users"))
-
-let html=""
-
-query.forEach(d=>{
-
-let lista = d.data().personaggi||[]
-
-lista.forEach((pers,i)=>{
-
-let nome=(pers.nome+" "+pers.cognome).toLowerCase()
-
-if(nome.includes(testo)){
-
-html+=`<div class="player"
-onclick="seleziona('${d.id}',${i},'${pers.nome} ${pers.cognome}')">
-${pers.nome} ${pers.cognome}
-</div>`
-
-}
-
-})
-
-})
-
-risultati.innerHTML=html
-
-}
-
-let destUID=null
-let destIndex=null
-
-window.seleziona=function(uid2,i,n){
-
-destUID=uid2
-destIndex=i
-
-ricerca.value=n
-risultati.innerHTML=""
-
-}
-
-/* bonifico */
-
-window.bonifico = async function(){
-
-let importo = Number(importoBonifico.value)
-
-if(importo>p.banca) return alert("Saldo insufficiente")
-
-p.banca -= importo
-p.storico.push("🔁 Bonifico inviato -"+importo+"€")
-
-await salva()
-
-let ref = doc(db,"users",destUID)
-
-let snap = await getDoc(ref)
-
-let lista = snap.data().personaggi
-
-lista[destIndex].banca += importo
-
-if(!lista[destIndex].storico) lista[destIndex].storico=[]
-
-lista[destIndex].storico.push("📥 Bonifico ricevuto +"+importo+"€")
-
-await setDoc(ref,{personaggi:lista})
-
-aggiorna()
-
-}
-
-/* fatture */
-
-window.pagaFattura = async function(i){
-
-let f = p.fatture[i]
-
-if(p.banca < f.importo) return alert("Saldo insufficiente")
-
-p.banca -= f.importo
-
-p.storico.push("🧾 Fattura pagata -"+f.importo+"€")
-
-p.fatture.splice(i,1)
-
-await salva()
-aggiorna()
-
-}
-
-/* multe */
-
-window.pagaMulta = async function(i){
-
-let m = p.multe[i]
-
-if(p.banca < m.importo) return alert("Saldo insufficiente")
-
-p.banca -= m.importo
-
-p.storico.push("🚓 Multa pagata -"+m.importo+"€")
-
-p.multe.splice(i,1)
-
-await salva()
-aggiorna()
-
-}
-
-/* tasse */
-
-function percentuale(saldo){
-
-if(saldo<5000) return 0
-if(saldo<20000) return 0.01
-if(saldo<50000) return 0.02
-if(saldo<100000) return 0.03
-
-return 0.05
-
-}
-
-async function tassaGiornaliera(){
-
-let now = Date.now()
-
-if(now-p.ultimaTassa < 86400000) return
-
-let perc = percentuale(p.banca)
-
-let tassa = Math.floor(p.banca*perc)
-
-if(tassa>0){
-
-p.banca -= tassa
-
-p.storico.push("🧾 Tassa giornaliera -"+tassa+"€")
-
-}
-
-p.ultimaTassa = now
-
-await salva()
-
-}
-
-/* stipendio */
-
-async function stipendioAutomatico(){
-
-let now = Date.now()
-
-if(now-p.ultimoStipendio < 7200000) return
-
-let lavoro = p.lavoro || "cittadino"
-
-let stipendio = lavoro==="cittadino" ? 500 : 5000
-
-p.banca += stipendio
-
-p.storico.push("💼 Stipendio +"+stipendio+"€ ("+lavoro+")")
-
-p.ultimoStipendio = now
-
-await salva()
-
-aggiorna()
-
-}
-
-carica()
-
 </script>
 
 </body>
