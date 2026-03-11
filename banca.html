@@ -10,73 +10,115 @@
 
 <style>
 
-body{
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
 font-family:Segoe UI;
-background:#121212;
-color:white;
+}
+
+body{
+
+background:url("assets/sfondo.webp");
+background-size:cover;
+background-position:center;
+min-height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-height:100vh;
+color:white;
+
 }
 
-.box{
+.container{
 
-background:#1e1e1e;
+background:rgba(0,0,0,0.65);
+backdrop-filter:blur(8px);
 padding:30px;
+border-radius:20px;
+width:420px;
+
+}
+
+/* carta */
+
+.card{
+
+background:linear-gradient(135deg,#1f1f1f,#343434);
 border-radius:15px;
-width:350px;
-text-align:center;
-
-}
-
-h2{
+padding:20px;
 margin-bottom:20px;
-}
-
-.saldo{
-
-font-size:22px;
-margin:10px 0;
 
 }
 
-input{
+.card h2{
+font-size:20px;
+margin-bottom:5px;
+}
 
-width:100%;
-padding:10px;
+.saldi{
 margin-top:10px;
-border:none;
-border-radius:8px;
+font-size:18px;
+}
+
+/* azioni */
+
+.actions{
+
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin-top:20px;
 
 }
 
 button{
 
-width:100%;
-padding:10px;
-margin-top:10px;
+padding:12px;
 border:none;
-border-radius:8px;
+border-radius:10px;
 cursor:pointer;
 font-weight:bold;
 
 }
 
-.deposito{
-background:#2ecc71;
-color:white;
+.deposit{background:#2ecc71}
+.withdraw{background:#e74c3c}
+.transfer{background:#3498db}
+.loan{background:#f39c12}
+
+input{
+
+width:100%;
+padding:10px;
+border-radius:8px;
+border:none;
+margin-top:10px;
+
 }
 
-.preleva{
-background:#e74c3c;
-color:white;
+.storico{
+
+margin-top:20px;
+max-height:150px;
+overflow:auto;
+background:rgba(0,0,0,0.4);
+padding:10px;
+border-radius:10px;
+
+}
+
+.storico div{
+font-size:14px;
+margin-bottom:5px;
 }
 
 .home{
-background:#3498db;
-color:white;
-margin-top:20px;
+
+margin-top:15px;
+background:#5865F2;
+width:100%;
+
 }
 
 </style>
@@ -85,27 +127,35 @@ margin-top:20px;
 
 <body>
 
-<div class="box">
+<div class="container">
 
-<h2 id="nomePersonaggio"></h2>
+<div class="card">
 
-<div class="saldo">
-🏦 Banca: <span id="saldoBanca">0</span> €
+<h2 id="nome"></h2>
+
+<div class="saldi">
+🏦 Banca: <span id="banca">0</span> €
 </div>
 
-<div class="saldo">
+<div class="saldi">
 💵 Contanti: <span id="contanti">0</span> €
 </div>
 
-<input id="importo" type="number" placeholder="Importo">
+</div>
 
-<button class="deposito" id="btnDeposita">
-Deposita
-</button>
+<input type="number" id="importo" placeholder="Importo">
 
-<button class="preleva" id="btnPreleva">
-Preleva
-</button>
+<div class="actions">
+
+<button class="deposit" id="deposito">Deposito</button>
+<button class="withdraw" id="prelievo">Prelievo</button>
+
+<button class="transfer" id="bonifico">Bonifico</button>
+<button class="loan" id="prestito">Prestito</button>
+
+</div>
+
+<div class="storico" id="storico"></div>
 
 <button class="home" onclick="window.location.href='home.html'">
 Torna alla Home
@@ -118,63 +168,64 @@ Torna alla Home
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
 import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
 
-const firebaseConfig = {
-
-apiKey: "AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
-authDomain: "sito-rp.firebaseapp.com",
-projectId: "sito-rp",
-storageBucket: "sito-rp.appspot.com",
-messagingSenderId: "234781749995",
-appId: "1:234781749995:web:6954473363659fe38b04ae"
-
+const firebaseConfig={
+apiKey:"AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
+authDomain:"sito-rp.firebaseapp.com",
+projectId:"sito-rp",
+storageBucket:"sito-rp.appspot.com",
+messagingSenderId:"234781749995",
+appId:"1:234781749995:web:6954473363659fe38b04ae"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const app=initializeApp(firebaseConfig);
+const db=getFirestore(app);
 
-const uid = sessionStorage.getItem("discord_uid");
-const index = sessionStorage.getItem("personaggio_index");
+const uid=sessionStorage.getItem("discord_uid");
+const index=sessionStorage.getItem("personaggio_index");
 
-if(!uid || index === null){
+if(!uid || index===null){
 
 window.location.href="index.html";
 
 }
 
-const ref = doc(db,"users",uid);
-const snap = await getDoc(ref);
+const ref=doc(db,"users",uid);
+const snap=await getDoc(ref);
 
-let lista = snap.data().personaggi || [];
-
-let p = lista[index];
+let lista=snap.data().personaggi || [];
+let p=lista[index];
 
 /* fix vecchi personaggi */
 
-if(p.banca === undefined) p.banca = 10000;
-if(p.contanti === undefined) p.contanti = 5000;
-
-/* aggiorna UI */
+if(p.banca===undefined) p.banca=10000;
+if(p.contanti===undefined) p.contanti=5000;
+if(!p.storico) p.storico=[];
 
 function aggiorna(){
 
-document.getElementById("nomePersonaggio").innerText =
-p.nome + " " + p.cognome;
+document.getElementById("nome").innerText=
+p.nome+" "+p.cognome;
 
-document.getElementById("saldoBanca").innerText =
-p.banca;
+document.getElementById("banca").innerText=p.banca;
+document.getElementById("contanti").innerText=p.contanti;
 
-document.getElementById("contanti").innerText =
-p.contanti;
+let storicoHTML="";
+
+p.storico.slice().reverse().forEach(s=>{
+
+storicoHTML+="<div>"+s+"</div>";
+
+});
+
+document.getElementById("storico").innerHTML=storicoHTML;
 
 }
 
 aggiorna();
 
-/* salva firebase */
-
 async function salva(){
 
-lista[index] = p;
+lista[index]=p;
 
 await setDoc(ref,{
 personaggi:lista
@@ -184,21 +235,16 @@ personaggi:lista
 
 /* deposito */
 
-document.getElementById("btnDeposita").onclick = async ()=>{
+deposito.onclick=async()=>{
 
-let importo = Number(document.getElementById("importo").value);
+let v=Number(importo.value);
 
-if(importo <=0) return;
+if(v>p.contanti) return alert("Contanti insufficienti");
 
-if(importo > p.contanti){
+p.contanti-=v;
+p.banca+=v;
 
-alert("Non hai abbastanza contanti");
-return;
-
-}
-
-p.contanti -= importo;
-p.banca += importo;
+p.storico.push("Deposito "+v+"€");
 
 await salva();
 
@@ -208,21 +254,50 @@ aggiorna();
 
 /* prelievo */
 
-document.getElementById("btnPreleva").onclick = async ()=>{
+prelievo.onclick=async()=>{
 
-let importo = Number(document.getElementById("importo").value);
+let v=Number(importo.value);
 
-if(importo <=0) return;
+if(v>p.banca) return alert("Saldo insufficiente");
 
-if(importo > p.banca){
+p.banca-=v;
+p.contanti+=v;
 
-alert("Saldo banca insufficiente");
-return;
+p.storico.push("Prelievo "+v+"€");
 
-}
+await salva();
 
-p.banca -= importo;
-p.contanti += importo;
+aggiorna();
+
+};
+
+/* bonifico */
+
+bonifico.onclick=async()=>{
+
+let v=Number(importo.value);
+
+if(v>p.banca) return alert("Saldo insufficiente");
+
+p.banca-=v;
+
+p.storico.push("Bonifico inviato "+v+"€");
+
+await salva();
+
+aggiorna();
+
+};
+
+/* prestito */
+
+prestito.onclick=async()=>{
+
+let v=Number(importo.value);
+
+p.banca+=v;
+
+p.storico.push("Prestito ricevuto "+v+"€");
 
 await salva();
 
@@ -233,5 +308,4 @@ aggiorna();
 </script>
 
 </body>
-
 </html>
