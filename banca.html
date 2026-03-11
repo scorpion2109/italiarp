@@ -1,407 +1,237 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
+
 <meta charset="UTF-8">
-<title>Banca RP</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Banca Italia RP</title>
 
 <style>
 
 body{
-margin:0;
-font-family:Arial;
-display:flex;
-flex-direction:column;
-align-items:center;
-padding-top:40px;
+font-family:Segoe UI;
+background:#121212;
 color:white;
-min-height:100vh;
-}
-
-body::before{
-content:"";
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:url("sfondo.webp") center/cover no-repeat;
-z-index:-2;
-}
-
-body::after{
-content:"";
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.65);
-z-index:-1;
-}
-
-/* CARTA */
-
-.card-container{
-width:420px;
-height:260px;
-perspective:1200px;
-margin-bottom:30px;
-}
-
-.card{
-width:100%;
-height:100%;
-position:relative;
-transform-style:preserve-3d;
-transition:0.8s;
-cursor:pointer;
-}
-
-.card.flip{
-transform:rotateY(180deg);
-}
-
-.front,.back{
-position:absolute;
-width:100%;
-height:100%;
-border-radius:20px;
-backface-visibility:hidden;
-overflow:hidden;
-box-shadow:0 30px 80px rgba(0,0,0,0.8);
-}
-
-.front{
-background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);
-}
-
-.back{
-transform:rotateY(180deg);
-background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);
-}
-
-.gold-bar{
-position:absolute;
-left:0;
-top:0;
-height:100%;
-width:55px;
-background:linear-gradient(180deg,#7a5a00,#d4af37,#ffd700,#cfa600,#7a5a00);
-}
-
-.postepay{
-position:absolute;
-top:22px;
-left:75px;
-color:#ffd700;
-font-weight:900;
-font-size:28px;
-}
-
-.evolution{
-position:absolute;
-top:58px;
-left:190px;
-color:#ffd700;
-font-size:13px;
-}
-
-.chip{
-position:absolute;
-top:100px;
-left:75px;
-width:65px;
-}
-
-.contactless{
-position:absolute;
-top:117px;
-left:130px;
-width:30px;
-}
-
-.posteitaliane{
-position:absolute;
-top:117px;
-left:165px;
-font-size:19px;
-font-weight:900;
-}
-
-.poste{color:#cfcfcf;}
-.italiane{color:#444;}
-
-.card-number{
-position:absolute;
-bottom:70px;
-left:75px;
-font-size:20px;
-letter-spacing:3px;
-font-weight:700;
-color:#f1f1f1;
-}
-
-.expiry{
-position:absolute;
-bottom:22px;
-right:95px;
-text-align:right;
-}
-
-.card-logo{
-position:absolute;
-bottom:18px;
-right:18px;
-}
-
-.card-logo img{
-width:65px;
-}
-
-.rp-box{
-position:absolute;
-top:22px;
-right:20px;
-padding:6px 14px;
-border-radius:6px;
-background:rgba(0,0,0,0.35);
-}
-
-.magnetic{
-position:absolute;
-top:25px;
-left:0;
-width:100%;
-height:45px;
-background:black;
-}
-
-.name{
-position:absolute;
-top:95px;
-left:30px;
-font-weight:700;
-font-size:16px;
-color:#111;
-}
-
-.cvv-bar{
-position:absolute;
-top:135px;
-left:30px;
-width:220px;
-height:35px;
-background:white;
 display:flex;
+justify-content:center;
 align-items:center;
-justify-content:flex-end;
-padding-right:10px;
-font-weight:bold;
+height:100vh;
 }
 
-.iban{
-position:absolute;
-bottom:20px;
-left:30px;
-font-size:14px;
-font-weight:bold;
-color:#222;
+.box{
+
+background:#1e1e1e;
+padding:30px;
+border-radius:15px;
+width:350px;
+text-align:center;
+
 }
 
-/* SALDO */
-
-.balance-box{
-width:420px;
-background:rgba(0,0,0,0.6);
-border-radius:14px;
-padding:20px;
+h2{
+margin-bottom:20px;
 }
 
-.balance-row{
-display:flex;
-justify-content:space-between;
-padding:8px 0;
+.saldo{
+
+font-size:22px;
+margin:10px 0;
+
 }
 
-.amount{
-color:#ffd700;
-font-weight:bold;
-}
+input{
 
-/* OPERAZIONI */
-
-.operations{
-width:420px;
-display:flex;
-flex-direction:column;
-gap:15px;
-margin-top:20px;
-}
-
-.operation-box{
-background:rgba(0,0,0,0.6);
-border-radius:12px;
-padding:15px;
-display:flex;
-flex-direction:column;
-gap:10px;
-}
-
-input,select{
-padding:8px;
-border-radius:6px;
+width:100%;
+padding:10px;
+margin-top:10px;
 border:none;
+border-radius:8px;
+
 }
 
 button{
+
+width:100%;
 padding:10px;
+margin-top:10px;
 border:none;
-border-radius:6px;
-background:#ffd700;
-font-weight:bold;
+border-radius:8px;
 cursor:pointer;
+font-weight:bold;
+
 }
 
-/* STORICO */
+.deposito{
+background:#2ecc71;
+color:white;
+}
 
-.history-box{
-width:420px;
+.preleva{
+background:#e74c3c;
+color:white;
+}
+
+.home{
+background:#3498db;
+color:white;
 margin-top:20px;
-background:rgba(0,0,0,0.6);
-border-radius:12px;
-padding:15px;
-max-height:200px;
-overflow:auto;
-}
-
-.transazione{
-display:flex;
-justify-content:space-between;
-padding:6px 0;
-border-bottom:1px solid rgba(255,255,255,0.1);
-}
-
-/* PRESTITO */
-
-.loan-box{
-width:420px;
-margin-top:20px;
-background:rgba(0,0,0,0.6);
-border-radius:12px;
-padding:15px;
-display:flex;
-flex-direction:column;
-gap:10px;
 }
 
 </style>
+
 </head>
 
 <body>
 
-<div class="card-container">
-<div class="card" onclick="this.classList.toggle('flip')">
+<div class="box">
 
-<div class="front">
+<h2 id="nomePersonaggio"></h2>
 
-<div class="gold-bar"></div>
-<div class="postepay">POSTEPAY</div>
-<div class="evolution">evolution</div>
-
-<img src="assets/chip.png" class="chip">
-<img src="assets/contactless.png" class="contactless">
-
-<div class="posteitaliane">
-<span class="poste">POSTE</span>
-<span class="italiane">ITALIANE</span>
+<div class="saldo">
+🏦 Banca: <span id="saldoBanca">0</span> €
 </div>
 
-<div class="rp-box">ITALIA RP</div>
-
-<div class="card-number">1234 5678 9012 3456</div>
-
-<div class="expiry">
-<div class="label">VALID THRU</div>
-<div class="date">12/29</div>
+<div class="saldo">
+💵 Contanti: <span id="contanti">0</span> €
 </div>
 
-<div class="card-logo">
-<img src="assets/mastercard.png">
-</div>
+<input id="importo" type="number" placeholder="Importo">
+
+<button class="deposito" id="btnDeposita">
+Deposita
+</button>
+
+<button class="preleva" id="btnPreleva">
+Preleva
+</button>
+
+<button class="home" onclick="window.location.href='home.html'">
+Torna alla Home
+</button>
 
 </div>
 
-<div class="back">
+<script type="module">
 
-<div class="magnetic"></div>
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
 
-<div id="cardName" class="name">Caricamento...</div>
+const firebaseConfig = {
 
-<div class="cvv-bar">123</div>
+apiKey: "AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
+authDomain: "sito-rp.firebaseapp.com",
+projectId: "sito-rp",
+storageBucket: "sito-rp.appspot.com",
+messagingSenderId: "234781749995",
+appId: "1:234781749995:web:6954473363659fe38b04ae"
 
-<div class="iban">IT60 RP00 0000 0000 0000</div>
+};
 
-</div>
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-</div>
-</div>
+const uid = sessionStorage.getItem("discord_uid");
+const index = sessionStorage.getItem("personaggio_index");
 
-<div class="balance-box">
-<div class="balance-row">BANCA <span id="banca" class="amount">€0</span></div>
-<div class="balance-row">CASH <span id="cash" class="amount">€0</span></div>
-</div>
+if(!uid || index === null){
 
-<div class="operations">
+window.location.href="index.html";
 
-<div class="operation-box">
+}
 
-<select id="tipo">
-<option value="deposito">Deposito</option>
-<option value="prelievo">Prelievo</option>
-</select>
+const ref = doc(db,"users",uid);
+const snap = await getDoc(ref);
 
-<input id="importo1" type="number" placeholder="Importo">
+let lista = snap.data().personaggi || [];
 
-<button onclick="operazione()">Conferma</button>
+let p = lista[index];
 
-</div>
+/* fix vecchi personaggi */
 
-<div class="operation-box">
+if(p.banca === undefined) p.banca = 10000;
+if(p.contanti === undefined) p.contanti = 5000;
 
-<select id="listaGiocatori"></select>
+/* aggiorna UI */
 
-<input id="importo2" type="number" placeholder="Importo bonifico">
+function aggiorna(){
 
-<button onclick="bonifico()">Invia Bonifico</button>
+document.getElementById("nomePersonaggio").innerText =
+p.nome + " " + p.cognome;
 
-</div>
+document.getElementById("saldoBanca").innerText =
+p.banca;
 
-</div>
+document.getElementById("contanti").innerText =
+p.contanti;
 
-<div class="history-box">
+}
 
-<h3>Storico</h3>
+aggiorna();
 
-<div id="storico"></div>
+/* salva firebase */
 
-</div>
+async function salva(){
 
-<div class="loan-box">
+lista[index] = p;
 
-<h3>Prestito</h3>
+await setDoc(ref,{
+personaggi:lista
+},{merge:true});
 
-<div>Prestito massimo: <b>500.000€</b></div>
-<div>Interesse banca: <b>18%</b></div>
+}
 
-<div id="debitoAttuale">Debito: €0</div>
+/* deposito */
 
-<input id="loanAmount" type="number" placeholder="Importo prestito">
+document.getElementById("btnDeposita").onclick = async ()=>{
 
-<button onclick="richiediPrestito()">Richiedi prestito</button>
-<button onclick="ripagaPrestito()">Ripaga prestito</button>
+let importo = Number(document.getElementById("importo").value);
 
-</div>
+if(importo <=0) return;
+
+if(importo > p.contanti){
+
+alert("Non hai abbastanza contanti");
+return;
+
+}
+
+p.contanti -= importo;
+p.banca += importo;
+
+await salva();
+
+aggiorna();
+
+};
+
+/* prelievo */
+
+document.getElementById("btnPreleva").onclick = async ()=>{
+
+let importo = Number(document.getElementById("importo").value);
+
+if(importo <=0) return;
+
+if(importo > p.banca){
+
+alert("Saldo banca insufficiente");
+return;
+
+}
+
+p.banca -= importo;
+p.contanti += importo;
+
+await salva();
+
+aggiorna();
+
+};
+
+</script>
 
 </body>
+
 </html>
