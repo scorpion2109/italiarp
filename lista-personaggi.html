@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Italia RP - Selezione Personaggi</title>
 
 <style>
@@ -15,7 +16,7 @@ font-family:'Segoe UI',sans-serif;
 }
 
 body{
-background: linear-gradient(180deg,#1c102b,#2a1b3f);
+background:linear-gradient(180deg,#1c102b,#2a1b3f);
 color:white;
 display:flex;
 flex-direction:column;
@@ -37,11 +38,6 @@ border:none;
 border-radius:10px;
 cursor:pointer;
 margin:10px 0;
-transition:0.2s;
-}
-
-button:hover{
-transform:scale(1.05);
 }
 
 .personaggio{
@@ -124,14 +120,12 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebas
 import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
 
 const firebaseConfig = {
-
-apiKey: "AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
-authDomain: "sito-rp.firebaseapp.com",
-projectId: "sito-rp",
-storageBucket: "sito-rp.appspot.com",
-messagingSenderId: "234781749995",
-appId: "1:234781749995:web:6954473363659fe38b04ae"
-
+apiKey:"AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
+authDomain:"sito-rp.firebaseapp.com",
+projectId:"sito-rp",
+storageBucket:"sito-rp.appspot.com",
+messagingSenderId:"234781749995",
+appId:"1:234781749995:web:6954473363659fe38b04ae"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -140,10 +134,8 @@ const db = getFirestore(app);
 const uid = sessionStorage.getItem("discord_uid");
 
 if(!uid){
-
-alert("Utente non loggato");
+alert("Devi fare il login");
 window.location.href="index.html";
-
 }
 
 const lista=document.getElementById("lista");
@@ -157,39 +149,35 @@ const MAX=2;
 
 /* CARICA PERSONAGGI */
 
-window.onload = async ()=>{
+async function carica(){
 
 const ref=doc(db,"users",uid);
 const snap=await getDoc(ref);
 
 if(snap.exists()){
-
 listaPers=snap.data().personaggi || [];
-
 }else{
-
 await setDoc(ref,{personaggi:[]});
 listaPers=[];
-
 }
 
 aggiornaLista();
 
-};
+}
 
-/* SALVA */
+carica();
+
+/* SALVA DATABASE */
 
 async function salva(){
 
 await setDoc(doc(db,"users",uid),{
-
 personaggi:listaPers
-
 },{merge:true});
 
 }
 
-/* LISTA */
+/* AGGIORNA LISTA */
 
 function aggiornaLista(){
 
@@ -212,7 +200,7 @@ nome.innerText=p.nome+" "+p.cognome;
 nome.onclick=()=>{
 
 sessionStorage.setItem("personaggio_index",index);
-window.location.href="home.html";
+window.location.href="documento.html";
 
 };
 
@@ -258,10 +246,8 @@ lista.appendChild(div);
 btn.onclick=()=>{
 
 if(listaPers.length>=MAX){
-
 alert("Massimo 2 personaggi");
 return;
-
 }
 
 form.style.display="flex";
@@ -275,14 +261,29 @@ form.onsubmit=async e=>{
 
 e.preventDefault();
 
+let nome=document.getElementById("nome").value.trim();
+let cognome=document.getElementById("cognome").value.trim();
+
+/* BLOCCO DUPLICATI */
+
+let duplicato=listaPers.find(p =>
+p.nome.toLowerCase()===nome.toLowerCase() &&
+p.cognome.toLowerCase()===cognome.toLowerCase()
+);
+
+if(duplicato && editingIndex===null){
+alert("Nome e cognome già esistenti");
+return;
+}
+
 const reader=new FileReader();
 
 reader.onload=async function(){
 
 let p={
 
-nome:document.getElementById("nome").value,
-cognome:document.getElementById("cognome").value,
+nome:nome,
+cognome:cognome,
 data:document.getElementById("data").value,
 occhi:document.getElementById("occhi").value,
 capelli:document.getElementById("capelli").value,
@@ -292,18 +293,17 @@ foto:reader.result,
 contanti:5000,
 banca:10000,
 debito:0,
-storico:[]
+
+storico:[],
+fatture:[],
+multe:[]
 
 };
 
 if(editingIndex!==null){
-
 listaPers[editingIndex]=p;
-
 }else{
-
 listaPers.push(p);
-
 }
 
 await salva();
@@ -319,7 +319,7 @@ reader.readAsDataURL(document.getElementById("fotoInput").files[0]);
 
 };
 
-/* MODIFICA */
+/* MODIFICA PERSONAGGIO */
 
 function modifica(index){
 
@@ -341,4 +341,4 @@ form.style.display="flex";
 </script>
 
 </body>
-  </html>
+</html>
