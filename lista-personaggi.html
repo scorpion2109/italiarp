@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Italia RP - Selezione Personaggi</title>
+<title>Italia RP - Personaggi</title>
 
 <style>
 
@@ -12,7 +14,7 @@
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:'Segoe UI',sans-serif;
+font-family:Segoe UI;
 }
 
 body{
@@ -25,19 +27,19 @@ min-height:100vh;
 }
 
 .container{
-margin-top:30px;
 width:90%;
 max-width:700px;
+margin-top:40px;
 }
 
 button{
 padding:10px 20px;
 background:#5865F2;
-color:white;
 border:none;
 border-radius:10px;
+color:white;
 cursor:pointer;
-margin:10px 0;
+margin-top:10px;
 }
 
 .personaggio{
@@ -54,7 +56,6 @@ align-items:center;
 display:flex;
 align-items:center;
 gap:10px;
-cursor:pointer;
 }
 
 .personaggio img{
@@ -63,6 +64,11 @@ height:50px;
 border-radius:50%;
 object-fit:cover;
 border:2px solid white;
+cursor:pointer;
+}
+
+.nome{
+cursor:pointer;
 }
 
 .actions{
@@ -85,7 +91,14 @@ border-radius:8px;
 border:none;
 }
 
+#documento{
+margin-top:30px;
+display:flex;
+justify-content:center;
+}
+
 </style>
+
 </head>
 
 <body>
@@ -96,16 +109,18 @@ border:none;
 
 <div id="lista"></div>
 
+<div id="documento"></div>
+
 <button id="btnCrea">Crea Personaggio</button>
 
 <form id="form">
 
-<input type="text" id="nome" placeholder="Nome" required>
-<input type="text" id="cognome" placeholder="Cognome" required>
-<input type="text" id="data" placeholder="Data nascita" required>
-<input type="text" id="occhi" placeholder="Occhi" required>
-<input type="text" id="capelli" placeholder="Capelli" required>
-<input type="text" id="residenza" placeholder="Residenza" required>
+<input id="nome" placeholder="Nome" required>
+<input id="cognome" placeholder="Cognome" required>
+<input id="data" placeholder="Data nascita" required>
+<input id="occhi" placeholder="Occhi" required>
+<input id="capelli" placeholder="Capelli" required>
+<input id="residenza" placeholder="Residenza" required>
 <input type="file" id="fotoInput" accept="image/*" required>
 
 <button type="submit">Conferma</button>
@@ -119,7 +134,7 @@ border:none;
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
 import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
 
-const firebaseConfig = {
+const firebaseConfig={
 apiKey:"AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
 authDomain:"sito-rp.firebaseapp.com",
 projectId:"sito-rp",
@@ -128,13 +143,13 @@ messagingSenderId:"234781749995",
 appId:"1:234781749995:web:6954473363659fe38b04ae"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const app=initializeApp(firebaseConfig);
+const db=getFirestore(app);
 
-const uid = sessionStorage.getItem("discord_uid");
+const uid=sessionStorage.getItem("discord_uid");
 
 if(!uid){
-alert("Devi fare il login");
+alert("Login richiesto");
 window.location.href="index.html";
 }
 
@@ -147,18 +162,15 @@ let editingIndex=null;
 
 const MAX=2;
 
-/* CARICA PERSONAGGI */
-
 async function carica(){
 
 const ref=doc(db,"users",uid);
 const snap=await getDoc(ref);
 
 if(snap.exists()){
-listaPers=snap.data().personaggi || [];
+listaPers=snap.data().personaggi||[];
 }else{
 await setDoc(ref,{personaggi:[]});
-listaPers=[];
 }
 
 aggiornaLista();
@@ -167,8 +179,6 @@ aggiornaLista();
 
 carica();
 
-/* SALVA DATABASE */
-
 async function salva(){
 
 await setDoc(doc(db,"users",uid),{
@@ -176,8 +186,6 @@ personaggi:listaPers
 },{merge:true});
 
 }
-
-/* AGGIORNA LISTA */
 
 function aggiornaLista(){
 
@@ -194,13 +202,20 @@ info.className="personaggio-info";
 let img=document.createElement("img");
 img.src=p.foto;
 
+/* CLICK FOTO → DOCUMENTO */
+
+img.onclick=()=>mostraDocumento(p);
+
 let nome=document.createElement("div");
+nome.className="nome";
 nome.innerText=p.nome+" "+p.cognome;
+
+/* CLICK NOME → HOME */
 
 nome.onclick=()=>{
 
 sessionStorage.setItem("personaggio_index",index);
-window.location.href="documento.html";
+window.location.href="home.html";
 
 };
 
@@ -220,11 +235,9 @@ del.innerText="🗑️";
 del.onclick=async ()=>{
 
 if(confirm("Eliminare personaggio?")){
-
 listaPers.splice(index,1);
 await salva();
 aggiornaLista();
-
 }
 
 };
@@ -241,8 +254,6 @@ lista.appendChild(div);
 
 }
 
-/* CREA PERSONAGGIO */
-
 btn.onclick=()=>{
 
 if(listaPers.length>=MAX){
@@ -255,8 +266,6 @@ editingIndex=null;
 
 };
 
-/* SALVA PERSONAGGIO */
-
 form.onsubmit=async e=>{
 
 e.preventDefault();
@@ -264,21 +273,19 @@ e.preventDefault();
 let nome=document.getElementById("nome").value.trim();
 let cognome=document.getElementById("cognome").value.trim();
 
-/* BLOCCO DUPLICATI */
-
-let duplicato=listaPers.find(p =>
-p.nome.toLowerCase()===nome.toLowerCase() &&
-p.cognome.toLowerCase()===cognome.toLowerCase()
+let duplicato=listaPers.find(p=>
+p.nome.toLowerCase()==nome.toLowerCase() &&
+p.cognome.toLowerCase()==cognome.toLowerCase()
 );
 
 if(duplicato && editingIndex===null){
-alert("Nome e cognome già esistenti");
+alert("Nome già esistente");
 return;
 }
 
 const reader=new FileReader();
 
-reader.onload=async function(){
+reader.onload=async ()=>{
 
 let p={
 
@@ -291,12 +298,7 @@ residenza:document.getElementById("residenza").value,
 foto:reader.result,
 
 contanti:5000,
-banca:10000,
-debito:0,
-
-storico:[],
-fatture:[],
-multe:[]
+banca:10000
 
 };
 
@@ -308,10 +310,10 @@ listaPers.push(p);
 
 await salva();
 
-aggiornaLista();
-
 form.reset();
 form.style.display="none";
+
+aggiornaLista();
 
 };
 
@@ -319,22 +321,45 @@ reader.readAsDataURL(document.getElementById("fotoInput").files[0]);
 
 };
 
-/* MODIFICA PERSONAGGIO */
-
 function modifica(index){
 
 let p=listaPers[index];
 
-document.getElementById("nome").value=p.nome;
-document.getElementById("cognome").value=p.cognome;
-document.getElementById("data").value=p.data;
-document.getElementById("occhi").value=p.occhi;
-document.getElementById("capelli").value=p.capelli;
-document.getElementById("residenza").value=p.residenza;
+nome.value=p.nome;
+cognome.value=p.cognome;
+data.value=p.data;
+occhi.value=p.occhi;
+capelli.value=p.capelli;
+residenza.value=p.residenza;
 
 editingIndex=index;
 
 form.style.display="flex";
+
+}
+
+/* DOCUMENTO */
+
+function mostraDocumento(p){
+
+document.getElementById("documento").innerHTML=`
+
+<div style="background:white;color:black;padding:20px;border-radius:10px;width:500px">
+
+<h3>Documento</h3>
+
+<img src="${p.foto}" style="width:120px;border-radius:10px"><br><br>
+
+<b>Nome:</b> ${p.nome}<br>
+<b>Cognome:</b> ${p.cognome}<br>
+<b>Data nascita:</b> ${p.data}<br>
+<b>Occhi:</b> ${p.occhi}<br>
+<b>Capelli:</b> ${p.capelli}<br>
+<b>Residenza:</b> ${p.residenza}
+
+</div>
+
+`;
 
 }
 
