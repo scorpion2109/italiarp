@@ -14,7 +14,7 @@
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:'Segoe UI',sans-serif;
+font-family:Segoe UI;
 }
 
 body{
@@ -97,7 +97,7 @@ display:flex;
 justify-content:center;
 }
 
-/* ================= CARTA IDENTITA ================= */
+/* CARTA IDENTITA */
 
 .wrapper{ perspective:2500px; }
 
@@ -106,7 +106,7 @@ width:540px;
 height:340px;
 position:relative;
 transform-style:preserve-3d;
-transition:1.2s;
+transition:1s;
 cursor:pointer;
 }
 
@@ -125,7 +125,6 @@ box-shadow:0 40px 80px rgba(0,0,0,0.8);
 .front{
 background:linear-gradient(135deg,#fdfdfd,#f1f1f1);
 padding:30px;
-position:relative;
 color:black;
 }
 
@@ -138,27 +137,9 @@ height:100%;
 background:linear-gradient(#008C45 33%,#fff 33% 66%,#CD212A 66%);
 }
 
-.header{
-display:flex;
-justify-content:space-between;
-}
-
-.title{
-font-size:22px;
-font-weight:800;
-letter-spacing:2px;
-}
-
-.subtitle{
-font-size:12px;
-color:#555;
-}
-
-.logo{ width:85px; }
-
 .content{
 display:flex;
-margin-top:25px;
+margin-top:20px;
 gap:30px;
 }
 
@@ -168,7 +149,6 @@ height:190px;
 border-radius:10px;
 border:2px solid #aaa;
 overflow:hidden;
-background:#ddd;
 }
 
 .photo img{
@@ -177,79 +157,28 @@ height:100%;
 object-fit:cover;
 }
 
-.info{ flex:1; font-size:15px; }
-
-.row{ margin-bottom:10px; }
-
-.label{ font-weight:700; }
-
 .signature{
-margin-top:18px;
-font-family:"Brush Script MT",cursive;
-font-size:28px;
-border-top:1px solid #333;
-width:260px;
-}
-
-.hologram{
-position:absolute;
-right:25px;
-bottom:25px;
-width:110px;
-height:110px;
-border-radius:50%;
-background:conic-gradient(
-rgba(0,255,255,0.6),
-rgba(255,0,255,0.6),
-rgba(255,255,0,0.6),
-rgba(0,255,255,0.6)
-);
-animation:spin 8s linear infinite;
-opacity:0.45;
-}
-
-@keyframes spin{
-from{transform:rotate(0deg);}
-to{transform:rotate(360deg);}
+margin-top:20px;
+font-family:cursive;
+font-size:24px;
+border-top:1px solid black;
+width:200px;
 }
 
 .back{
 transform:rotateY(180deg);
-background:linear-gradient(180deg,#cfe3e6,#e8f1f3);
+background:#e8f1f3;
 padding:30px;
-display:flex;
-flex-direction:column;
-justify-content:space-between;
-font-size:14px;
 color:black;
 }
-
-.field{ margin-bottom:10px; }
-
-.field span{ font-weight:bold; }
 
 .big-barcode{
 height:90px;
 background:repeating-linear-gradient(
 90deg,
 #000 0px,#000 2px,
-#fff 2px,#fff 4px,
-#000 4px,#000 7px,
-#fff 7px,#fff 9px
+#fff 2px,#fff 4px
 );
-border-radius:4px;
-}
-
-.barcode-number{
-font-family:monospace;
-text-align:center;
-margin-top:5px;
-}
-
-.mrz{
-font-family:monospace;
-letter-spacing:2px;
-margin-top:8px;
 }
 
 </style>
@@ -276,7 +205,7 @@ margin-top:8px;
 <input id="occhi" placeholder="Occhi" required>
 <input id="capelli" placeholder="Capelli" required>
 <input id="residenza" placeholder="Residenza" required>
-<input type="file" id="fotoInput" accept="image/*" required>
+<input type="file" id="fotoInput" required>
 
 <button type="submit">Conferma</button>
 
@@ -302,11 +231,6 @@ const app=initializeApp(firebaseConfig);
 const db=getFirestore(app);
 
 const uid=sessionStorage.getItem("discord_uid");
-
-if(!uid){
-alert("Utente non loggato");
-window.location.href="index.html";
-}
 
 const lista=document.getElementById("lista");
 const form=document.getElementById("form");
@@ -371,7 +295,6 @@ info.appendChild(img);
 info.appendChild(nome);
 
 let actions=document.createElement("div");
-actions.className="actions";
 
 let edit=document.createElement("span");
 edit.innerText="✏️";
@@ -379,8 +302,7 @@ edit.onclick=()=>modifica(index);
 
 let del=document.createElement("span");
 del.innerText="🗑️";
-
-del.onclick=async ()=>{
+del.onclick=async()=>{
 if(confirm("Eliminare personaggio?")){
 listaPers.splice(index,1);
 await salva();
@@ -419,13 +341,14 @@ e.preventDefault();
 let nome=document.getElementById("nome").value.trim();
 let cognome=document.getElementById("cognome").value.trim();
 
-let duplicato=listaPers.find(p=>
-p.nome.toLowerCase()==nome.toLowerCase() &&
-p.cognome.toLowerCase()==cognome.toLowerCase()
+let duplicato = listaPers.some((p,i)=>
+i !== editingIndex &&
+p.nome.toLowerCase() === nome.toLowerCase() &&
+p.cognome.toLowerCase() === cognome.toLowerCase()
 );
 
-if(duplicato && editingIndex===null){
-alert("Nome già esistente");
+if(duplicato){
+alert("Nome e cognome già esistono");
 return;
 }
 
@@ -437,16 +360,14 @@ let p={
 
 nome:nome,
 cognome:cognome,
-data:document.getElementById("data").value,
-occhi:document.getElementById("occhi").value,
-capelli:document.getElementById("capelli").value,
-residenza:document.getElementById("residenza").value,
+data:data.value,
+occhi:occhi.value,
+capelli:capelli.value,
+residenza:residenza.value,
 foto:reader.result,
 
 contanti:5000,
-banca:20000,
-debito:0,
-storico:[]
+banca:20000
 
 };
 
@@ -465,7 +386,7 @@ aggiornaLista();
 
 };
 
-reader.readAsDataURL(document.getElementById("fotoInput").files[0]);
+reader.readAsDataURL(fotoInput.files[0]);
 
 };
 
@@ -498,27 +419,19 @@ document.getElementById("documento").innerHTML=`
 
 <div class="flag"></div>
 
-<div class="header">
-<div>
-<div class="title">ITALIA RP</div>
-<div class="subtitle">Documento Ufficiale Roleplay</div>
-</div>
-<img src="assets/logo.png" class="logo">
-</div>
-
 <div class="content">
 
 <div class="photo">
 <img src="${p.foto}">
 </div>
 
-<div class="info">
+<div>
 
-<div class="row"><span class="label">Nome:</span> ${p.nome}</div>
-<div class="row"><span class="label">Cognome:</span> ${p.cognome}</div>
-<div class="row"><span class="label">Data Nascita:</span> ${p.data}</div>
-<div class="row"><span class="label">Occhi:</span> ${p.occhi}</div>
-<div class="row"><span class="label">Capelli:</span> ${p.capelli}</div>
+<div>Nome: ${p.nome}</div>
+<div>Cognome: ${p.cognome}</div>
+<div>Data nascita: ${p.data}</div>
+<div>Occhi: ${p.occhi}</div>
+<div>Capelli: ${p.capelli}</div>
 
 <div class="signature">${p.nome} ${p.cognome}</div>
 
@@ -526,38 +439,13 @@ document.getElementById("documento").innerHTML=`
 
 </div>
 
-<div class="hologram"></div>
-
 </div>
 
 <div class="face back">
 
-<div>
-
-<div class="field">
-<span>Codice Fiscale:</span>
-${p.cognome.substring(0,3).toUpperCase()}${p.nome.substring(0,3).toUpperCase()}RP
-</div>
-
-<div class="field">
-<span>Residenza:</span> ${p.residenza}
-</div>
-
-</div>
-
-<div>
+<div>Residenza: ${p.residenza}</div>
 
 <div class="big-barcode"></div>
-
-<div class="barcode-number">
-ITA-${Math.floor(Math.random()*9999)}-${Math.floor(Math.random()*9999)}
-</div>
-
-<div class="mrz">
-IDITA${p.cognome.toUpperCase()}<<${p.nome.toUpperCase()}
-</div>
-
-</div>
 
 </div>
 
