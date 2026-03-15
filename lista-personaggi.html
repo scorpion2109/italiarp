@@ -66,9 +66,7 @@ border:2px solid white;
 cursor:pointer;
 }
 
-.nome{
-cursor:pointer;
-}
+.nome{ cursor:pointer; }
 
 .actions{
 display:flex;
@@ -98,18 +96,25 @@ justify-content:center;
 
 /* CARTA IDENTITA */
 
-.wrapper{ perspective:2500px; }
+.wrapper{
+perspective:2000px;
+display:flex;
+justify-content:center;
+}
 
 .card{
 width:540px;
 height:340px;
 position:relative;
 transform-style:preserve-3d;
-transition:1.2s cubic-bezier(.2,.8,.2,1);
+transition:0.8s;
+transform-origin:center;
 cursor:pointer;
 }
 
-.card.flipped{ transform:rotateY(180deg); }
+.card.flipped{
+transform:rotateY(180deg);
+}
 
 .face{
 position:absolute;
@@ -121,6 +126,8 @@ overflow:hidden;
 box-shadow:0 40px 80px rgba(0,0,0,0.8);
 }
 
+/* FRONTE */
+
 .front{
 background:
 radial-gradient(circle at 20% 30%,rgba(0,120,255,0.05),transparent 40%),
@@ -129,18 +136,6 @@ linear-gradient(135deg,#fdfdfd,#f1f1f1);
 padding:30px;
 position:relative;
 color:black;
-}
-
-.front::before{
-content:"ITALIA RP • REPUBBLICA ROLEPLAY • ";
-position:absolute;
-top:0;
-left:0;
-width:200%;
-font-size:18px;
-color:rgba(0,0,0,0.03);
-transform:rotate(-25deg);
-white-space:nowrap;
 }
 
 .flag{
@@ -176,9 +171,11 @@ margin-top:25px;
 gap:30px;
 }
 
+/* FOTO PIU PICCOLA */
+
 .photo{
-width:150px;
-height:190px;
+width:130px;
+height:170px;
 border-radius:10px;
 border:2px solid #aaa;
 overflow:hidden;
@@ -197,13 +194,18 @@ object-fit:cover;
 
 .label{ font-weight:700; }
 
+/* FIRMA CORSIVA */
+
 .signature{
-margin-top:18px;
+margin-top:20px;
 font-family:"Brush Script MT",cursive;
-font-size:28px;
+font-size:30px;
 border-top:1px solid #333;
 width:260px;
+padding-top:5px;
 }
+
+/* OLOGRAMMA */
 
 .hologram{
 position:absolute;
@@ -226,6 +228,8 @@ opacity:0.45;
 from{transform:rotate(0deg);}
 to{transform:rotate(360deg);}
 }
+
+/* RETRO */
 
 .back{
 transform:rotateY(180deg);
@@ -295,113 +299,16 @@ margin-top:8px;
 
 </div>
 
-<script type="module">
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
-
-const firebaseConfig={
-apiKey:"AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
-authDomain:"sito-rp.firebaseapp.com",
-projectId:"sito-rp"
-};
-
-const app=initializeApp(firebaseConfig);
-const db=getFirestore(app);
-
-const uid=sessionStorage.getItem("discord_uid");
-
-const lista=document.getElementById("lista");
-const form=document.getElementById("form");
+<script>
 
 let listaPers=[];
-let editingIndex=null;
 
-const MAX=2;
-
-async function carica(){
-
-const ref=doc(db,"users",uid);
-const snap=await getDoc(ref);
-
-if(snap.exists()){
-listaPers=snap.data().personaggi||[];
-}else{
-await setDoc(ref,{personaggi:[]});
-}
-
-aggiornaLista();
-
-}
-
-carica();
-
-async function salva(){
-
-await setDoc(doc(db,"users",uid),{
-personaggi:listaPers
-},{merge:true});
-
-}
-
-function aggiornaLista(){
-
-lista.innerHTML="";
-
-listaPers.forEach((p,index)=>{
-
-let div=document.createElement("div");
-div.className="personaggio";
-
-let info=document.createElement("div");
-info.className="personaggio-info";
-
-let img=document.createElement("img");
-img.src=p.foto;
-img.onclick=()=>mostraDocumento(p);
-
-let nome=document.createElement("div");
-nome.className="nome";
-nome.innerText=p.nome+" "+p.cognome;
-nome.onclick=()=>{
-sessionStorage.setItem("personaggio_index",index);
-window.location.href="home.html";
-};
-
-info.appendChild(img);
-info.appendChild(nome);
-
-let actions=document.createElement("div");
-
-let edit=document.createElement("span");
-edit.innerText="✏️";
-edit.onclick=()=>modifica(index);
-
-let del=document.createElement("span");
-del.innerText="🗑️";
-del.onclick=async()=>{
-if(confirm("Eliminare personaggio?")){
-listaPers.splice(index,1);
-await salva();
-aggiornaLista();
-}
-};
-
-actions.appendChild(edit);
-actions.appendChild(del);
-
-div.appendChild(info);
-div.appendChild(actions);
-
-lista.appendChild(div);
-
-});
-
-}
+/* MOSTRA DOCUMENTO */
 
 function mostraDocumento(p){
 
 document.getElementById("documento").innerHTML=`
+
 <div class="wrapper">
 <div class="card" id="card">
 
@@ -434,6 +341,7 @@ document.getElementById("documento").innerHTML=`
 <div class="signature">${p.nome} ${p.cognome}</div>
 
 </div>
+
 </div>
 
 <div class="hologram"></div>
