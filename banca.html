@@ -44,6 +44,50 @@ cursor:pointer;
 border:2px solid white;
 }
 
+/* MENU PROFILO */
+.menu-profilo{
+position:fixed;
+top:70px;
+right:20px;
+width:220px;
+background:#2a1b3f;
+border-radius:12px;
+padding:15px;
+display:none;
+flex-direction:column;
+align-items:center;
+box-shadow:0 10px 30px rgba(0,0,0,0.6);
+z-index:2000;
+}
+
+.menu-avatar{
+width:70px;
+height:70px;
+border-radius:50%;
+margin-bottom:10px;
+}
+
+.menu-nome{
+font-weight:bold;
+margin-bottom:5px;
+}
+
+.menu-rp{
+font-size:14px;
+opacity:0.8;
+margin-bottom:15px;
+}
+
+#logoutBtn{
+background:#ff4d4d;
+border:none;
+padding:8px;
+border-radius:8px;
+color:white;
+cursor:pointer;
+width:100%;
+}
+
 body{ padding-top:70px; }
 
 /* CARD */
@@ -102,11 +146,13 @@ background:#5865F2;
 color:white;
 cursor:pointer;
 }
-</style></head><body><!-- TOPBAR --><div class="topbar"><div class="left">
+</style></head><body><!-- TOPBAR --><div class="topbar"><div>
 <img src="assets/logo.png" class="logo">
-</div><div class="center" id="orario"></div><div class="right">
+</div><div id="orario" class="center"></div><div>
 <img id="avatar" class="avatar">
-</div></div><!-- CARD --><div class="wrapper">
+</div></div><!-- MENU PROFILO --><div id="menuProfilo" class="menu-profilo"><img id="menuAvatar" class="menu-avatar"><div id="menuDiscordNome" class="menu-nome"></div><div id="menuRpNome" class="menu-rp"></div><button id="logoutBtn">Esci</button>
+
+</div><!-- CARD --><div class="wrapper">
 <div class="card" id="card"><div class="face front"><div class="photo">
 <img id="foto">
 </div><h3 id="nome"></h3><p>Contanti: <span id="contanti"></span></p>
@@ -134,7 +180,6 @@ appId:"1:234781749995:web:6954473363659fe38b04ae"
 const app=initializeApp(firebaseConfig);
 const db=getFirestore(app);
 
-/* DATI */
 const uid=sessionStorage.getItem("discord_uid");
 const index=parseInt(sessionStorage.getItem("personaggio_index"));
 
@@ -158,20 +203,18 @@ if(!dati.contanti) dati.contanti=5000;
 if(!dati.banca) dati.banca=20000;
 
 aggiornaUI();
+caricaProfilo();
 
 }
 
 carica();
 
-/* UI */
 function aggiornaUI(){
-
 nome.innerText=dati.nome+" "+dati.cognome;
 contanti.innerText=dati.contanti+"€";
 banca.innerText=dati.banca+"€";
 debito.innerText=dati.debito+"€";
 foto.src=dati.foto;
-
 }
 
 /* BANCA */
@@ -203,7 +246,6 @@ dati.contanti+=a;
 salva();
 };
 
-/* BOLLETTE */
 window.pagaBollette=()=>{
 let costo=500;
 
@@ -217,7 +259,6 @@ alert("Bollette pagate");
 salva();
 };
 
-/* PRESTITO */
 window.chiediPrestito=()=>{
 let a=parseInt(prompt("Quanto vuoi?"));
 if(!a || a<=0) return;
@@ -229,9 +270,7 @@ alert("Prestito accettato (+20%)");
 salva();
 };
 
-/* SALVA */
 async function salva(){
-
 personaggi[index]=dati;
 
 await updateDoc(doc(db,"users",uid),{
@@ -239,7 +278,6 @@ personaggi:personaggi
 });
 
 aggiornaUI();
-
 }
 
 /* FLIP */
@@ -253,26 +291,43 @@ const now=new Date();
 const h=now.getHours().toString().padStart(2,"0");
 const m=now.getMinutes().toString().padStart(2,"0");
 const s=now.getSeconds().toString().padStart(2,"0");
-
-document.getElementById("orario").innerText=h+":"+m+":"+s;
+orario.innerText=h+":"+m+":"+s;
 }
-
 setInterval(aggiornaOrario,1000);
 aggiornaOrario();
 
-/* AVATAR */
+/* PROFILO DISCORD */
+function caricaProfilo(){
+
 const avatarUrl=sessionStorage.getItem("discord_avatar");
-const avatar=document.getElementById("avatar");
+const discordNome=sessionStorage.getItem("discord_username");
 
 avatar.src=avatarUrl || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
-/* LOGOUT */
-avatar.onclick=()=>{
-if(confirm("Vuoi fare logout?")){
-sessionStorage.clear();
-location.href="index.html";
+menuAvatar.src=avatar.src;
+menuDiscordNome.innerText=discordNome || "Utente";
+menuRpNome.innerText=dati.nome+" "+dati.cognome;
+
 }
+
+/* MENU */
+avatar.onclick=()=>{
+menuProfilo.style.display =
+menuProfilo.style.display==="flex" ? "none" : "flex";
 };
 
+/* LOGOUT */
+logoutBtn.onclick=()=>{
+sessionStorage.clear();
+location.href="index.html";
+};
+
+/* CLICK FUORI */
+document.addEventListener("click",(e)=>{
+if(!menuProfilo.contains(e.target) && e.target !== avatar){
+menuProfilo.style.display="none";
+}
+});
+
 </script></body>
-  </html>
+</html>
