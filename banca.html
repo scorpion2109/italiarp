@@ -1,122 +1,420 @@
-<!-- 🔽 LASCIA TUTTO IL TUO HTML/CSS UGUALE FINO A <script> --><script type="module">
+<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><title>Carta RP Banca</title><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
-import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
+body{
+margin:0;
+background:#161832;
+font-family:Arial, sans-serif;
+display:flex;
+flex-direction:column;
+align-items:center;
+padding-top:40px;
+color:white;
+}
 
-const app = initializeApp({
-apiKey:"AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
-authDomain:"sito-rp.firebaseapp.com",
-projectId:"sito-rp"
-});
+/* -------- CARTA -------- */
 
+.card-container{
+width:420px;
+height:260px;
+perspective:1200px;
+margin-bottom:30px;
+}
+
+.card{
+width:100%;
+height:100%;
+position:relative;
+transform-style:preserve-3d;
+transition:transform 0.8s;
+cursor:pointer;
+}
+
+.card.flip{
+transform:rotateY(180deg);
+}
+
+.front, .back{
+position:absolute;
+width:100%;
+height:100%;
+border-radius:20px;
+backface-visibility:hidden;
+overflow:hidden;
+box-shadow:0 35px 90px rgba(0,0,0,0.85),
+0 10px 20px rgba(0,0,0,0.5),
+inset 0 3px 8px rgba(255,255,255,0.25);
+}
+
+.front::after,
+.back::after{
+content:"";
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:linear-gradient(
+120deg,
+rgba(255,255,255,0.25) 0%,
+rgba(255,255,255,0.05) 40%,
+transparent 60%
+);
+pointer-events:none;
+}
+
+/* FRONTE */
+.front{
+background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);
+}
+
+.gold-bar{
+position:absolute;
+left:0;
+top:0;
+height:100%;
+width:55px;
+background:linear-gradient(180deg,#7a5a00,#d4af37,#ffd700,#cfa600,#7a5a00);
+}
+
+.postepay{
+position:absolute;
+top:22px;
+left:75px;
+color:#ffd700;
+font-weight:900;
+font-size:28px;
+}
+
+.evolution{
+position:absolute;
+top:58px;
+left:190px;
+color:#ffd700;
+font-size:13px;
+}
+
+.chip{
+position:absolute;
+top:100px;
+left:75px;
+width:65px;
+}
+
+.contactless{
+position:absolute;
+top:117px;
+left:130px;
+width:30px;
+}
+
+.posteitaliane{
+position:absolute;
+top:117px;
+left:165px;
+font-size:19px;
+font-weight:900;
+}
+
+.poste{color:#cfcfcf;}
+.italiane{color:#444;}
+
+.card-number{
+position:absolute;
+bottom:70px;
+left:75px;
+font-size:20px;
+letter-spacing:3px;
+font-weight:700;
+color:#f1f1f1;
+text-shadow:1px 1px 0 #aaa,2px 2px 2px rgba(0,0,0,0.6);
+}
+
+.expiry{
+position:absolute;
+bottom:22px;
+right:90px;
+color:#e6e6e6;
+text-align:right;
+}
+
+.expiry .label{font-size:9px;}
+.expiry .date{font-size:16px;font-weight:bold;}
+
+.card-logo{
+position:absolute;
+bottom:20px;
+right:20px;
+width:55px;
+}
+
+.card-logo img{width:100%;}
+
+.rp-box{
+position:absolute;
+top:22px;
+right:20px;
+padding:6px 14px;
+border-radius:6px;
+background:rgba(0,0,0,0.35);
+border:1px solid rgba(255,255,255,0.25);
+color:white;
+font-weight:700;
+font-size:12px;
+}
+
+/* RETRO */
+.back{
+transform:rotateY(180deg);
+background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);
+}
+
+.magnetic{
+position:absolute;
+top:25px;
+left:0;
+width:100%;
+height:45px;
+background:black;
+}
+
+.name{
+position:absolute;
+top:95px;
+left:30px;
+font-weight:700;
+font-size:16px;
+color:#111;
+text-shadow:1px 1px 0 #bbb,2px 2px 3px rgba(0,0,0,0.5);
+}
+
+.cvv-bar{
+position:absolute;
+top:135px;
+left:30px;
+width:220px;
+height:35px;
+background:white;
+border-radius:4px;
+display:flex;
+align-items:center;
+justify-content:flex-end;
+padding-right:10px;
+font-weight:bold;
+letter-spacing:2px;
+}
+
+.iban{
+position:absolute;
+bottom:20px;
+left:30px;
+font-size:14px;
+font-weight:bold;
+color:#222;
+}
+
+/* -------- SALDO -------- */
+
+.balance-box{
+width:420px;
+background:#1f1f1f;
+border-radius:14px;
+padding:20px;
+margin-top:20px;
+box-shadow:0 10px 25px rgba(0,0,0,0.6);
+}
+
+.balance-row{
+display:flex;
+justify-content:space-between;
+padding:10px 0;
+font-size:18px;
+}
+
+.label{font-weight:bold;}
+.amount{color:#ffd700;font-weight:bold;}
+
+/* -------- OPERAZIONI -------- */
+
+.operations-line{
+width:420px;
+border-top:3px solid black;
+margin-top:30px;
+}
+
+.operations-title{
+margin-top:10px;
+margin-bottom:20px;
+font-weight:bold;
+letter-spacing:2px;
+}
+
+.operations{
+width:420px;
+display:flex;
+gap:20px;
+}
+
+.operation-box{
+flex:1;
+background:#222;
+border-radius:12px;
+padding:15px;
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+select,input{
+padding:8px;
+border-radius:6px;
+border:none;
+}
+
+button{
+padding:10px;
+border:none;
+border-radius:6px;
+background:#ffd700;
+font-weight:bold;
+cursor:pointer;
+}
+
+button:hover{
+background:#e6c200;
+}
+
+</style></head><body>
+
+<div class="card-container">
+<div class="card" onclick="this.classList.toggle('flip')">
+
+<div class="front">
+<div class="gold-bar"></div>
+<div class="postepay">POSTEPAY</div>
+<div class="evolution">evolution</div>
+<img src="assets/chip.png" class="chip">
+<img src="assets/contactless.png" class="contactless">
+<div class="posteitaliane"><span class="poste">POSTE</span><span class="italiane">ITALIANE</span></div>
+<div class="rp-box">ITALIA RP</div>
+<div class="card-number">1234 5678 9012 3456</div>
+<div class="expiry"><div class="label">VALID THRU</div><div class="date">12/29</div></div>
+<div class="card-logo"><img src="assets/mastercard.png"></div>
+</div>
+
+<div class="back">
+<div class="magnetic"></div>
+<div class="name">MARIO ROSSI</div>
+<div class="cvv-bar">123</div>
+<div class="iban">IT60 X054 2811 1010 0000 0123 456</div>
+</div>
+
+</div>
+</div>
+
+<div class="balance-box">
+<div class="balance-row"><span class="label">BANCA:</span><span id="banca" class="amount">€0</span></div>
+<div class="balance-row"><span class="label">CASH:</span><span id="cash" class="amount">€0</span></div>
+</div>
+
+<div class="operations-line"></div>
+<div class="operations-title">OPERAZIONI</div>
+
+<div class="operations">
+<div class="operation-box">
+<select id="tipo">
+<option value="deposito">Deposito</option>
+<option value="prelievo">Prelievo</option>
+</select>
+<input id="importo1" type="number" placeholder="Quantità">
+<button onclick="operazione()">Conferma</button>
+</div>
+
+<div class="operation-box">
+<select>
+<option>Mario Rossi</option>
+<option>Luca Bianchi</option>
+<option>Giulia Verdi</option>
+</select>
+<input type="number" placeholder="Quantità">
+<button>Conferma</button>
+</div>
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "TUA_API_KEY",
+  authDomain: "TUO_DOMINIO",
+  projectId: "TUO_PROJECT_ID",
+  storageBucket: "TUO_BUCKET",
+  messagingSenderId: "TUO_ID",
+  appId: "TUO_APP_ID"
+};
+
+const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const uid = sessionStorage.getItem("discord_uid");
 const index = parseInt(sessionStorage.getItem("personaggio_index"));
 
-let dati, personaggi;
+let banca = 0;
+let cash = 0;
 
-/* ===== CARICA DATI ===== */
 async function carica(){
+  if(!uid || isNaN(index)) return;
 
-const snap = await getDoc(doc(db,"users",uid));
+  const ref = doc(db, "utenti", uid);
+  const snap = await getDoc(ref);
 
-if(!snap.exists()){
-alert("Errore utente");
-return;
+  if(!snap.exists()) return;
+
+  const dati = snap.data().personaggi[index];
+
+  banca = dati.banca || 0;
+  cash = dati.cash || 0;
+
+  document.getElementById("banca").innerText = "€" + banca;
+  document.getElementById("cash").innerText = "€" + cash;
 }
-
-personaggi = snap.data().personaggi;
-dati = personaggi[index];
-
-/* CREA CARTA SE NON ESISTE */
-if(!dati.carta){
-dati.carta = {
-numero: generaNumero(),
-cvv: generaCVV(),
-scadenza: generaScadenza(),
-iban: generaIBAN()
-};
-await salva();
-}
-
-/* AGGIORNA UI */
-document.querySelector(".card-number").innerText = dati.carta.numero;
-document.querySelector(".date").innerText = dati.carta.scadenza;
-document.querySelector(".name").innerText = dati.nome + " " + dati.cognome;
-document.querySelector(".cvv-bar").innerText = dati.carta.cvv;
-document.querySelector(".iban").innerText = dati.carta.iban;
-
-document.getElementById("banca").innerText = "€" + dati.banca;
-document.getElementById("cash").innerText = "€" + dati.contanti;
-
-}
-
-carica();
-
-/* ===== GENERATORI ===== */
-
-function generaNumero(){
-let n="";
-for(let i=0;i<16;i++){
-n+=Math.floor(Math.random()*10);
-if((i+1)%4===0 && i!==15) n+=" ";
-}
-return n;
-}
-
-function generaCVV(){
-return Math.floor(100+Math.random()*900);
-}
-
-function generaScadenza(){
-let m = Math.floor(Math.random()*12)+1;
-let y = new Date().getFullYear()+3;
-return m.toString().padStart(2,"0")+"/"+y.toString().slice(2);
-}
-
-function generaIBAN(){
-return "IT"+Math.floor(Math.random()*999999999999999999);
-}
-
-/* ===== SALVA ===== */
 
 async function salva(){
-personaggi[index] = dati;
-await updateDoc(doc(db,"users",uid),{
-personaggi:personaggi
-});
+  const ref = doc(db, "utenti", uid);
+  const snap = await getDoc(ref);
+
+  let data = snap.data();
+  data.personaggi[index].banca = banca;
+  data.personaggi[index].cash = cash;
+
+  await updateDoc(ref, { personaggi: data.personaggi });
 }
 
-/* ===== OPERAZIONE ===== */
+window.operazione = async function(){
+  let tipo = document.getElementById("tipo").value;
+  let importo = parseInt(document.getElementById("importo1").value);
 
-window.operazione = async ()=>{
+  if(!importo) return;
 
-let tipo = document.getElementById("tipo").value;
-let importo = parseInt(document.getElementById("importo1").value);
+  if(tipo === "deposito" && cash >= importo){
+    cash -= importo;
+    banca += importo;
+  }
 
-if(!importo || importo <= 0) return;
+  if(tipo === "prelievo" && banca >= importo){
+    banca -= importo;
+    cash += importo;
+  }
 
-if(tipo==="deposito"){
-if(importo > dati.contanti) return alert("Non hai contanti");
-dati.contanti -= importo;
-dati.banca += importo;
+  document.getElementById("banca").innerText = "€" + banca;
+  document.getElementById("cash").innerText = "€" + cash;
+
+  await salva();
 }
 
-if(tipo==="prelievo"){
-if(importo > dati.banca) return alert("Saldo insufficiente");
-dati.banca -= importo;
-dati.contanti += importo;
-}
-
-await salva();
 carica();
 
-};
+</script>
 
-/* ===== FLIP CARTA ===== */
-document.querySelector(".card").onclick = function(){
-this.classList.toggle("flip");
-};
-
-    </script>
+</body></html>
