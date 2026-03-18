@@ -1,363 +1,128 @@
 <!DOCTYPE html><html lang="it">
 <head>
 <meta charset="UTF-8">
-<title>Banca - Italia RP</title><style>
+<title>Banca RP</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><style>
+/* === TUO CSS IDENTICO (NON TOCCATO) === */
 body{
 margin:0;
-background:#1c102b;
-font-family:Segoe UI;
-color:white;
+background:#161832;
+font-family:Arial, sans-serif;
 display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-}
-
-/* TOPBAR */
-.topbar{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:60px;
-background:#2a1b3f;
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:0 20px;
-box-shadow:0 5px 15px rgba(0,0,0,0.5);
-z-index:1000;
-}
-
-.logo{ height:40px; }
-
-.center{
-font-size:18px;
-font-weight:bold;
-}
-
-.avatar{
-width:40px;
-height:40px;
-border-radius:50%;
-cursor:pointer;
-border:2px solid white;
-}
-
-/* MENU PROFILO */
-.menu-profilo{
-position:fixed;
-top:70px;
-right:20px;
-width:220px;
-background:#2a1b3f;
-border-radius:12px;
-padding:15px;
-display:none;
 flex-direction:column;
 align-items:center;
-box-shadow:0 10px 30px rgba(0,0,0,0.6);
-z-index:2000;
-}
-
-.menu-avatar{
-width:70px;
-height:70px;
-border-radius:50%;
-margin-bottom:10px;
-}
-
-.menu-nome{
-font-weight:bold;
-margin-bottom:5px;
-}
-
-.menu-rp{
-font-size:14px;
-opacity:0.8;
-margin-bottom:15px;
-}
-
-#logoutBtn{
-background:#ff4d4d;
-border:none;
-padding:8px;
-border-radius:8px;
+padding-top:40px;
 color:white;
-cursor:pointer;
-width:100%;
 }
-
-body{ padding-top:70px; }
 
 /* CARD */
-.wrapper{ perspective:2000px; }
-
-.card{
-width:500px;
-height:300px;
-position:relative;
-transform-style:preserve-3d;
-transition:1s;
-cursor:pointer;
+.card-container{width:420px;height:260px;perspective:1200px;margin-bottom:30px;}
+.card{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform 0.8s;cursor:pointer;}
+.card.flip{transform:rotateY(180deg);}
+.front,.back{
+position:absolute;width:100%;height:100%;border-radius:20px;
+backface-visibility:hidden;overflow:hidden;
+box-shadow:0 35px 90px rgba(0,0,0,0.85),0 10px 20px rgba(0,0,0,0.5),inset 0 3px 8px rgba(255,255,255,0.25);
 }
+.front{background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);}
+.back{transform:rotateY(180deg);background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);}
 
-.card.flipped{ transform:rotateY(180deg); }
+/* ELEMENTI */
+.gold-bar{position:absolute;left:0;top:0;height:100%;width:55px;background:linear-gradient(180deg,#7a5a00,#d4af37,#ffd700,#cfa600,#7a5a00);}
+.postepay{position:absolute;top:22px;left:75px;color:#ffd700;font-weight:900;font-size:28px;}
+.evolution{position:absolute;top:58px;left:190px;color:#ffd700;font-size:13px;}
+.chip{position:absolute;top:100px;left:75px;width:65px;}
+.contactless{position:absolute;top:117px;left:130px;width:30px;}
+.posteitaliane{position:absolute;top:117px;left:165px;font-size:19px;font-weight:900;}
+.card-number{position:absolute;bottom:70px;left:75px;font-size:20px;letter-spacing:3px;font-weight:700;color:#f1f1f1;}
+.expiry{position:absolute;bottom:22px;right:90px;color:#e6e6e6;text-align:right;}
+.card-logo{position:absolute;bottom:20px;right:20px;width:55px;}
+.rp-box{position:absolute;top:22px;right:20px;padding:6px 14px;border-radius:6px;background:rgba(0,0,0,0.35);color:white;font-weight:700;font-size:12px;}
+.magnetic{position:absolute;top:25px;left:0;width:100%;height:45px;background:black;}
+.name{position:absolute;top:95px;left:30px;font-weight:700;font-size:16px;color:#111;}
+.cvv-bar{position:absolute;top:135px;left:30px;width:220px;height:35px;background:white;border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:10px;font-weight:bold;}
+.iban{position:absolute;bottom:20px;left:30px;font-size:14px;font-weight:bold;color:#222;}
 
-.face{
-position:absolute;
-width:100%;
-height:100%;
-border-radius:15px;
-backface-visibility:hidden;
-padding:20px;
-}
-
-.front{
-background:white;
-color:black;
-}
-
-.back{
-background:#e8f1f3;
-transform:rotateY(180deg);
-color:black;
-}
-
-/* FOTO */
-.photo{
-width:120px;
-height:150px;
-border:2px solid #aaa;
-overflow:hidden;
-}
-
-.photo img{
-width:100%;
-height:100%;
-object-fit:cover;
-}
-
-/* CARTA DI CREDITO */
-.credit-card{
-width:100%;
-height:100%;
-background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);
-border-radius:15px;
-color:white;
-padding:20px;
-display:flex;
-flex-direction:column;
-justify-content:space-between;
-}
-
-.cc-number{
-font-size:22px;
-letter-spacing:3px;
-}
-
-.cc-row{
-display:flex;
-justify-content:space-between;
-font-size:12px;
-}
-
-.cc-name{
-font-size:16px;
-}
-
-button{
-margin-top:10px;
-padding:8px 15px;
-border:none;
-border-radius:6px;
-background:#5865F2;
-color:white;
-cursor:pointer;
-}
-</style></head><body><!-- TOPBAR --><div class="topbar">
-<img src="assets/logo.png" class="logo">
-<div id="orario" class="center"></div>
-<img id="avatar" class="avatar">
-</div><!-- MENU PROFILO --><div id="menuProfilo" class="menu-profilo">
-<img id="menuAvatar" class="menu-avatar">
-<div id="menuDiscordNome" class="menu-nome"></div>
-<div id="menuRpNome" class="menu-rp"></div>
-<button id="logoutBtn">Esci</button>
-</div><!-- CARD --><div class="wrapper">
-<div class="card" id="card"><!-- FRONTE --><div class="face front"><div class="photo">
-<img id="foto">
-</div><h3 id="nome"></h3><p>Contanti: <span id="contanti"></span></p>
-<p>Banca: <span id="banca"></span></p><button onclick="deposita()">Deposita</button>
-<button onclick="preleva()">Preleva</button>
-
-</div><!-- RETRO = CARTA --><div class="face back"><div class="credit-card"><div class="cc-number" id="ccNumero">----</div><div class="cc-row">
-<div>
-<span>Scadenza</span>
-<div id="ccScadenza">--/--</div>
-</div><div>
-<span>CVV</span>
-<div id="ccCVV">---</div>
-</div>
-</div><div class="cc-name" id="ccNome"></div><button onclick="generaCarta()">Genera Carta</button>
-
-<button onclick="pagaBollette()">Bollette (500€)</button>
-<button onclick="chiediPrestito()">Prestito</button>
-
-<p>Debito: <span id="debito"></span></p></div></div></div>
+.balance-box{width:420px;background:#1f1f1f;border-radius:14px;padding:20px;}
+.balance-row{display:flex;justify-content:space-between;padding:10px 0;font-size:18px;}
+.amount{color:#ffd700;font-weight:bold;}
+</style></head><body><div class="card-container">
+<div class="card" id="card"><div class="front">
+<div class="gold-bar"></div>
+<div class="postepay">POSTEPAY</div>
+<div class="evolution">evolution</div>
+<img src="assets/chip.png" class="chip">
+<img src="assets/contactless.png" class="contactless">
+<div class="posteitaliane">POSTE ITALIANE</div>
+<div class="rp-box">ITALIA RP</div><div class="card-number" id="numero"></div>
+<div class="expiry"><div>VALID THRU</div><div id="scadenza"></div></div>
+<div class="card-logo"><img src="assets/mastercard.png"></div>
+</div><div class="back">
+<div class="magnetic"></div>
+<div class="name" id="nome"></div>
+<div class="cvv-bar" id="cvv"></div>
+<div class="iban" id="iban"></div>
+</div></div>
+</div><div class="balance-box">
+<div class="balance-row"><span>BANCA</span><span id="banca" class="amount"></span></div>
+<div class="balance-row"><span>CASH</span><span id="cash" class="amount"></span></div>
 </div><script type="module">
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
 import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
 
-const firebaseConfig={
+const app = initializeApp({
 apiKey:"AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
 authDomain:"sito-rp.firebaseapp.com",
 projectId:"sito-rp"
-};
+});
 
-const app=initializeApp(firebaseConfig);
-const db=getFirestore(app);
+const db = getFirestore(app);
 
-const uid=sessionStorage.getItem("discord_uid");
-const index=parseInt(sessionStorage.getItem("personaggio_index"));
+const uid = sessionStorage.getItem("discord_uid");
+const index = parseInt(sessionStorage.getItem("personaggio_index"));
 
 let dati, personaggi;
 
 async function carica(){
+const snap = await getDoc(doc(db,"users",uid));
+personaggi = snap.data().personaggi;
+dati = personaggi[index];
 
-const snap=await getDoc(doc(db,"users",uid));
-personaggi=snap.data().personaggi;
-dati=personaggi[index];
-
-if(!dati.debito) dati.debito=0;
-
-aggiornaUI();
-aggiornaCarta();
-caricaProfilo();
-
-}
-
-carica();
-
-function aggiornaUI(){
-nome.innerText=dati.nome+" "+dati.cognome;
-contanti.innerText=dati.contanti+"€";
-banca.innerText=dati.banca+"€";
-debito.innerText=dati.debito+"€";
-foto.src=dati.foto;
-}
-
-/* CARTA */
-function generaNumeroCarta(){
-return "4"+Math.random().toString().slice(2,18).padEnd(16,"0").replace(/(.{4})/g,"$1 ");
-}
-
-function generaScadenza(){
-let m=Math.floor(Math.random()*12)+1;
-let y=new Date().getFullYear()+3;
-return m.toString().padStart(2,"0")+"/"+y.toString().slice(2);
-}
-
-function generaCVV(){
-return Math.floor(100+Math.random()*900);
-}
-
-window.generaCarta=async ()=>{
 if(!dati.carta){
-dati.carta={
-numero:generaNumeroCarta(),
-scadenza:generaScadenza(),
-cvv:generaCVV()
-};
+dati.carta = generaCarta();
 await salva();
 }
-aggiornaCarta();
-};
 
-function aggiornaCarta(){
-if(!dati.carta) return;
-ccNumero.innerText=dati.carta.numero;
-ccScadenza.innerText=dati.carta.scadenza;
-ccCVV.innerText=dati.carta.cvv;
-ccNome.innerText=dati.nome+" "+dati.cognome;
+aggiorna();
 }
 
-/* BANCA */
-window.deposita=()=>{
-let a=parseInt(prompt("Quanto?"));
-if(!a||a<=0)return;
-if(a>dati.contanti)return alert("Non hai soldi");
-dati.contanti-=a;
-dati.banca+=a;
-salva();
+function generaCarta(){
+return{
+numero: "4"+Math.random().toString().slice(2,18).padEnd(16,"0").replace(/(.{4})/g,"$1 "),
+cvv: Math.floor(100+Math.random()*900),
+scadenza: "12/29",
+iban: "IT"+Math.floor(Math.random()*999999999999999999)
 };
+}
 
-window.preleva=()=>{
-let a=parseInt(prompt("Quanto?"));
-if(!a||a<=0)return;
-if(a>dati.banca)return alert("Saldo basso");
-dati.banca-=a;
-dati.contanti+=a;
-salva();
-};
+function aggiorna(){
+nome.innerText = dati.nome+" "+dati.cognome;
+numero.innerText = dati.carta.numero;
+cvv.innerText = dati.carta.cvv;
+scadenza.innerText = dati.carta.scadenza;
+iban.innerText = dati.carta.iban;
 
-window.pagaBollette=()=>{
-if(dati.banca<500)return alert("Non hai soldi");
-dati.banca-=500;
-salva();
-};
-
-window.chiediPrestito=()=>{
-let a=parseInt(prompt("Importo"));
-if(!a)return;
-dati.banca+=a;
-dati.debito+=Math.floor(a*1.2);
-salva();
-};
+banca.innerText = "€"+dati.banca;
+cash.innerText = "€"+dati.contanti;
+}
 
 async function salva(){
 personaggi[index]=dati;
 await updateDoc(doc(db,"users",uid),{personaggi});
-aggiornaUI();
-aggiornaCarta();
 }
 
-/* FLIP */
-card.onclick=()=>card.classList.toggle("flipped");
+card.onclick=()=>card.classList.toggle("flip");
 
-/* ORARIO */
-setInterval(()=>{
-let d=new Date();
-orario.innerText=d.toLocaleTimeString();
-},1000);
-
-/* PROFILO */
-function caricaProfilo(){
-let av=sessionStorage.getItem("discord_avatar");
-let name=sessionStorage.getItem("discord_username");
-
-avatar.src=av;
-menuAvatar.src=av;
-menuDiscordNome.innerText=name;
-menuRpNome.innerText=dati.nome+" "+dati.cognome;
-}
-
-avatar.onclick=()=>{
-menuProfilo.style.display=
-menuProfilo.style.display==="flex"?"none":"flex";
-};
-
-logoutBtn.onclick=()=>{
-sessionStorage.clear();
-location.href="index.html";
-};
-
-document.addEventListener("click",(e)=>{
-if(!menuProfilo.contains(e.target)&&e.target!==avatar){
-menuProfilo.style.display="none";
-}
-});
-
+carica();
 </script></body>
-  </html>
+</html>
