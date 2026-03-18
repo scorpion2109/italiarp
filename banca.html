@@ -11,277 +11,48 @@ padding-top:40px;
 color:white;
 }
 
-/* -------- CARTA -------- */
+.card-container{width:420px;height:260px;perspective:1200px;margin-bottom:30px;}
+.card{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform 0.8s;cursor:pointer;}
+.card.flip{transform:rotateY(180deg);}
+.front,.back{position:absolute;width:100%;height:100%;border-radius:20px;backface-visibility:hidden;overflow:hidden;box-shadow:0 35px 90px rgba(0,0,0,0.85),0 10px 20px rgba(0,0,0,0.5),inset 0 3px 8px rgba(255,255,255,0.25);}
+.front::after,.back::after{content:"";position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(120deg,rgba(255,255,255,0.25) 0%,rgba(255,255,255,0.05) 40%,transparent 60%);pointer-events:none;}
 
-.card-container{
-width:420px;
-height:260px;
-perspective:1200px;
-margin-bottom:30px;
-}
+.front{background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);}
+.gold-bar{position:absolute;left:0;top:0;height:100%;width:55px;background:linear-gradient(180deg,#7a5a00,#d4af37,#ffd700,#cfa600,#7a5a00);}
+.postepay{position:absolute;top:22px;left:75px;color:#ffd700;font-weight:900;font-size:28px;}
+.evolution{position:absolute;top:58px;left:190px;color:#ffd700;font-size:13px;}
+.chip{position:absolute;top:100px;left:75px;width:65px;}
+.contactless{position:absolute;top:117px;left:130px;width:30px;}
+.posteitaliane{position:absolute;top:117px;left:165px;font-size:19px;font-weight:900;}
+.poste{color:#cfcfcf;} .italiane{color:#444;}
 
-.card{
-width:100%;
-height:100%;
-position:relative;
-transform-style:preserve-3d;
-transition:transform 0.8s;
-cursor:pointer;
-}
+.card-number{position:absolute;bottom:70px;left:75px;font-size:20px;letter-spacing:3px;font-weight:700;color:#f1f1f1;text-shadow:1px 1px 0 #aaa,2px 2px 2px rgba(0,0,0,0.6);}
+.expiry{position:absolute;bottom:22px;right:90px;color:#e6e6e6;text-align:right;}
+.expiry .label{font-size:9px;} .expiry .date{font-size:16px;font-weight:bold;}
 
-.card.flip{
-transform:rotateY(180deg);
-}
-
-.front, .back{
-position:absolute;
-width:100%;
-height:100%;
-border-radius:20px;
-backface-visibility:hidden;
-overflow:hidden;
-box-shadow:0 35px 90px rgba(0,0,0,0.85),
-0 10px 20px rgba(0,0,0,0.5),
-inset 0 3px 8px rgba(255,255,255,0.25);
-}
-
-.front::after,
-.back::after{
-content:"";
-position:absolute;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:linear-gradient(
-120deg,
-rgba(255,255,255,0.25) 0%,
-rgba(255,255,255,0.05) 40%,
-transparent 60%
-);
-pointer-events:none;
-}
-
-/* FRONTE */
-.front{
-background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);
-}
-
-.gold-bar{
-position:absolute;
-left:0;
-top:0;
-height:100%;
-width:55px;
-background:linear-gradient(180deg,#7a5a00,#d4af37,#ffd700,#cfa600,#7a5a00);
-}
-
-.postepay{
-position:absolute;
-top:22px;
-left:75px;
-color:#ffd700;
-font-weight:900;
-font-size:28px;
-}
-
-.evolution{
-position:absolute;
-top:58px;
-left:190px;
-color:#ffd700;
-font-size:13px;
-}
-
-.chip{
-position:absolute;
-top:100px;
-left:75px;
-width:65px;
-}
-
-.contactless{
-position:absolute;
-top:117px;
-left:130px;
-width:30px;
-}
-
-.posteitaliane{
-position:absolute;
-top:117px;
-left:165px;
-font-size:19px;
-font-weight:900;
-}
-
-.poste{color:#cfcfcf;}
-.italiane{color:#444;}
-
-.card-number{
-position:absolute;
-bottom:70px;
-left:75px;
-font-size:20px;
-letter-spacing:3px;
-font-weight:700;
-color:#f1f1f1;
-text-shadow:1px 1px 0 #aaa,2px 2px 2px rgba(0,0,0,0.6);
-}
-
-.expiry{
-position:absolute;
-bottom:22px;
-right:90px;
-color:#e6e6e6;
-text-align:right;
-}
-
-.expiry .label{font-size:9px;}
-.expiry .date{font-size:16px;font-weight:bold;}
-
-.card-logo{
-position:absolute;
-bottom:20px;
-right:20px;
-width:55px;
-}
-
+.card-logo{position:absolute;bottom:20px;right:20px;width:55px;}
 .card-logo img{width:100%;}
 
-.rp-box{
-position:absolute;
-top:22px;
-right:20px;
-padding:6px 14px;
-border-radius:6px;
-background:rgba(0,0,0,0.35);
-border:1px solid rgba(255,255,255,0.25);
-color:white;
-font-weight:700;
-font-size:12px;
-}
+.rp-box{position:absolute;top:22px;right:20px;padding:6px 14px;border-radius:6px;background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.25);color:white;font-weight:700;font-size:12px;}
 
-/* RETRO */
-.back{
-transform:rotateY(180deg);
-background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);
-}
+.back{transform:rotateY(180deg);background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);}
+.magnetic{position:absolute;top:25px;left:0;width:100%;height:45px;background:black;}
+.name{position:absolute;top:95px;left:30px;font-weight:700;font-size:16px;color:#111;text-shadow:1px 1px 0 #bbb,2px 2px 3px rgba(0,0,0,0.5);}
+.cvv-bar{position:absolute;top:135px;left:30px;width:220px;height:35px;background:white;border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:10px;font-weight:bold;letter-spacing:2px;}
+.iban{position:absolute;bottom:20px;left:30px;font-size:14px;font-weight:bold;color:#222;}
 
-.magnetic{
-position:absolute;
-top:25px;
-left:0;
-width:100%;
-height:45px;
-background:black;
-}
+.balance-box{width:420px;background:#1f1f1f;border-radius:14px;padding:20px;margin-top:20px;box-shadow:0 10px 25px rgba(0,0,0,0.6);}
+.balance-row{display:flex;justify-content:space-between;padding:10px 0;font-size:18px;}
+.label{font-weight:bold;} .amount{color:#ffd700;font-weight:bold;}
 
-.name{
-position:absolute;
-top:95px;
-left:30px;
-font-weight:700;
-font-size:16px;
-color:#111;
-text-shadow:1px 1px 0 #bbb,2px 2px 3px rgba(0,0,0,0.5);
-}
+.operations-line{width:420px;border-top:3px solid black;margin-top:30px;}
+.operations-title{margin-top:10px;margin-bottom:20px;font-weight:bold;letter-spacing:2px;}
+.operations{width:420px;display:flex;gap:20px;}
+.operation-box{flex:1;background:#222;border-radius:12px;padding:15px;display:flex;flex-direction:column;gap:10px;}
 
-.cvv-bar{
-position:absolute;
-top:135px;
-left:30px;
-width:220px;
-height:35px;
-background:white;
-border-radius:4px;
-display:flex;
-align-items:center;
-justify-content:flex-end;
-padding-right:10px;
-font-weight:bold;
-letter-spacing:2px;
-}
-
-.iban{
-position:absolute;
-bottom:20px;
-left:30px;
-font-size:14px;
-font-weight:bold;
-color:#222;
-}
-
-/* -------- SALDO -------- */
-
-.balance-box{
-width:420px;
-background:#1f1f1f;
-border-radius:14px;
-padding:20px;
-margin-top:20px;
-box-shadow:0 10px 25px rgba(0,0,0,0.6);
-}
-
-.balance-row{
-display:flex;
-justify-content:space-between;
-padding:10px 0;
-font-size:18px;
-}
-
-.label{font-weight:bold;}
-.amount{color:#ffd700;font-weight:bold;}
-
-/* -------- OPERAZIONI -------- */
-
-.operations-line{
-width:420px;
-border-top:3px solid black;
-margin-top:30px;
-}
-
-.operations-title{
-margin-top:10px;
-margin-bottom:20px;
-font-weight:bold;
-letter-spacing:2px;
-}
-
-.operations{
-width:420px;
-display:flex;
-gap:20px;
-}
-
-.operation-box{
-flex:1;
-background:#222;
-border-radius:12px;
-padding:15px;
-display:flex;
-flex-direction:column;
-gap:10px;
-}
-
-select,input{
-padding:8px;
-border-radius:6px;
-border:none;
-}
-
-button{
-padding:10px;
-border:none;
-border-radius:6px;
-background:#ffd700;
-font-weight:bold;
-cursor:pointer;
-}
-
-button:hover{
-background:#e6c200;
-}
+select,input{padding:8px;border-radius:6px;border:none;}
+button{padding:10px;border:none;border-radius:6px;background:#ffd700;font-weight:bold;cursor:pointer;}
+button:hover{background:#e6c200;}
 
 </style></head><body>
 
@@ -320,6 +91,7 @@ background:#e6c200;
 <div class="operations-title">OPERAZIONI</div>
 
 <div class="operations">
+
 <div class="operation-box">
 <select id="tipo">
 <option value="deposito">Deposito</option>
@@ -330,29 +102,26 @@ background:#e6c200;
 </div>
 
 <div class="operation-box">
-<select>
-<option>Mario Rossi</option>
-<option>Luca Bianchi</option>
-<option>Giulia Verdi</option>
-</select>
-<input type="number" placeholder="Quantità">
-<button>Conferma</button>
+<select id="destinatario"></select>
+<input id="importo2" type="number" placeholder="Quantità">
+<button onclick="bonifico()">Invia</button>
 </div>
+
 </div>
+
+<div class="operations-line"></div>
+<div class="operations-title">UTENTI LIVE</div>
+<div id="listaUtenti" style="width:420px;display:flex;flex-direction:column;gap:10px;"></div>
 
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, getDoc, updateDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
-  authDomain: "sito-rp.firebaseapp.com",
-  projectId: "sito-rp",
-  storageBucket: "sito-rp.firebasestorage.app",
-  messagingSenderId: "234781749995",
-  appId: "1:234781749995:web:6954473363659fe38b04ae",
-  measurementId: "G-R23N60PBYY"
+  apiKey: "TUA_API_KEY",
+  authDomain: "TUO_DOMINIO",
+  projectId: "TUO_PROJECT_ID",
 };
 
 const app = initializeApp(firebaseConfig);
@@ -365,56 +134,107 @@ let banca = 0;
 let cash = 0;
 
 async function carica(){
-  if(!uid || isNaN(index)) return;
-
-  const ref = doc(db, "utenti", uid);
+  const ref = doc(db,"utenti",uid);
   const snap = await getDoc(ref);
-
-  if(!snap.exists()) return;
-
   const dati = snap.data().personaggi[index];
 
   banca = dati.banca || 0;
   cash = dati.cash || 0;
 
-  document.getElementById("banca").innerText = "€" + banca;
-  document.getElementById("cash").innerText = "€" + cash;
+  document.getElementById("banca").innerText="€"+banca;
+  document.getElementById("cash").innerText="€"+cash;
 }
 
 async function salva(){
-  const ref = doc(db, "utenti", uid);
+  const ref = doc(db,"utenti",uid);
   const snap = await getDoc(ref);
-
   let data = snap.data();
-  data.personaggi[index].banca = banca;
-  data.personaggi[index].cash = cash;
 
-  await updateDoc(ref, { personaggi: data.personaggi });
+  data.personaggi[index].banca=banca;
+  data.personaggi[index].cash=cash;
+
+  await updateDoc(ref,{personaggi:data.personaggi});
 }
 
 window.operazione = async function(){
-  let tipo = document.getElementById("tipo").value;
-  let importo = parseInt(document.getElementById("importo1").value);
-
+  let tipo=document.getElementById("tipo").value;
+  let importo=parseInt(document.getElementById("importo1").value);
   if(!importo) return;
 
-  if(tipo === "deposito" && cash >= importo){
-    cash -= importo;
-    banca += importo;
-  }
+  if(tipo==="deposito" && cash>=importo){cash-=importo;banca+=importo;}
+  if(tipo==="prelievo" && banca>=importo){banca-=importo;cash+=importo;}
 
-  if(tipo === "prelievo" && banca >= importo){
-    banca -= importo;
-    cash += importo;
-  }
-
-  document.getElementById("banca").innerText = "€" + banca;
-  document.getElementById("cash").innerText = "€" + cash;
+  document.getElementById("banca").innerText="€"+banca;
+  document.getElementById("cash").innerText="€"+cash;
 
   await salva();
 }
 
+window.bonifico = async function(){
+  let valore=document.getElementById("destinatario").value;
+  let importo=parseInt(document.getElementById("importo2").value);
+  if(!valore||!importo) return;
+  if(banca<importo){alert("Soldi insufficienti");return;}
+
+  const [destUid,destIndex]=valore.split("|");
+
+  const refMitt=doc(db,"utenti",uid);
+  const refDest=doc(db,"utenti",destUid);
+
+  const snapMitt=await getDoc(refMitt);
+  const snapDest=await getDoc(refDest);
+
+  let dataMitt=snapMitt.data();
+  let dataDest=snapDest.data();
+
+  dataMitt.personaggi[index].banca-=importo;
+  dataDest.personaggi[destIndex].banca=(dataDest.personaggi[destIndex].banca||0)+importo;
+
+  await updateDoc(refMitt,{personaggi:dataMitt.personaggi});
+  await updateDoc(refDest,{personaggi:dataDest.personaggi});
+
+  alert("Bonifico inviato!");
+  carica();
+}
+
+function caricaUtenti(){
+  const ref=collection(db,"utenti");
+
+  onSnapshot(ref,(snapshot)=>{
+    const box=document.getElementById("listaUtenti");
+    const select=document.getElementById("destinatario");
+
+    box.innerHTML="";
+    select.innerHTML="";
+
+    snapshot.forEach(docSnap=>{
+      const data=docSnap.data();
+
+      data.personaggi.forEach((p,i)=>{
+
+        // lista
+        let div=document.createElement("div");
+        div.style.background="#222";
+        div.style.padding="10px";
+        div.style.borderRadius="10px";
+        div.innerHTML=`<b>${p.nome} ${p.cognome}</b><br>Banca: €${p.banca||20000}<br>Cash: €${p.cash||5000}`;
+        box.appendChild(div);
+
+        // select
+        if(docSnap.id===uid && i===index) return;
+
+        let opt=document.createElement("option");
+        opt.value=docSnap.id+"|"+i;
+        opt.textContent=p.nome+" "+p.cognome;
+        select.appendChild(opt);
+
+      });
+    });
+  });
+}
+
 carica();
+caricaUtenti();
 
 </script>
 
