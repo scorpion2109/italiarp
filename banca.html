@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="it">
 <head>
 <meta charset="UTF-8">
-<title>Banca RP</title>
+<title>Banca RP PRO</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"><style>
 body{
 margin:0;
@@ -14,12 +14,14 @@ padding-top:40px;
 color:white;
 }
 
-/* CARD */
+/* ===== CARTA ===== */
 .card-container{width:420px;height:260px;perspective:1200px;}
-.card{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:0.8s;cursor:pointer;}
+.card{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:.8s;cursor:pointer;}
 .card.flip{transform:rotateY(180deg);}
+
 .front,.back{
-position:absolute;width:100%;height:100%;border-radius:20px;
+position:absolute;width:100%;height:100%;
+border-radius:20px;
 backface-visibility:hidden;
 box-shadow:0 35px 90px rgba(0,0,0,0.85);
 }
@@ -27,19 +29,33 @@ box-shadow:0 35px 90px rgba(0,0,0,0.85);
 .front{background:linear-gradient(135deg,#5f5f5f,#a0a0a0);}
 .back{transform:rotateY(180deg);background:linear-gradient(135deg,#5f5f5f,#a0a0a0);}
 
-.gold-bar{position:absolute;left:0;top:0;width:55px;height:100%;background:gold;}
-.postepay{position:absolute;top:20px;left:70px;color:gold;font-size:28px;font-weight:bold;}
-.chip{position:absolute;top:100px;left:70px;width:60px;}
+/* FRONT */
+.gold-bar{position:absolute;left:0;top:0;width:55px;height:100%;background:linear-gradient(#7a5a00,#ffd700);}
+.postepay{position:absolute;top:20px;left:70px;color:#ffd700;font-size:26px;font-weight:900;}
+.chip{position:absolute;top:95px;left:70px;width:60px;}
 
-.card-number{position:absolute;bottom:70px;left:70px;font-size:20px;letter-spacing:3px;}
-.expiry{position:absolute;bottom:25px;right:80px;}
+.card-number{
+position:absolute;
+bottom:70px;
+left:70px;
+font-size:20px;
+letter-spacing:3px;
+font-weight:bold;
+}
+
+.expiry{
+position:absolute;
+bottom:25px;
+right:80px;
+font-size:14px;
+}
 
 .card-logo{
 position:absolute;
 bottom:18px;
 right:18px;
-width:65px;
-height:40px;
+width:70px;
+height:45px;
 }
 .card-logo img{
 width:100%;
@@ -47,23 +63,77 @@ height:100%;
 object-fit:contain;
 }
 
-/* RETRO */
-.magnetic{position:absolute;top:25px;width:100%;height:40px;background:black;}
-.name{position:absolute;top:90px;left:30px;color:black;font-weight:bold;}
-.cvv-bar{position:absolute;top:130px;left:30px;width:200px;height:35px;background:white;display:flex;align-items:center;justify-content:flex-end;padding-right:10px;color:black;}
-.iban{position:absolute;bottom:20px;left:30px;color:black;}
+/* BACK */
+.magnetic{position:absolute;top:25px;width:100%;height:45px;background:black;}
+.name{position:absolute;top:95px;left:30px;color:black;font-weight:bold;}
+.cvv-bar{
+position:absolute;
+top:135px;
+left:30px;
+width:220px;
+height:35px;
+background:white;
+display:flex;
+align-items:center;
+justify-content:flex-end;
+padding-right:10px;
+color:black;
+font-weight:bold;
+}
+.iban{
+position:absolute;
+bottom:20px;
+left:30px;
+color:black;
+font-size:13px;
+}
 
 /* SALDO */
-.balance-box{width:420px;background:#1f1f1f;border-radius:12px;padding:20px;margin-top:20px;}
+.balance-box{
+width:420px;
+background:#1f1f1f;
+border-radius:12px;
+padding:20px;
+margin-top:20px;
+}
 .row{display:flex;justify-content:space-between;margin:10px 0;}
-.amount{color:#ffd700;}
+.amount{color:#ffd700;font-weight:bold;}
 
 /* OPERAZIONI */
-.operations{width:420px;display:flex;gap:15px;margin-top:20px;}
-.box{flex:1;background:#222;padding:15px;border-radius:10px;}
-input,select{width:100%;margin-top:5px;padding:8px;border:none;border-radius:6px;}
-button{margin-top:10px;width:100%;padding:10px;background:gold;border:none;border-radius:6px;font-weight:bold;cursor:pointer;}
-</style></head><body><!-- CARTA --><div class="card-container">
+.operations{
+width:420px;
+display:flex;
+gap:15px;
+margin-top:20px;
+}
+
+.box{
+flex:1;
+background:#222;
+padding:15px;
+border-radius:10px;
+}
+
+input,select{
+width:100%;
+margin-top:6px;
+padding:9px;
+border:none;
+border-radius:6px;
+}
+
+button{
+margin-top:10px;
+width:100%;
+padding:10px;
+background:#ffd700;
+border:none;
+border-radius:6px;
+font-weight:bold;
+cursor:pointer;
+}
+button:hover{background:#e6c200;}
+</style></head><body><div class="card-container">
 <div class="card" id="card"><div class="front">
 <div class="gold-bar"></div>
 <div class="postepay">POSTEPAY</div>
@@ -77,25 +147,24 @@ button{margin-top:10px;width:100%;padding:10px;background:gold;border:none;borde
 <div class="cvv-bar" id="cvv"></div>
 <div class="iban" id="iban"></div>
 </div></div>
-</div><!-- SALDO --><div class="balance-box">
+</div><div class="balance-box">
 <div class="row">BANCA <span id="banca" class="amount"></span></div>
 <div class="row">CASH <span id="cash" class="amount"></span></div>
-</div><!-- OPERAZIONI --><div class="operations"><div class="box">
+</div><div class="operations"><div class="box">
 <h3>Deposito / Prelievo</h3>
-<select id="tipo">
+<select id="tipoOp">
 <option value="deposito">Deposito</option>
 <option value="prelievo">Prelievo</option>
 </select>
-<input id="importo1" type="number" placeholder="Importo">
+<input id="importoOp" type="number" placeholder="Importo">
 <button onclick="operazione()">Conferma</button>
 </div><div class="box">
 <h3>Bonifico</h3>
-<input id="nomeDest" placeholder="Nome">
-<input id="cognomeDest" placeholder="Cognome">
-<input id="importo2" type="number" placeholder="Importo">
+<input id="nomeDest" placeholder="Nome RP">
+<input id="cognomeDest" placeholder="Cognome RP">
+<input id="importoBonifico" type="number" placeholder="Importo">
 <button onclick="bonifico()">Invia</button>
 </div></div><script type="module">
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
 import { getFirestore, doc, getDoc, updateDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
 
@@ -114,6 +183,9 @@ let dati, personaggi;
 
 async function carica(){
 const snap = await getDoc(doc(db,"users",uid));
+
+if(!snap.exists()) return alert("Errore utente");
+
 personaggi = snap.data().personaggi;
 dati = personaggi[index];
 
@@ -149,18 +221,21 @@ personaggi[index]=dati;
 await updateDoc(doc(db,"users",uid),{personaggi});
 }
 
-/* DEPOSITO / PRELIEVO */
+/* OPERAZIONI */
 window.operazione = async ()=>{
-let tipo = tipo.value;
-let importo = parseInt(importo1.value);
-if(!importo) return;
+let tipo = document.getElementById("tipoOp").value;
+let importo = parseInt(document.getElementById("importoOp").value);
 
-if(tipo==="deposito" && dati.contanti>=importo){
+if(!importo || importo<=0) return alert("Importo non valido");
+
+if(tipo==="deposito"){
+if(importo>dati.contanti) return alert("Non hai contanti");
 dati.contanti-=importo;
 dati.banca+=importo;
 }
 
-if(tipo==="prelievo" && dati.banca>=importo){
+if(tipo==="prelievo"){
+if(importo>dati.banca) return alert("Saldo insufficiente");
 dati.banca-=importo;
 dati.contanti+=importo;
 }
@@ -171,31 +246,31 @@ aggiorna();
 
 /* BONIFICO */
 window.bonifico = async ()=>{
-let nome = nomeDest.value.toLowerCase();
-let cognome = cognomeDest.value.toLowerCase();
-let importo = parseInt(importo2.value);
+let nome = document.getElementById("nomeDest").value.trim().toLowerCase();
+let cognome = document.getElementById("cognomeDest").value.trim().toLowerCase();
+let importo = parseInt(document.getElementById("importoBonifico").value);
 
-if(!nome || !cognome || !importo) return alert("Compila");
+if(!nome || !cognome || !importo) return alert("Compila tutti i campi");
 
-if(importo > dati.banca) return alert("Soldi insufficienti");
+if(importo<=0) return alert("Importo non valido");
+if(importo>dati.banca) return alert("Saldo insufficiente");
 
-const qs = await getDocs(collection(db,"users"));
+const utenti = await getDocs(collection(db,"users"));
 
-for(const d of qs.docs){
+for(const u of utenti.docs){
 
-let user = d.data();
-
+let user = u.data();
 if(!user.personaggi) continue;
 
 for(let i=0;i<user.personaggi.length;i++){
 
 let p = user.personaggi[i];
 
-if(p.nome.toLowerCase()==nome && p.cognome.toLowerCase()==cognome){
+if(p.nome.toLowerCase()===nome && p.cognome.toLowerCase()===cognome){
 
 p.banca += importo;
 
-await updateDoc(doc(db,"users",d.id),{
+await updateDoc(doc(db,"users",u.id),{
 personaggi:user.personaggi
 });
 
@@ -204,19 +279,18 @@ dati.banca -= importo;
 await salva();
 aggiorna();
 
-alert("Bonifico inviato");
+alert("Bonifico inviato!");
 return;
 }
 }
 }
 
-alert("Utente non trovato");
+alert("Giocatore non trovato");
 };
 
 /* FLIP */
 card.onclick=()=>card.classList.toggle("flip");
 
 carica();
-
 </script></body>
   </html>
