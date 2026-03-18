@@ -124,6 +124,7 @@ transform:rotateY(180deg);
 color:black;
 }
 
+/* FOTO */
 .photo{
 width:120px;
 height:150px;
@@ -137,6 +138,34 @@ height:100%;
 object-fit:cover;
 }
 
+/* CARTA DI CREDITO */
+.credit-card{
+width:100%;
+height:100%;
+background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);
+border-radius:15px;
+color:white;
+padding:20px;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+}
+
+.cc-number{
+font-size:22px;
+letter-spacing:3px;
+}
+
+.cc-row{
+display:flex;
+justify-content:space-between;
+font-size:12px;
+}
+
+.cc-name{
+font-size:16px;
+}
+
 button{
 margin-top:10px;
 padding:8px 15px;
@@ -146,23 +175,36 @@ background:#5865F2;
 color:white;
 cursor:pointer;
 }
-</style></head><body><!-- TOPBAR --><div class="topbar"><div>
+</style></head><body><!-- TOPBAR --><div class="topbar">
 <img src="assets/logo.png" class="logo">
-</div><div id="orario" class="center"></div><div>
+<div id="orario" class="center"></div>
 <img id="avatar" class="avatar">
-</div></div><!-- MENU PROFILO --><div id="menuProfilo" class="menu-profilo"><img id="menuAvatar" class="menu-avatar"><div id="menuDiscordNome" class="menu-nome"></div><div id="menuRpNome" class="menu-rp"></div><button id="logoutBtn">Esci</button>
-
+</div><!-- MENU PROFILO --><div id="menuProfilo" class="menu-profilo">
+<img id="menuAvatar" class="menu-avatar">
+<div id="menuDiscordNome" class="menu-nome"></div>
+<div id="menuRpNome" class="menu-rp"></div>
+<button id="logoutBtn">Esci</button>
 </div><!-- CARD --><div class="wrapper">
-<div class="card" id="card"><div class="face front"><div class="photo">
+<div class="card" id="card"><!-- FRONTE --><div class="face front"><div class="photo">
 <img id="foto">
 </div><h3 id="nome"></h3><p>Contanti: <span id="contanti"></span></p>
 <p>Banca: <span id="banca"></span></p><button onclick="deposita()">Deposita</button>
 <button onclick="preleva()">Preleva</button>
 
-</div><div class="face back"><h3>Servizi Bancari</h3><button onclick="pagaBollette()">Paga Bollette (500€)</button>
+</div><!-- RETRO = CARTA --><div class="face back"><div class="credit-card"><div class="cc-number" id="ccNumero">----</div><div class="cc-row">
+<div>
+<span>Scadenza</span>
+<div id="ccScadenza">--/--</div>
+</div><div>
+<span>CVV</span>
+<div id="ccCVV">---</div>
+</div>
+</div><div class="cc-name" id="ccNome"></div><button onclick="generaCarta()">Genera Carta</button>
+
+<button onclick="pagaBollette()">Bollette (500€)</button>
 <button onclick="chiediPrestito()">Prestito</button>
 
-<p>Debito: <span id="debito"></span></p></div></div>
+<p>Debito: <span id="debito"></span></p></div></div></div>
 </div><script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
@@ -171,10 +213,7 @@ import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/fi
 const firebaseConfig={
 apiKey:"AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
 authDomain:"sito-rp.firebaseapp.com",
-projectId:"sito-rp",
-storageBucket:"sito-rp.appspot.com",
-messagingSenderId:"234781749995",
-appId:"1:234781749995:web:6954473363659fe38b04ae"
+projectId:"sito-rp"
 };
 
 const app=initializeApp(firebaseConfig);
@@ -183,26 +222,18 @@ const db=getFirestore(app);
 const uid=sessionStorage.getItem("discord_uid");
 const index=parseInt(sessionStorage.getItem("personaggio_index"));
 
-if(!uid || isNaN(index)){
-alert("Errore accesso");
-location.href="lista-personaggi.html";
-}
-
 let dati, personaggi;
 
 async function carica(){
 
-const ref=doc(db,"users",uid);
-const snap=await getDoc(ref);
-
+const snap=await getDoc(doc(db,"users",uid));
 personaggi=snap.data().personaggi;
 dati=personaggi[index];
 
 if(!dati.debito) dati.debito=0;
-if(!dati.contanti) dati.contanti=5000;
-if(!dati.banca) dati.banca=20000;
 
 aggiornaUI();
+aggiornaCarta();
 caricaProfilo();
 
 }
@@ -217,117 +248,116 @@ debito.innerText=dati.debito+"€";
 foto.src=dati.foto;
 }
 
-/* BANCA */
-window.deposita=()=>{
-let a=parseInt(prompt("Quanto depositare?"));
-if(!a || a<=0) return;
-
-if(a>dati.contanti){
-alert("Non hai abbastanza contanti");
-return;
+/* CARTA */
+function generaNumeroCarta(){
+return "4"+Math.random().toString().slice(2,18).padEnd(16,"0").replace(/(.{4})/g,"$1 ");
 }
 
+function generaScadenza(){
+let m=Math.floor(Math.random()*12)+1;
+let y=new Date().getFullYear()+3;
+return m.toString().padStart(2,"0")+"/"+y.toString().slice(2);
+}
+
+function generaCVV(){
+return Math.floor(100+Math.random()*900);
+}
+
+window.generaCarta=async ()=>{
+if(!dati.carta){
+dati.carta={
+numero:generaNumeroCarta(),
+scadenza:generaScadenza(),
+cvv:generaCVV()
+};
+await salva();
+}
+aggiornaCarta();
+};
+
+function aggiornaCarta(){
+if(!dati.carta) return;
+ccNumero.innerText=dati.carta.numero;
+ccScadenza.innerText=dati.carta.scadenza;
+ccCVV.innerText=dati.carta.cvv;
+ccNome.innerText=dati.nome+" "+dati.cognome;
+}
+
+/* BANCA */
+window.deposita=()=>{
+let a=parseInt(prompt("Quanto?"));
+if(!a||a<=0)return;
+if(a>dati.contanti)return alert("Non hai soldi");
 dati.contanti-=a;
 dati.banca+=a;
 salva();
 };
 
 window.preleva=()=>{
-let a=parseInt(prompt("Quanto prelevare?"));
-if(!a || a<=0) return;
-
-if(a>dati.banca){
-alert("Saldo insufficiente");
-return;
-}
-
+let a=parseInt(prompt("Quanto?"));
+if(!a||a<=0)return;
+if(a>dati.banca)return alert("Saldo basso");
 dati.banca-=a;
 dati.contanti+=a;
 salva();
 };
 
 window.pagaBollette=()=>{
-let costo=500;
-
-if(dati.banca<costo){
-alert("Non hai abbastanza soldi");
-return;
-}
-
-dati.banca-=costo;
-alert("Bollette pagate");
+if(dati.banca<500)return alert("Non hai soldi");
+dati.banca-=500;
 salva();
 };
 
 window.chiediPrestito=()=>{
-let a=parseInt(prompt("Quanto vuoi?"));
-if(!a || a<=0) return;
-
+let a=parseInt(prompt("Importo"));
+if(!a)return;
 dati.banca+=a;
 dati.debito+=Math.floor(a*1.2);
-
-alert("Prestito accettato (+20%)");
 salva();
 };
 
 async function salva(){
 personaggi[index]=dati;
-
-await updateDoc(doc(db,"users",uid),{
-personaggi:personaggi
-});
-
+await updateDoc(doc(db,"users",uid),{personaggi});
 aggiornaUI();
+aggiornaCarta();
 }
 
 /* FLIP */
-card.onclick=()=>{
-card.classList.toggle("flipped");
-};
+card.onclick=()=>card.classList.toggle("flipped");
 
 /* ORARIO */
-function aggiornaOrario(){
-const now=new Date();
-const h=now.getHours().toString().padStart(2,"0");
-const m=now.getMinutes().toString().padStart(2,"0");
-const s=now.getSeconds().toString().padStart(2,"0");
-orario.innerText=h+":"+m+":"+s;
-}
-setInterval(aggiornaOrario,1000);
-aggiornaOrario();
+setInterval(()=>{
+let d=new Date();
+orario.innerText=d.toLocaleTimeString();
+},1000);
 
-/* PROFILO DISCORD */
+/* PROFILO */
 function caricaProfilo(){
+let av=sessionStorage.getItem("discord_avatar");
+let name=sessionStorage.getItem("discord_username");
 
-const avatarUrl=sessionStorage.getItem("discord_avatar");
-const discordNome=sessionStorage.getItem("discord_username");
-
-avatar.src=avatarUrl || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-
-menuAvatar.src=avatar.src;
-menuDiscordNome.innerText=discordNome || "Utente";
+avatar.src=av;
+menuAvatar.src=av;
+menuDiscordNome.innerText=name;
 menuRpNome.innerText=dati.nome+" "+dati.cognome;
-
 }
 
-/* MENU */
 avatar.onclick=()=>{
-menuProfilo.style.display =
-menuProfilo.style.display==="flex" ? "none" : "flex";
+menuProfilo.style.display=
+menuProfilo.style.display==="flex"?"none":"flex";
 };
 
-/* LOGOUT */
 logoutBtn.onclick=()=>{
 sessionStorage.clear();
 location.href="index.html";
 };
 
-/* CLICK FUORI */
 document.addEventListener("click",(e)=>{
-if(!menuProfilo.contains(e.target) && e.target !== avatar){
+if(!menuProfilo.contains(e.target)&&e.target!==avatar){
 menuProfilo.style.display="none";
 }
 });
 
 </script></body>
-</html>
+  </html>
