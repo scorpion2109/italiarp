@@ -1,172 +1,7 @@
-<!DOCTYPE html><html lang="it">
-<head>
-<meta charset="UTF-8">
-<title>Banca RP PRO</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><style>
-body{
-margin:0;
-background:#161832;
-font-family:Arial;
-display:flex;
-flex-direction:column;
-align-items:center;
-padding-top:40px;
-color:white;
-}
+<!-- 🔽 LASCIA TUTTO IL TUO HTML/CSS UGUALE FINO A <script> --><script type="module">
 
-/* ===== CARTA ===== */
-.card-container{width:420px;height:260px;perspective:1200px;}
-.card{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:.8s;cursor:pointer;}
-.card.flip{transform:rotateY(180deg);}
-
-.front,.back{
-position:absolute;width:100%;height:100%;
-border-radius:20px;
-backface-visibility:hidden;
-box-shadow:0 35px 90px rgba(0,0,0,0.85);
-}
-
-.front{background:linear-gradient(135deg,#5f5f5f,#a0a0a0);}
-.back{transform:rotateY(180deg);background:linear-gradient(135deg,#5f5f5f,#a0a0a0);}
-
-/* FRONT */
-.gold-bar{position:absolute;left:0;top:0;width:55px;height:100%;background:linear-gradient(#7a5a00,#ffd700);}
-.postepay{position:absolute;top:20px;left:70px;color:#ffd700;font-size:26px;font-weight:900;}
-.chip{position:absolute;top:95px;left:70px;width:60px;}
-
-.card-number{
-position:absolute;
-bottom:70px;
-left:70px;
-font-size:20px;
-letter-spacing:3px;
-font-weight:bold;
-}
-
-.expiry{
-position:absolute;
-bottom:25px;
-right:80px;
-font-size:14px;
-}
-
-.card-logo{
-position:absolute;
-bottom:18px;
-right:18px;
-width:70px;
-height:45px;
-}
-.card-logo img{
-width:100%;
-height:100%;
-object-fit:contain;
-}
-
-/* BACK */
-.magnetic{position:absolute;top:25px;width:100%;height:45px;background:black;}
-.name{position:absolute;top:95px;left:30px;color:black;font-weight:bold;}
-.cvv-bar{
-position:absolute;
-top:135px;
-left:30px;
-width:220px;
-height:35px;
-background:white;
-display:flex;
-align-items:center;
-justify-content:flex-end;
-padding-right:10px;
-color:black;
-font-weight:bold;
-}
-.iban{
-position:absolute;
-bottom:20px;
-left:30px;
-color:black;
-font-size:13px;
-}
-
-/* SALDO */
-.balance-box{
-width:420px;
-background:#1f1f1f;
-border-radius:12px;
-padding:20px;
-margin-top:20px;
-}
-.row{display:flex;justify-content:space-between;margin:10px 0;}
-.amount{color:#ffd700;font-weight:bold;}
-
-/* OPERAZIONI */
-.operations{
-width:420px;
-display:flex;
-gap:15px;
-margin-top:20px;
-}
-
-.box{
-flex:1;
-background:#222;
-padding:15px;
-border-radius:10px;
-}
-
-input,select{
-width:100%;
-margin-top:6px;
-padding:9px;
-border:none;
-border-radius:6px;
-}
-
-button{
-margin-top:10px;
-width:100%;
-padding:10px;
-background:#ffd700;
-border:none;
-border-radius:6px;
-font-weight:bold;
-cursor:pointer;
-}
-button:hover{background:#e6c200;}
-</style></head><body><div class="card-container">
-<div class="card" id="card"><div class="front">
-<div class="gold-bar"></div>
-<div class="postepay">POSTEPAY</div>
-<img src="assets/chip.png" class="chip"><div class="card-number" id="numero"></div>
-<div class="expiry" id="scadenza"></div><div class="card-logo">
-<img src="assets/mastercard.png">
-</div>
-</div><div class="back">
-<div class="magnetic"></div>
-<div class="name" id="nome"></div>
-<div class="cvv-bar" id="cvv"></div>
-<div class="iban" id="iban"></div>
-</div></div>
-</div><div class="balance-box">
-<div class="row">BANCA <span id="banca" class="amount"></span></div>
-<div class="row">CASH <span id="cash" class="amount"></span></div>
-</div><div class="operations"><div class="box">
-<h3>Deposito / Prelievo</h3>
-<select id="tipoOp">
-<option value="deposito">Deposito</option>
-<option value="prelievo">Prelievo</option>
-</select>
-<input id="importoOp" type="number" placeholder="Importo">
-<button onclick="operazione()">Conferma</button>
-</div><div class="box">
-<h3>Bonifico</h3>
-<input id="nomeDest" placeholder="Nome RP">
-<input id="cognomeDest" placeholder="Cognome RP">
-<input id="importoBonifico" type="number" placeholder="Importo">
-<button onclick="bonifico()">Invia</button>
-</div></div><script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
-import { getFirestore, doc, getDoc, updateDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
 
 const app = initializeApp({
 apiKey:"AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
@@ -181,116 +16,107 @@ const index = parseInt(sessionStorage.getItem("personaggio_index"));
 
 let dati, personaggi;
 
+/* ===== CARICA DATI ===== */
 async function carica(){
+
 const snap = await getDoc(doc(db,"users",uid));
 
-if(!snap.exists()) return alert("Errore utente");
+if(!snap.exists()){
+alert("Errore utente");
+return;
+}
 
 personaggi = snap.data().personaggi;
 dati = personaggi[index];
 
+/* CREA CARTA SE NON ESISTE */
 if(!dati.carta){
-dati.carta = generaCarta();
+dati.carta = {
+numero: generaNumero(),
+cvv: generaCVV(),
+scadenza: generaScadenza(),
+iban: generaIBAN()
+};
 await salva();
 }
 
-aggiorna();
+/* AGGIORNA UI */
+document.querySelector(".card-number").innerText = dati.carta.numero;
+document.querySelector(".date").innerText = dati.carta.scadenza;
+document.querySelector(".name").innerText = dati.nome + " " + dati.cognome;
+document.querySelector(".cvv-bar").innerText = dati.carta.cvv;
+document.querySelector(".iban").innerText = dati.carta.iban;
+
+document.getElementById("banca").innerText = "€" + dati.banca;
+document.getElementById("cash").innerText = "€" + dati.contanti;
+
 }
 
-function generaCarta(){
-return{
-numero:"4"+Math.random().toString().slice(2,18).padEnd(16,"0").replace(/(.{4})/g,"$1 "),
-cvv:Math.floor(100+Math.random()*900),
-scadenza:"12/29",
-iban:"IT"+Math.floor(Math.random()*999999999999999999)
-};
+carica();
+
+/* ===== GENERATORI ===== */
+
+function generaNumero(){
+let n="";
+for(let i=0;i<16;i++){
+n+=Math.floor(Math.random()*10);
+if((i+1)%4===0 && i!==15) n+=" ";
+}
+return n;
 }
 
-function aggiorna(){
-nome.innerText = dati.nome+" "+dati.cognome;
-numero.innerText = dati.carta.numero;
-cvv.innerText = dati.carta.cvv;
-scadenza.innerText = dati.carta.scadenza;
-iban.innerText = dati.carta.iban;
-banca.innerText = "€"+dati.banca;
-cash.innerText = "€"+dati.contanti;
+function generaCVV(){
+return Math.floor(100+Math.random()*900);
 }
+
+function generaScadenza(){
+let m = Math.floor(Math.random()*12)+1;
+let y = new Date().getFullYear()+3;
+return m.toString().padStart(2,"0")+"/"+y.toString().slice(2);
+}
+
+function generaIBAN(){
+return "IT"+Math.floor(Math.random()*999999999999999999);
+}
+
+/* ===== SALVA ===== */
 
 async function salva(){
-personaggi[index]=dati;
-await updateDoc(doc(db,"users",uid),{personaggi});
+personaggi[index] = dati;
+await updateDoc(doc(db,"users",uid),{
+personaggi:personaggi
+});
 }
 
-/* OPERAZIONI */
-window.operazione = async ()=>{
-let tipo = document.getElementById("tipoOp").value;
-let importo = parseInt(document.getElementById("importoOp").value);
+/* ===== OPERAZIONE ===== */
 
-if(!importo || importo<=0) return alert("Importo non valido");
+window.operazione = async ()=>{
+
+let tipo = document.getElementById("tipo").value;
+let importo = parseInt(document.getElementById("importo1").value);
+
+if(!importo || importo <= 0) return;
 
 if(tipo==="deposito"){
-if(importo>dati.contanti) return alert("Non hai contanti");
-dati.contanti-=importo;
-dati.banca+=importo;
+if(importo > dati.contanti) return alert("Non hai contanti");
+dati.contanti -= importo;
+dati.banca += importo;
 }
 
 if(tipo==="prelievo"){
-if(importo>dati.banca) return alert("Saldo insufficiente");
-dati.banca-=importo;
-dati.contanti+=importo;
-}
-
-await salva();
-aggiorna();
-};
-
-/* BONIFICO */
-window.bonifico = async ()=>{
-let nome = document.getElementById("nomeDest").value.trim().toLowerCase();
-let cognome = document.getElementById("cognomeDest").value.trim().toLowerCase();
-let importo = parseInt(document.getElementById("importoBonifico").value);
-
-if(!nome || !cognome || !importo) return alert("Compila tutti i campi");
-
-if(importo<=0) return alert("Importo non valido");
-if(importo>dati.banca) return alert("Saldo insufficiente");
-
-const utenti = await getDocs(collection(db,"users"));
-
-for(const u of utenti.docs){
-
-let user = u.data();
-if(!user.personaggi) continue;
-
-for(let i=0;i<user.personaggi.length;i++){
-
-let p = user.personaggi[i];
-
-if(p.nome.toLowerCase()===nome && p.cognome.toLowerCase()===cognome){
-
-p.banca += importo;
-
-await updateDoc(doc(db,"users",u.id),{
-personaggi:user.personaggi
-});
-
+if(importo > dati.banca) return alert("Saldo insufficiente");
 dati.banca -= importo;
+dati.contanti += importo;
+}
 
 await salva();
-aggiorna();
+carica();
 
-alert("Bonifico inviato!");
-return;
-}
-}
-}
-
-alert("Giocatore non trovato");
 };
 
-/* FLIP */
-card.onclick=()=>card.classList.toggle("flip");
+/* ===== FLIP CARTA ===== */
+document.querySelector(".card").onclick = function(){
+this.classList.toggle("flip");
+};
 
-carica();
-</script></body>
-  </html>
+    </script>
