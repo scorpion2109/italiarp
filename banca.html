@@ -3,11 +3,10 @@
 <meta charset="UTF-8">
 <title>Banca RP</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"><style>
-/* === TUO CSS IDENTICO (NON TOCCATO) === */
 body{
 margin:0;
 background:#161832;
-font-family:Arial, sans-serif;
+font-family:Arial;
 display:flex;
 flex-direction:column;
 align-items:center;
@@ -16,59 +15,89 @@ color:white;
 }
 
 /* CARD */
-.card-container{width:420px;height:260px;perspective:1200px;margin-bottom:30px;}
-.card{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform 0.8s;cursor:pointer;}
+.card-container{width:420px;height:260px;perspective:1200px;}
+.card{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:0.8s;cursor:pointer;}
 .card.flip{transform:rotateY(180deg);}
 .front,.back{
 position:absolute;width:100%;height:100%;border-radius:20px;
-backface-visibility:hidden;overflow:hidden;
-box-shadow:0 35px 90px rgba(0,0,0,0.85),0 10px 20px rgba(0,0,0,0.5),inset 0 3px 8px rgba(255,255,255,0.25);
+backface-visibility:hidden;
+box-shadow:0 35px 90px rgba(0,0,0,0.85);
 }
-.front{background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);}
-.back{transform:rotateY(180deg);background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);}
 
-/* ELEMENTI */
-.gold-bar{position:absolute;left:0;top:0;height:100%;width:55px;background:linear-gradient(180deg,#7a5a00,#d4af37,#ffd700,#cfa600,#7a5a00);}
-.postepay{position:absolute;top:22px;left:75px;color:#ffd700;font-weight:900;font-size:28px;}
-.evolution{position:absolute;top:58px;left:190px;color:#ffd700;font-size:13px;}
-.chip{position:absolute;top:100px;left:75px;width:65px;}
-.contactless{position:absolute;top:117px;left:130px;width:30px;}
-.posteitaliane{position:absolute;top:117px;left:165px;font-size:19px;font-weight:900;}
-.card-number{position:absolute;bottom:70px;left:75px;font-size:20px;letter-spacing:3px;font-weight:700;color:#f1f1f1;}
-.expiry{position:absolute;bottom:22px;right:90px;color:#e6e6e6;text-align:right;}
-.card-logo{position:absolute;bottom:20px;right:20px;width:55px;}
-.rp-box{position:absolute;top:22px;right:20px;padding:6px 14px;border-radius:6px;background:rgba(0,0,0,0.35);color:white;font-weight:700;font-size:12px;}
-.magnetic{position:absolute;top:25px;left:0;width:100%;height:45px;background:black;}
-.name{position:absolute;top:95px;left:30px;font-weight:700;font-size:16px;color:#111;}
-.cvv-bar{position:absolute;top:135px;left:30px;width:220px;height:35px;background:white;border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:10px;font-weight:bold;}
-.iban{position:absolute;bottom:20px;left:30px;font-size:14px;font-weight:bold;color:#222;}
+.front{background:linear-gradient(135deg,#5f5f5f,#a0a0a0);}
+.back{transform:rotateY(180deg);background:linear-gradient(135deg,#5f5f5f,#a0a0a0);}
 
-.balance-box{width:420px;background:#1f1f1f;border-radius:14px;padding:20px;}
-.balance-row{display:flex;justify-content:space-between;padding:10px 0;font-size:18px;}
-.amount{color:#ffd700;font-weight:bold;}
-</style></head><body><div class="card-container">
+.gold-bar{position:absolute;left:0;top:0;width:55px;height:100%;background:gold;}
+.postepay{position:absolute;top:20px;left:70px;color:gold;font-size:28px;font-weight:bold;}
+.chip{position:absolute;top:100px;left:70px;width:60px;}
+
+.card-number{position:absolute;bottom:70px;left:70px;font-size:20px;letter-spacing:3px;}
+.expiry{position:absolute;bottom:25px;right:80px;}
+
+.card-logo{
+position:absolute;
+bottom:18px;
+right:18px;
+width:65px;
+height:40px;
+}
+.card-logo img{
+width:100%;
+height:100%;
+object-fit:contain;
+}
+
+/* RETRO */
+.magnetic{position:absolute;top:25px;width:100%;height:40px;background:black;}
+.name{position:absolute;top:90px;left:30px;color:black;font-weight:bold;}
+.cvv-bar{position:absolute;top:130px;left:30px;width:200px;height:35px;background:white;display:flex;align-items:center;justify-content:flex-end;padding-right:10px;color:black;}
+.iban{position:absolute;bottom:20px;left:30px;color:black;}
+
+/* SALDO */
+.balance-box{width:420px;background:#1f1f1f;border-radius:12px;padding:20px;margin-top:20px;}
+.row{display:flex;justify-content:space-between;margin:10px 0;}
+.amount{color:#ffd700;}
+
+/* OPERAZIONI */
+.operations{width:420px;display:flex;gap:15px;margin-top:20px;}
+.box{flex:1;background:#222;padding:15px;border-radius:10px;}
+input,select{width:100%;margin-top:5px;padding:8px;border:none;border-radius:6px;}
+button{margin-top:10px;width:100%;padding:10px;background:gold;border:none;border-radius:6px;font-weight:bold;cursor:pointer;}
+</style></head><body><!-- CARTA --><div class="card-container">
 <div class="card" id="card"><div class="front">
 <div class="gold-bar"></div>
 <div class="postepay">POSTEPAY</div>
-<div class="evolution">evolution</div>
-<img src="assets/chip.png" class="chip">
-<img src="assets/contactless.png" class="contactless">
-<div class="posteitaliane">POSTE ITALIANE</div>
-<div class="rp-box">ITALIA RP</div><div class="card-number" id="numero"></div>
-<div class="expiry"><div>VALID THRU</div><div id="scadenza"></div></div>
-<div class="card-logo"><img src="assets/mastercard.png"></div>
+<img src="assets/chip.png" class="chip"><div class="card-number" id="numero"></div>
+<div class="expiry" id="scadenza"></div><div class="card-logo">
+<img src="assets/mastercard.png">
+</div>
 </div><div class="back">
 <div class="magnetic"></div>
 <div class="name" id="nome"></div>
 <div class="cvv-bar" id="cvv"></div>
 <div class="iban" id="iban"></div>
 </div></div>
-</div><div class="balance-box">
-<div class="balance-row"><span>BANCA</span><span id="banca" class="amount"></span></div>
-<div class="balance-row"><span>CASH</span><span id="cash" class="amount"></span></div>
-</div><script type="module">
+</div><!-- SALDO --><div class="balance-box">
+<div class="row">BANCA <span id="banca" class="amount"></span></div>
+<div class="row">CASH <span id="cash" class="amount"></span></div>
+</div><!-- OPERAZIONI --><div class="operations"><div class="box">
+<h3>Deposito / Prelievo</h3>
+<select id="tipo">
+<option value="deposito">Deposito</option>
+<option value="prelievo">Prelievo</option>
+</select>
+<input id="importo1" type="number" placeholder="Importo">
+<button onclick="operazione()">Conferma</button>
+</div><div class="box">
+<h3>Bonifico</h3>
+<input id="nomeDest" placeholder="Nome">
+<input id="cognomeDest" placeholder="Cognome">
+<input id="importo2" type="number" placeholder="Importo">
+<button onclick="bonifico()">Invia</button>
+</div></div><script type="module">
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
-import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, updateDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
 
 const app = initializeApp({
 apiKey:"AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
@@ -98,10 +127,10 @@ aggiorna();
 
 function generaCarta(){
 return{
-numero: "4"+Math.random().toString().slice(2,18).padEnd(16,"0").replace(/(.{4})/g,"$1 "),
-cvv: Math.floor(100+Math.random()*900),
-scadenza: "12/29",
-iban: "IT"+Math.floor(Math.random()*999999999999999999)
+numero:"4"+Math.random().toString().slice(2,18).padEnd(16,"0").replace(/(.{4})/g,"$1 "),
+cvv:Math.floor(100+Math.random()*900),
+scadenza:"12/29",
+iban:"IT"+Math.floor(Math.random()*999999999999999999)
 };
 }
 
@@ -111,7 +140,6 @@ numero.innerText = dati.carta.numero;
 cvv.innerText = dati.carta.cvv;
 scadenza.innerText = dati.carta.scadenza;
 iban.innerText = dati.carta.iban;
-
 banca.innerText = "€"+dati.banca;
 cash.innerText = "€"+dati.contanti;
 }
@@ -121,8 +149,74 @@ personaggi[index]=dati;
 await updateDoc(doc(db,"users",uid),{personaggi});
 }
 
+/* DEPOSITO / PRELIEVO */
+window.operazione = async ()=>{
+let tipo = tipo.value;
+let importo = parseInt(importo1.value);
+if(!importo) return;
+
+if(tipo==="deposito" && dati.contanti>=importo){
+dati.contanti-=importo;
+dati.banca+=importo;
+}
+
+if(tipo==="prelievo" && dati.banca>=importo){
+dati.banca-=importo;
+dati.contanti+=importo;
+}
+
+await salva();
+aggiorna();
+};
+
+/* BONIFICO */
+window.bonifico = async ()=>{
+let nome = nomeDest.value.toLowerCase();
+let cognome = cognomeDest.value.toLowerCase();
+let importo = parseInt(importo2.value);
+
+if(!nome || !cognome || !importo) return alert("Compila");
+
+if(importo > dati.banca) return alert("Soldi insufficienti");
+
+const qs = await getDocs(collection(db,"users"));
+
+for(const d of qs.docs){
+
+let user = d.data();
+
+if(!user.personaggi) continue;
+
+for(let i=0;i<user.personaggi.length;i++){
+
+let p = user.personaggi[i];
+
+if(p.nome.toLowerCase()==nome && p.cognome.toLowerCase()==cognome){
+
+p.banca += importo;
+
+await updateDoc(doc(db,"users",d.id),{
+personaggi:user.personaggi
+});
+
+dati.banca -= importo;
+
+await salva();
+aggiorna();
+
+alert("Bonifico inviato");
+return;
+}
+}
+}
+
+alert("Utente non trovato");
+};
+
+/* FLIP */
 card.onclick=()=>card.classList.toggle("flip");
 
 carica();
+
 </script></body>
-</html>
+  </html>
