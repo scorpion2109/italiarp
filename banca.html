@@ -6,8 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-
-/* ===== BODY ===== */
 body{
 margin:0;
 background:#161832;
@@ -34,50 +32,41 @@ padding:0 20px;
 box-shadow:0 5px 20px rgba(0,0,0,0.6);
 z-index:999;
 }
-
-.logo{
-height:40px;
-cursor:pointer;
-}
-
-.time{
-font-size:18px;
-font-weight:bold;
-}
-
-.avatar{
-width:40px;
-height:40px;
-border-radius:50%;
-cursor:pointer;
-border:2px solid #ffd700;
-}
+.logo{height:40px;cursor:pointer;}
+.time{font-size:18px;font-weight:bold;}
+.avatar{width:40px;height:40px;border-radius:50%;border:2px solid #ffd700;cursor:pointer;}
 
 /* ===== CARTA ===== */
 .card-container{width:420px;height:260px;perspective:1200px;margin-bottom:30px;}
-.card{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform 0.8s;cursor:pointer;}
+.card{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:0.8s;cursor:pointer;}
 .card.flip{transform:rotateY(180deg);}
-.front,.back{position:absolute;width:100%;height:100%;border-radius:20px;backface-visibility:hidden;overflow:hidden;box-shadow:0 35px 90px rgba(0,0,0,0.85);}
+.front,.back{
+position:absolute;width:100%;height:100%;
+border-radius:20px;backface-visibility:hidden;
+box-shadow:0 35px 90px rgba(0,0,0,0.85);
+overflow:hidden;
+}
 .front{background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);}
 .back{transform:rotateY(180deg);background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);}
 
-.gold-bar{position:absolute;left:0;top:0;height:100%;width:55px;background:linear-gradient(180deg,#7a5a00,#ffd700);}
-.postepay{position:absolute;top:22px;left:75px;color:#ffd700;font-weight:900;font-size:28px;}
+.gold-bar{position:absolute;left:0;top:0;width:55px;height:100%;background:linear-gradient(#7a5a00,#ffd700);}
+.postepay{position:absolute;top:22px;left:75px;color:#ffd700;font-size:28px;font-weight:900;}
 .chip{position:absolute;top:100px;left:75px;width:65px;}
-.card-number{position:absolute;bottom:70px;left:75px;font-size:20px;color:#fff;}
+.card-number{position:absolute;bottom:70px;left:75px;color:#fff;font-size:20px;}
 .card-logo{position:absolute;bottom:20px;right:20px;width:55px;}
+
 .name{position:absolute;top:95px;left:30px;font-weight:700;color:#111;}
 .iban{position:absolute;bottom:20px;left:30px;color:#222;}
 
 /* ===== SALDO ===== */
-.balance-box{width:420px;background:#1f1f1f;border-radius:14px;padding:20px;margin-top:20px;}
+.balance-box{width:420px;background:#1f1f1f;border-radius:14px;padding:20px;}
 .balance-row{display:flex;justify-content:space-between;padding:10px 0;}
 .amount{color:#ffd700;font-weight:bold;}
 
 /* ===== OPERAZIONI ===== */
 .operations{width:420px;display:flex;gap:20px;margin-top:20px;}
-.operation-box{flex:1;background:#222;border-radius:12px;padding:15px;display:flex;flex-direction:column;gap:10px;}
-button{padding:10px;background:#ffd700;border:none;border-radius:6px;cursor:pointer;}
+.operation-box{flex:1;background:#222;padding:15px;border-radius:12px;display:flex;flex-direction:column;gap:10px;}
+button{background:#ffd700;border:none;padding:10px;border-radius:6px;cursor:pointer;}
 
 </style>
 </head>
@@ -104,7 +93,7 @@ button{padding:10px;background:#ffd700;border:none;border-radius:6px;cursor:poin
 </div>
 
 <div class="back">
-<div class="name">MARIO ROSSI</div>
+<div class="name" id="nomeCarta">--</div>
 <div class="iban">IT60 X054 2811 1010</div>
 </div>
 
@@ -125,19 +114,17 @@ button{padding:10px;background:#ffd700;border:none;border-radius:6px;cursor:poin
 <option value="deposito">Deposito</option>
 <option value="prelievo">Prelievo</option>
 </select>
-<input id="importo1" type="number">
+<input id="importo1" type="number" placeholder="Importo">
 <button onclick="operazione()">OK</button>
 </div>
 
 <div class="operation-box">
 <select id="destinatario"></select>
-<input id="importo2" type="number">
+<input id="importo2" type="number" placeholder="Importo">
 <button onclick="bonifico()">INVIA</button>
 </div>
 
 </div>
-
-<div id="listaUtenti"></div>
 
 <script type="module">
 
@@ -152,8 +139,8 @@ const firebaseConfig = {
   messagingSenderId: "234781749995",
   appId: "1:234781749995:web:6954473363659fe38b04ae",
   measurementId: "G-R23N60PBYY"
-};
-  
+};https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js
+
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
@@ -163,34 +150,55 @@ const index = parseInt(sessionStorage.getItem("personaggio_index"));
 let banca=0;
 let cash=0;
 
+/* CARICA DATI REALI */
 async function carica(){
+
 const ref=doc(db,"utenti",uid);
 const snap=await getDoc(ref);
-const p=snap.data().personaggi[index];
-banca=p.banca||20000;
-cash=p.cash||5000;
+
+if(!snap.exists()) return;
+
+const data=snap.data();
+const p=data.personaggi[index];
+
+banca = p.banca ?? 20000;
+cash = p.cash ?? 5000;
+
+/* NOME CARTA */
+document.getElementById("nomeCarta").innerText = p.nome + " " + p.cognome;
+
+/* UI */
 document.getElementById("banca").innerText="€"+banca;
 document.getElementById("cash").innerText="€"+cash;
+
 }
 
-window.operazione=async function(){
-let tipo=document.getElementById("tipo").value;
-let imp=parseInt(document.getElementById("importo1").value);
-if(tipo==="deposito"&&cash>=imp){cash-=imp;banca+=imp;}
-if(tipo==="prelievo"&&banca>=imp){banca-=imp;cash+=imp;}
-await salva();
-carica();
-}
-
+/* SALVA */
 async function salva(){
 const ref=doc(db,"utenti",uid);
 const snap=await getDoc(ref);
 let data=snap.data();
+
 data.personaggi[index].banca=banca;
 data.personaggi[index].cash=cash;
+
 await updateDoc(ref,{personaggi:data.personaggi});
 }
 
+/* DEPOSITO / PRELIEVO */
+window.operazione=async function(){
+let tipo=document.getElementById("tipo").value;
+let imp=parseInt(document.getElementById("importo1").value);
+if(!imp) return;
+
+if(tipo==="deposito" && cash>=imp){cash-=imp;banca+=imp;}
+if(tipo==="prelievo" && banca>=imp){banca-=imp;cash+=imp;}
+
+await salva();
+carica();
+}
+
+/* BONIFICO REALE */
 window.bonifico=async function(){
 let v=document.getElementById("destinatario").value;
 let imp=parseInt(document.getElementById("importo2").value);
@@ -205,21 +213,23 @@ let m=(await getDoc(refM)).data();
 let d=(await getDoc(refD)).data();
 
 m.personaggi[index].banca-=imp;
-d.personaggi[i].banca+=imp;
+d.personaggi[i].banca=(d.personaggi[i].banca||0)+imp;
 
 await updateDoc(refM,{personaggi:m.personaggi});
 await updateDoc(refD,{personaggi:d.personaggi});
 
+alert("Bonifico inviato!");
 carica();
 }
 
+/* UTENTI LIVE */
 function utenti(){
 onSnapshot(collection(db,"utenti"),snap=>{
 const sel=document.getElementById("destinatario");
 sel.innerHTML="";
 snap.forEach(docu=>{
 docu.data().personaggi.forEach((p,i)=>{
-if(docu.id===uid&&i===index)return;
+if(docu.id===uid && i===index) return;
 let o=document.createElement("option");
 o.value=docu.id+"|"+i;
 o.textContent=p.nome+" "+p.cognome;
@@ -229,20 +239,19 @@ sel.appendChild(o);
 });
 }
 
-carica();
-utenti();
-
 /* ORARIO */
 setInterval(()=>{
-let d=new Date();
-document.getElementById("orario").innerText=d.toLocaleTimeString();
+document.getElementById("orario").innerText=new Date().toLocaleTimeString();
 },1000);
 
-/* AVATAR DISCORD */
+/* AVATAR */
 let av=sessionStorage.getItem("discord_avatar");
 if(av) document.getElementById("avatar").src=av;
+
+carica();
+utenti();
 
 </script>
 
 </body>
-  </html>
+</html>
