@@ -6,290 +6,112 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+
 body{
 margin:0;
-background:#161832;
+background:#dcdcdc;
 font-family:Arial;
-color:white;
 display:flex;
-flex-direction:column;
-align-items:center;
-padding-top:90px;
-padding-bottom:90px;
+justify-content:center;
 }
 
-/* ===== TOPBAR ===== */
-.topbar{
-position:fixed;
-top:0;
-width:100%;
-height:65px;
-background:#0d0f24;
+/* CONTAINER */
+.container{
+width:360px;
+background:linear-gradient(135deg,#000428,#1f2bff,#000428);
+margin-top:20px;
+border-radius:12px;
+color:white;
+padding-bottom:20px;
+}
+
+/* TOP */
+.top{
 display:flex;
 justify-content:space-between;
 align-items:center;
-padding:0 15px;
-z-index:1000;
+padding:10px;
 }
 
-.logo{height:40px;cursor:pointer;}
-.avatar{width:42px;height:42px;border-radius:50%;border:2px solid gold;}
-.time{font-weight:bold;}
+.logo{height:40px;}
+.avatar{width:40px;border-radius:50%;}
+.time{border:1px solid white;padding:5px 20px;}
 
-/* ===== CARTA ===== */
+/* CARTA */
 .card-container{
-width:420px;
-height:260px;
-perspective:1200px;
+display:flex;
+justify-content:center;
+perspective:1000px;
 }
 
 .card{
-width:100%;
-height:100%;
-position:relative;
+width:320px;
+height:200px;
 transform-style:preserve-3d;
 transition:0.8s;
 cursor:pointer;
+position:relative;
 }
 
-.card.flip{
-transform:rotateY(180deg);
-}
+.card.flip{transform:rotateY(180deg);}
 
-/* BASE */
 .front,.back{
 position:absolute;
 width:100%;
 height:100%;
-border-radius:20px;
+border-radius:15px;
 backface-visibility:hidden;
-overflow:hidden;
-box-shadow:
-0 35px 90px rgba(0,0,0,0.85),
-0 10px 20px rgba(0,0,0,0.5),
-inset 0 3px 8px rgba(255,255,255,0.25);
+background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a);
 }
 
-/* ===== EFFETTO LUCIDO ===== */
-.front::after,
-.back::after{
-content:"";
-position:absolute;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:linear-gradient(
-120deg,
-rgba(255,255,255,0.25) 0%,
-rgba(255,255,255,0.05) 40%,
-transparent 60%
-);
-pointer-events:none;
-}
+.back{transform:rotateY(180deg);}
 
-/* ===== FRONT ===== */
-.front{
-background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);
-}
-
-/* BARRA ORO */
-.gold-bar{
-position:absolute;
-left:0;
-top:0;
-height:100%;
-width:55px;
-background:linear-gradient(180deg,#7a5a00,#d4af37,#ffd700,#cfa600,#7a5a00);
-}
-
-/* TESTI */
-.postepay{
-position:absolute;
-top:22px;
-left:75px;
-color:#ffd700;
-font-weight:900;
-font-size:28px;
-}
-
-.evolution{
-position:absolute;
-top:58px;
-left:190px;
-color:#ffd700;
-font-size:13px;
-}
-
-/* CHIP */
-.chip{
-position:absolute;
-top:100px;
-left:75px;
-width:65px;
-}
-
-/* CONTACTLESS */
-.contactless{
-position:absolute;
-top:117px;
-left:130px;
-width:30px;
-}
-
-/* POSTE */
-.posteitaliane{
-position:absolute;
-top:117px;
-left:165px;
-font-size:19px;
-font-weight:900;
-}
-
-.poste{color:#cfcfcf;}
-.italiane{color:#444;}
-
-/* NUMERO */
-.card-number{
-position:absolute;
-bottom:70px;
-left:75px;
-font-size:20px;
-letter-spacing:3px;
-font-weight:700;
-color:#f1f1f1;
-text-shadow:1px 1px 0 #aaa,2px 2px 2px rgba(0,0,0,0.6);
-}
-
-/* SCADENZA */
-.expiry{
-position:absolute;
-bottom:22px;
-right:90px;
-color:#e6e6e6;
-text-align:right;
-}
-
-.expiry .label{font-size:9px;}
-.expiry .date{font-size:16px;font-weight:bold;}
-
-/* LOGO MASTERCARD */
-.card-logo{
-position:absolute;
-bottom:20px;
-right:20px;
-width:55px;
-height:35px;
-}
-
-.card-logo::before,
-.card-logo::after{
-content:"";
-position:absolute;
-width:30px;
-height:30px;
-border-radius:50%;
-}
-
-.card-logo::before{background:#EB001B;left:0;}
-.card-logo::after{background:#F79E1B;right:0;opacity:0.9;}
-
-/* RP BOX */
-.rp-box{
-position:absolute;
-top:22px;
-right:20px;
-padding:6px 14px;
-border-radius:6px;
-background:rgba(0,0,0,0.35);
-border:1px solid rgba(255,255,255,0.25);
-color:white;
-font-weight:700;
-font-size:12px;
-}
-
-/* ===== BACK ===== */
-.back{
-transform:rotateY(180deg);
-background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);
-}
-
-.magnetic{
-position:absolute;
-top:25px;
-left:0;
-width:100%;
-height:45px;
-background:black;
-}
-
-/* NOME */
 .name{
 position:absolute;
-top:95px;
-left:30px;
-font-weight:700;
-font-size:16px;
-color:#111;
-text-shadow:1px 1px 0 #bbb,2px 2px 3px rgba(0,0,0,0.5);
-}
-
-/* CVV */
-.cvv-bar{
-position:absolute;
-top:135px;
-left:30px;
-width:220px;
-height:35px;
-background:white;
-border-radius:4px;
-display:flex;
-align-items:center;
-justify-content:flex-end;
-padding-right:10px;
+top:90px;
+left:20px;
+color:black;
 font-weight:bold;
 }
 
-/* IBAN */
-.iban{
-position:absolute;
-bottom:20px;
-left:30px;
+/* BOX */
+.box{
+margin:15px;
+padding:15px;
+background:rgba(255,255,255,0.05);
+border-radius:10px;
+text-align:center;
+}
+
+/* INPUT */
+input,select{
+width:80%;
+padding:10px;
+margin:5px;
+}
+
+button{
+padding:8px 20px;
+border-radius:20px;
+}
+
+/* MOVIMENTI */
+.mov{
+display:flex;
+justify-content:space-between;
+margin:5px;
 font-size:14px;
-font-weight:bold;
-color:#222;
 }
-
-/* ===== BOTTOM BAR ===== */
-.bottombar{
-position:fixed;
-bottom:0;
-width:100%;
-height:70px;
-background:#0d0f24;
-display:flex;
-justify-content:space-around;
-align-items:center;
-}
-
-.nav-item{
-display:flex;
-flex-direction:column;
-align-items:center;
-font-size:12px;
-color:#ccc;
-cursor:pointer;
-}
-
-.nav-item:hover{color:gold;}
 
 </style>
 </head>
 
 <body>
 
-<!-- TOPBAR -->
-<div class="topbar">
+<div class="container">
+
+<!-- TOP -->
+<div class="top">
 <img src="assets/logo.png" class="logo">
 <div id="orario" class="time"></div>
 <img class="avatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png">
@@ -299,52 +121,168 @@ cursor:pointer;
 <div class="card-container">
 <div class="card" onclick="this.classList.toggle('flip')">
 
-<div class="front">
-<div class="gold-bar"></div>
-<div class="postepay">POSTEPAY</div>
-<div class="evolution">evolution</div>
-
-<img src="assets/chip.png" class="chip">
-<img src="assets/contactless.png" class="contactless">
-
-<div class="posteitaliane">
-<span class="poste">POSTE</span><span class="italiane">ITALIANE</span>
-</div>
-
-<div class="rp-box">ITALIA RP</div>
-
-<div class="card-number">1234 5678 9012 3456</div>
-
-<div class="expiry">
-<div class="label">VALID THRU</div>
-<div class="date">12/29</div>
-</div>
-
-<div class="card-logo"></div>
-</div>
+<div class="front"></div>
 
 <div class="back">
-<div class="magnetic"></div>
-<div class="name" id="nomeCarta">Mario Rossi</div>
-<div class="cvv-bar">123</div>
-<div class="iban">IT60 X054 2811 1010 0000 0123 456</div>
+<div class="name">NOME</div>
 </div>
 
 </div>
 </div>
 
-<!-- BOTTOM BAR -->
-<div class="bottombar">
-<div class="nav-item">🏠 Home</div>
-<div class="nav-item">💳 Banca</div>
-<div class="nav-item">👤 Profilo</div>
+<!-- CONTO -->
+<div class="box">
+CASH: €<span id="cash">0</span><br><br>
+BANCA: €<span id="banca">0</span>
 </div>
 
-<script>
+<!-- OPERAZIONI -->
+<div class="box">
+<select id="tipo">
+<option value="deposito">Deposito</option>
+<option value="prelievo">Prelievo</option>
+</select>
+
+<input id="importo" type="number" placeholder="Quantità">
+
+<button onclick="operazione()">CONFERMA</button>
+</div>
+
+<div class="box">
+<input id="destinatario" placeholder="Nome Cognome">
+<input id="importoBonifico" type="number" placeholder="Quantità">
+
+<button onclick="bonifico()">CONFERMA</button>
+</div>
+
+<!-- STORICO -->
+<div class="box" id="movimenti">STORICO</div>
+
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+/* CONFIG */
+const firebaseConfig = {
+  apiKey: "AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
+  authDomain: "sito-rp.firebaseapp.com",
+  projectId: "sito-rp",
+  storageBucket: "sito-rp.firebasestorage.app",
+  messagingSenderId: "234781749995",
+  appId: "1:234781749995:web:6954473363659fe38b04ae"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+/* DATI */
+let banca=0;
+let cash=0;
+
+/* ORARIO */
 setInterval(()=>{
-document.getElementById("orario").innerText=new Date().toLocaleTimeString();
+orario.innerText=new Date().toLocaleTimeString().slice(0,5);
 },1000);
+
+/* CARICA */
+async function carica(){
+
+  const discordId = localStorage.getItem("discordId") || "TUO_ID";
+  const index = parseInt(localStorage.getItem("personaggioIndex")) || 0;
+
+  const ref = doc(db,"users",discordId);
+  const snap = await getDoc(ref);
+
+  if(!snap.exists()){
+    alert("Utente non trovato");
+    return;
+  }
+
+  let data = snap.data();
+  let p = data.personaggi[index];
+
+  banca = p.banca || 0;
+  cash = p.contanti || 0;
+
+  document.getElementById("banca").innerText=banca;
+  document.getElementById("cash").innerText=cash;
+
+  document.querySelector(".name").innerText =
+    (p.nome+" "+p.cognome).toUpperCase();
+}
+
+/* SALVA */
+async function salva(){
+
+  const discordId = localStorage.getItem("discordId") || "TUO_ID";
+  const index = parseInt(localStorage.getItem("personaggioIndex")) || 0;
+
+  const ref = doc(db,"users",discordId);
+  const snap = await getDoc(ref);
+
+  let data = snap.data();
+  let personaggi = data.personaggi;
+
+  personaggi[index].banca = banca;
+  personaggi[index].contanti = cash;
+
+  await updateDoc(ref,{personaggi});
+}
+
+/* MOV */
+function addMov(t){
+let d=document.createElement("div");
+d.className="mov";
+d.innerHTML=t;
+movimenti.prepend(d);
+}
+
+/* OPERAZIONI */
+window.operazione = async function(){
+let tipo=tipo.value;
+let imp=parseInt(importo.value);
+if(!imp)return;
+
+if(tipo=="deposito" && cash>=imp){
+cash-=imp; banca+=imp;
+addMov("Deposito €"+imp);
+}
+
+if(tipo=="prelievo" && banca>=imp){
+banca-=imp; cash+=imp;
+addMov("Prelievo €"+imp);
+}
+
+document.getElementById("banca").innerText=banca;
+document.getElementById("cash").innerText=cash;
+
+await salva();
+}
+
+/* BONIFICO */
+window.bonifico = async function(){
+let nome=destinatario.value;
+let imp=parseInt(importoBonifico.value);
+
+if(!nome||!imp)return;
+
+if(banca>=imp){
+banca-=imp;
+addMov("Bonifico a "+nome+" €"+imp);
+}
+
+document.getElementById("banca").innerText=banca;
+
+await salva();
+}
+
+/* INIT */
+carica();
+
 </script>
 
 </body>
-</html>
+  </html>
