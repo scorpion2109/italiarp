@@ -6,7 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-
 body{
 margin:0;
 background:#dcdcdc;
@@ -66,6 +65,7 @@ background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a);
 
 .back{transform:rotateY(180deg);}
 
+/* RETRO */
 .name{
 position:absolute;
 top:90px;
@@ -102,7 +102,6 @@ justify-content:space-between;
 margin:5px;
 font-size:14px;
 }
-
 </style>
 </head>
 
@@ -165,7 +164,7 @@ BANCA: €<span id="banca">0</span>
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-/* CONFIG */
+/* FIREBASE */
 const firebaseConfig = {
   apiKey: "AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
   authDomain: "sito-rp.firebaseapp.com",
@@ -179,19 +178,29 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 /* DATI */
-let banca=0;
-let cash=0;
+let banca = 0;
+let cash = 0;
 
 /* ORARIO */
 setInterval(()=>{
 orario.innerText=new Date().toLocaleTimeString().slice(0,5);
 },1000);
 
-/* CARICA */
+/* CARICA DATI */
 async function carica(){
 
-  const discordId = localStorage.getItem("discordId") || "TUO_ID";
-  const index = parseInt(localStorage.getItem("personaggioIndex")) || 0;
+  const discordId = localStorage.getItem("discordId");
+  const index = parseInt(localStorage.getItem("personaggioIndex"));
+
+  if(!discordId){
+    alert("Non sei loggato");
+    return;
+  }
+
+  if(index === null){
+    alert("Nessun personaggio selezionato");
+    return;
+  }
 
   const ref = doc(db,"users",discordId);
   const snap = await getDoc(ref);
@@ -202,23 +211,29 @@ async function carica(){
   }
 
   let data = snap.data();
+
+  if(!data.personaggi || !data.personaggi[index]){
+    alert("Personaggio non trovato");
+    return;
+  }
+
   let p = data.personaggi[index];
 
   banca = p.banca || 0;
   cash = p.contanti || 0;
 
-  document.getElementById("banca").innerText=banca;
-  document.getElementById("cash").innerText=cash;
+  document.getElementById("banca").innerText = banca;
+  document.getElementById("cash").innerText = cash;
 
   document.querySelector(".name").innerText =
-    (p.nome+" "+p.cognome).toUpperCase();
+    (p.nome + " " + p.cognome).toUpperCase();
 }
 
 /* SALVA */
 async function salva(){
 
-  const discordId = localStorage.getItem("discordId") || "TUO_ID";
-  const index = parseInt(localStorage.getItem("personaggioIndex")) || 0;
+  const discordId = localStorage.getItem("discordId");
+  const index = parseInt(localStorage.getItem("personaggioIndex"));
 
   const ref = doc(db,"users",discordId);
   const snap = await getDoc(ref);
@@ -232,7 +247,7 @@ async function salva(){
   await updateDoc(ref,{personaggi});
 }
 
-/* MOV */
+/* MOVIMENTI */
 function addMov(t){
 let d=document.createElement("div");
 d.className="mov";
@@ -244,15 +259,18 @@ movimenti.prepend(d);
 window.operazione = async function(){
 let tipo=tipo.value;
 let imp=parseInt(importo.value);
+
 if(!imp)return;
 
 if(tipo=="deposito" && cash>=imp){
-cash-=imp; banca+=imp;
+cash-=imp;
+banca+=imp;
 addMov("Deposito €"+imp);
 }
 
 if(tipo=="prelievo" && banca>=imp){
-banca-=imp; cash+=imp;
+banca-=imp;
+cash+=imp;
 addMov("Prelievo €"+imp);
 }
 
@@ -285,4 +303,4 @@ carica();
 </script>
 
 </body>
-  </html>
+</html>
