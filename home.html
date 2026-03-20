@@ -258,10 +258,10 @@ appId: "1:234781749995:web:6954473363659fe38b04ae"
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const uid = sessionStorage.getItem("discord_uid");
-const personaggioIndex = sessionStorage.getItem("personaggio_index");
+const uid = localStorage.getItem("discord_uid");
+const personaggioIndex = parseInt(localStorage.getItem("personaggioIndex"));
 
-if(!uid || personaggioIndex === null){
+if(!uid || isNaN(personaggioIndex)){
 window.location.href="index.html";
 }
 
