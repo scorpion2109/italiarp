@@ -142,7 +142,7 @@ appId: "1:234781749995:web:6954473363659fe38b04ae"
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const uid = sessionStorage.getItem("discord_uid");
+const uid = localStorage.getItem("discord_uid");
 
 if(!uid){
 alert("Utente non loggato");
@@ -212,7 +212,7 @@ nome.className="nome";
 nome.innerText=p.nome+" "+p.cognome;
 
 nome.onclick=()=>{
-sessionStorage.setItem("personaggio_index",index);
+localStorage.setItem("personaggioIndex",index);
 window.location.href="home.html";
 };
 
