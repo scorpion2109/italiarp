@@ -85,7 +85,7 @@ const user = await res.json();
 console.log("Discord user:",user);
 
 // SALVA UID
-sessionStorage.setItem("discord_uid",user.id);
+localStorage.setItem("discord_uid",user.id);
 
 // pulisce url
 history.replaceState(null,null," ");
