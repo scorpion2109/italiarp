@@ -2,34 +2,61 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<title>Carta RP</title>
+<title>Banca RP</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body{
 margin:0;
 background:#161832;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
 font-family:Arial;
+color:white;
+display:flex;
+flex-direction:column;
+align-items:center;
+padding-top:90px;
+padding-bottom:90px;
 }
 
-/* CONTENITORE */
+/* ===== TOPBAR ===== */
+.topbar{
+position:fixed;
+top:0;
+width:100%;
+height:65px;
+background:#0d0f24;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:0 15px;
+box-shadow:0 5px 20px rgba(0,0,0,0.5);
+z-index:1000;
+}
+
+.logo{height:40px;cursor:pointer;}
+
+.time{font-weight:bold;}
+
+.avatar{
+width:42px;
+height:42px;
+border-radius:50%;
+border:2px solid gold;
+}
+
+/* ===== CARTA ===== */
 .card-container{
 width:420px;
 height:260px;
 perspective:1200px;
 }
 
-/* CARTA */
 .card{
 width:100%;
 height:100%;
 position:relative;
 transform-style:preserve-3d;
-transition:transform 0.8s;
+transition:0.8s;
 cursor:pointer;
 }
 
@@ -37,112 +64,59 @@ cursor:pointer;
 transform:rotateY(180deg);
 }
 
-/* FACCE */
-.front, .back{
+.front,.back{
 position:absolute;
 width:100%;
 height:100%;
 border-radius:20px;
 backface-visibility:hidden;
-overflow:hidden;
-box-shadow:
-0 35px 90px rgba(0,0,0,0.85),
-0 10px 20px rgba(0,0,0,0.5),
-inset 0 3px 8px rgba(255,255,255,0.25);
+box-shadow:0 35px 90px rgba(0,0,0,0.8);
 }
 
-/* ===== FRONT ===== */
+/* FRONT */
 .front{
 background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);
 }
 
-/* BARRA ORO */
 .gold-bar{
 position:absolute;
 left:0;
 top:0;
-height:100%;
 width:55px;
-background:linear-gradient(180deg,#7a5a00,#d4af37,#ffd700,#cfa600,#7a5a00);
+height:100%;
+background:linear-gradient(#7a5a00,#ffd700,#7a5a00);
 }
 
-/* TESTO */
 .postepay{
 position:absolute;
-top:22px;
+top:20px;
 left:75px;
 color:#ffd700;
-font-weight:900;
 font-size:28px;
+font-weight:bold;
 }
 
-.evolution{
-position:absolute;
-top:58px;
-left:190px;
-color:#ffd700;
-font-size:13px;
-}
-
-/* CHIP */
-.chip{
-position:absolute;
-top:100px;
-left:75px;
-width:65px;
-}
-
-/* CONTACTLESS */
-.contactless{
-position:absolute;
-top:117px;
-left:130px;
-width:30px;
-}
-
-/* POSTE */
-.posteitaliane{
-position:absolute;
-top:117px;
-left:165px;
-font-size:19px;
-font-weight:900;
-}
-
-.poste{color:#cfcfcf;}
-.italiane{color:#444;}
-
-/* NUMERO */
 .card-number{
 position:absolute;
 bottom:70px;
 left:75px;
-font-size:20px;
 letter-spacing:3px;
-font-weight:700;
-color:#f1f1f1;
+font-size:20px;
 }
 
-/* SCADENZA */
 .expiry{
 position:absolute;
-bottom:22px;
+bottom:20px;
 right:90px;
-color:#e6e6e6;
-text-align:right;
+font-size:14px;
 }
 
-.expiry .label{font-size:9px;}
-.expiry .date{font-size:16px;font-weight:bold;}
-
-/* LOGO MASTERCARD FIX */
 .card-logo{
 position:absolute;
 bottom:20px;
 right:20px;
 width:55px;
 height:35px;
-background:transparent;
 }
 
 .card-logo::before,
@@ -154,78 +128,55 @@ height:30px;
 border-radius:50%;
 }
 
-.card-logo::before{
-background:#EB001B;
-left:0;
-}
+.card-logo::before{background:red;}
+.card-logo::after{background:orange;right:0;}
 
-.card-logo::after{
-background:#F79E1B;
-right:0;
-opacity:0.9;
-}
-
-/* BOX RP */
-.rp-box{
-position:absolute;
-top:22px;
-right:20px;
-padding:6px 14px;
-border-radius:6px;
-background:rgba(0,0,0,0.35);
-border:1px solid rgba(255,255,255,0.25);
-color:white;
-font-weight:700;
-font-size:12px;
-}
-
-/* ===== BACK ===== */
+/* BACK */
 .back{
 transform:rotateY(180deg);
-background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);
+background:linear-gradient(135deg,#5f5f5f,#a0a0a0);
 }
 
 .magnetic{
 position:absolute;
 top:25px;
 width:100%;
-height:45px;
+height:40px;
 background:black;
 }
 
-/* NOME DINAMICO */
 .name{
 position:absolute;
-top:95px;
+top:100px;
 left:30px;
-font-weight:700;
-font-size:18px;
-color:#111;
+color:black;
+font-weight:bold;
 }
 
-/* CVV */
-.cvv-bar{
-position:absolute;
-top:140px;
-left:30px;
-width:220px;
-height:35px;
-background:white;
+/* ===== BOTTOM BAR ===== */
+.bottombar{
+position:fixed;
+bottom:0;
+width:100%;
+height:70px;
+background:#0d0f24;
 display:flex;
+justify-content:space-around;
 align-items:center;
-justify-content:flex-end;
-padding-right:10px;
-font-weight:bold;
+box-shadow:0 -5px 20px rgba(0,0,0,0.5);
 }
 
-/* IBAN */
-.iban{
-position:absolute;
-bottom:20px;
-left:30px;
-font-size:14px;
-font-weight:bold;
-color:#222;
+.nav-item{
+display:flex;
+flex-direction:column;
+align-items:center;
+font-size:12px;
+cursor:pointer;
+color:#ccc;
+}
+
+.nav-item:hover{
+color:gold;
 }
 
 </style>
@@ -233,57 +184,65 @@ color:#222;
 
 <body>
 
+<!-- TOPBAR -->
+<div class="topbar">
+<img src="assets/logo.png" class="logo" onclick="location.href='home.html'">
+<div id="orario" class="time"></div>
+<img id="avatar" class="avatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png">
+</div>
+
+<!-- CARTA -->
 <div class="card-container">
 <div class="card" onclick="this.classList.toggle('flip')">
 
-<!-- FRONT -->
 <div class="front">
 <div class="gold-bar"></div>
 <div class="postepay">POSTEPAY</div>
-<div class="evolution">evolution</div>
-
-<img src="assets/chip.png" class="chip">
-<img src="assets/contactless.png" class="contactless">
-
-<div class="posteitaliane">
-<span class="poste">POSTE</span><span class="italiane">ITALIANE</span>
-</div>
-
-<div class="rp-box">ITALIA RP</div>
-
 <div class="card-number">1234 5678 9012 3456</div>
-
-<div class="expiry">
-<div class="label">VALID THRU</div>
-<div class="date">12/29</div>
-</div>
-
+<div class="expiry">12/29</div>
 <div class="card-logo"></div>
 </div>
 
-<!-- BACK -->
 <div class="back">
 <div class="magnetic"></div>
-
-<div class="name" id="nomeCarta">
-Mario Rossi
-</div>
-
-<div class="cvv-bar">123</div>
-
-<div class="iban">IT60 X054 2811 1010 0000 0123 456</div>
+<div class="name" id="nomeCarta">Mario Rossi</div>
 </div>
 
 </div>
+</div>
+
+<!-- BOTTOM BAR -->
+<div class="bottombar">
+
+<div class="nav-item" onclick="location.href='home.html'">
+🏠
+Home
+</div>
+
+<div class="nav-item">
+💳
+Banca
+</div>
+
+<div class="nav-item">
+👤
+Profilo
+</div>
+
 </div>
 
 <script>
 
-/* TEST: cambia nome */
+/* ORARIO */
+setInterval(()=>{
+document.getElementById("orario").innerText =
+new Date().toLocaleTimeString();
+},1000);
+
+/* TEST NOME */
 document.getElementById("nomeCarta").innerText = "Mario Rossi";
 
 </script>
 
 </body>
 </html>
-
