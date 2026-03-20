@@ -189,7 +189,7 @@ orario.innerText=new Date().toLocaleTimeString().slice(0,5);
 /* CARICA DATI */
 async function carica(){
 
-  const discordId = localStorage.getItem("discordId");
+  const discordId = "982317367596032010"
   const index = parseInt(localStorage.getItem("personaggioIndex"));
 
   if(!discordId){
@@ -232,7 +232,7 @@ async function carica(){
 /* SALVA */
 async function salva(){
 
-  const discordId = localStorage.getItem("discordId");
+const discordId = "982317367596032010"
   const index = parseInt(localStorage.getItem("personaggioIndex"));
 
   const ref = doc(db,"users",discordId);
