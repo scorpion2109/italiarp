@@ -3,51 +3,58 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Creator RP</title>
+<title>Creator RP PRO</title>
 
 <style>
 
 body{
 margin:0;
 font-family:'Segoe UI',sans-serif;
-background:#0c0c0f;
+background:linear-gradient(135deg,#0a0a0d,#111);
 color:white;
 display:flex;
 height:100vh;
 }
 
-/* SINISTRA */
+/* SIDEBAR */
 .left{
-width:40%;
+width:340px;
 padding:20px;
-background:#121217;
+background:rgba(20,20,25,0.9);
+backdrop-filter:blur(20px);
 overflow-y:auto;
+border-right:1px solid rgba(255,255,255,0.1);
 }
 
-/* DESTRA */
+/* AREA AVATAR */
 .right{
 flex:1;
 display:flex;
 align-items:center;
 justify-content:center;
-background:radial-gradient(circle,#1a1a1f,#000);
+background:radial-gradient(circle,#1a1a22,#000);
 }
 
 /* INPUT */
-input{
+input,select{
 width:100%;
-padding:12px;
+padding:10px;
 margin-bottom:10px;
 border:none;
 border-radius:10px;
-background:#1a1a1f;
+background:#1a1a22;
 color:white;
+}
+
+/* SLIDER */
+input[type=range]{
+accent-color:#00ffd5;
 }
 
 /* AVATAR */
 .avatar{
-width:250px;
-height:350px;
+width:280px;
+height:420px;
 position:relative;
 transition:0.3s;
 }
@@ -55,36 +62,72 @@ transition:0.3s;
 /* TESTA */
 .head{
 width:200px;
-height:200px;
-border-radius:50%;
+height:240px;
+border-radius:100px;
+background:#f1c27d;
 position:absolute;
 top:0;
 left:50%;
 transform:translateX(-50%);
-background:#f1c27d;
+box-shadow:inset 0 -15px 40px rgba(0,0,0,0.4);
 }
-
-/* OCCHI */
-.eye{
-width:20px;
-height:20px;
-border-radius:50%;
-position:absolute;
-top:80px;
-background:black;
-}
-
-.eye.left{left:60px;}
-.eye.right{right:60px;}
 
 /* CAPELLI */
 .hair{
 position:absolute;
-top:-20px;
+top:-30px;
 width:100%;
-height:120px;
-border-radius:50%;
+height:130px;
 background:black;
+border-radius:100px;
+}
+
+/* OCCHI */
+.eye{
+width:28px;
+height:18px;
+background:white;
+border-radius:50%;
+position:absolute;
+top:100px;
+overflow:hidden;
+}
+
+.eye.left{left:45px;}
+.eye.right{right:45px;}
+
+.pupil{
+width:12px;
+height:12px;
+background:black;
+border-radius:50%;
+position:absolute;
+top:3px;
+left:7px;
+}
+
+/* NASO */
+.nose{
+width:16px;
+height:28px;
+background:rgba(0,0,0,0.2);
+border-radius:50%;
+position:absolute;
+top:130px;
+left:50%;
+transform:translateX(-50%);
+}
+
+/* BOCCA */
+.mouth{
+width:70px;
+height:25px;
+background:#7a3b3b;
+border-radius:0 0 50px 50px;
+position:absolute;
+bottom:55px;
+left:50%;
+transform:translateX(-50%);
 }
 
 /* BARBA */
@@ -93,8 +136,8 @@ position:absolute;
 bottom:-10px;
 width:100%;
 height:80px;
-border-radius:50%;
 background:black;
+border-radius:80px;
 display:none;
 }
 
@@ -102,17 +145,15 @@ display:none;
 .body{
 position:absolute;
 bottom:0;
-width:120px;
-height:150px;
-background:#333;
+width:150px;
+height:180px;
+background:linear-gradient(#333,#111);
 left:50%;
 transform:translateX(-50%);
 border-radius:20px;
 }
 
-/* LABEL */
-h2{margin-bottom:10px;}
-
+/* BUTTON */
 button{
 padding:12px;
 border:none;
@@ -122,28 +163,43 @@ color:black;
 font-weight:bold;
 cursor:pointer;
 width:100%;
+margin-top:10px;
 }
+
+h3{margin-top:20px;}
 
 </style>
 </head>
 
 <body>
 
-<!-- SINISTRA -->
 <div class="left">
 
-<h2>Creator Personaggio</h2>
+<h2>Creator PRO</h2>
 
 <input id="nome" placeholder="Nome">
 <input id="cognome" placeholder="Cognome">
 
-<input id="comando" placeholder="Scrivi... es: capelli blu, occhi verdi, alto 1.70, barba">
+<input id="comando" placeholder="es: capelli neri lunghi, occhi verdi, naso grande, alto 1.80">
 
-<button onclick="salva()">Salva Personaggio</button>
+<h3>Modifica Volto</h3>
+
+<label>Naso</label>
+<input type="range" min="10" max="30" id="naso">
+
+<label>Bocca</label>
+<input type="range" min="40" max="100" id="bocca">
+
+<label>Viso</label>
+<input type="range" min="180" max="240" id="viso">
+
+<label>Occhi distanza</label>
+<input type="range" min="30" max="80" id="occhiDist">
+
+<button onclick="salva()">Salva</button>
 
 </div>
 
-<!-- DESTRA -->
 <div class="right">
 
 <div class="avatar" id="avatar">
@@ -152,9 +208,16 @@ width:100%;
 
 <div class="hair" id="hair"></div>
 
-<div class="eye left" id="eyeL"></div>
-<div class="eye right" id="eyeR"></div>
+<div class="eye left">
+<div class="pupil" id="eyeL"></div>
+</div>
 
+<div class="eye right">
+<div class="pupil" id="eyeR"></div>
+</div>
+
+<div class="nose" id="nose"></div>
+<div class="mouth" id="mouth"></div>
 <div class="beard" id="beard"></div>
 
 </div>
@@ -167,106 +230,78 @@ width:100%;
 
 <script>
 
-/* COLORI ITALIANO */
-const colori = {
-"blu":"blue",
-"rosso":"red",
-"verde":"green",
-"nero":"black",
-"bianco":"white",
-"giallo":"yellow",
-"viola":"purple",
-"rosa":"pink",
-"marrone":"brown"
+/* COLORI */
+const colori={
+blu:"blue",rosso:"red",verde:"green",
+nero:"black",bianco:"white",giallo:"yellow",
+marrone:"brown"
 };
 
 /* INPUT INTELLIGENTE */
-document.getElementById("comando").addEventListener("input", (e)=>{
+document.getElementById("comando").addEventListener("input",(e)=>{
 
-let t = e.target.value.toLowerCase();
+let t=e.target.value.toLowerCase();
 
 /* CAPELLI */
-if(t.includes("capelli")){
 for(let c in colori){
-if(t.includes(c)){
-document.getElementById("hair").style.background = colori[c];
-}
+if(t.includes("capelli") && t.includes(c)){
+hair.style.background=colori[c];
 }
 }
 
 /* OCCHI */
-if(t.includes("occhi")){
 for(let c in colori){
-if(t.includes(c)){
-document.getElementById("eyeL").style.background = colori[c];
-document.getElementById("eyeR").style.background = colori[c];
-}
-}
-}
-
-/* PELLE */
-if(t.includes("pelle")){
-for(let c in colori){
-if(t.includes(c)){
-document.getElementById("head").style.background = colori[c];
-}
+if(t.includes("occhi") && t.includes(c)){
+eyeL.style.background=colori[c];
+eyeR.style.background=colori[c];
 }
 }
 
 /* BARBA */
 if(t.includes("barba")){
-document.getElementById("beard").style.display = "block";
+beard.style.display="block";
 }
 
 /* ALTEZZA */
-let match = t.match(/(\d\.\d{2})/);
-
-if(t.includes("alto") && match){
-
-let h = parseFloat(match[1]);
-
-let scale = h / 1.70; // base 1.70
-
-document.getElementById("avatar").style.transform = `scale(${scale})`;
-
-}
-
-/* TAGLIO */
-if(t.includes("corto")){
-document.getElementById("hair").style.height="80px";
-}
-if(t.includes("lungo")){
-document.getElementById("hair").style.height="160px";
+let m=t.match(/(\d\.\d{2})/);
+if(t.includes("alto") && m){
+avatar.style.transform=`scale(${parseFloat(m[1])/1.75})`;
 }
 
 });
 
+/* SLIDER */
+naso.oninput=e=>{
+nose.style.width=e.target.value+"px";
+};
+
+bocca.oninput=e=>{
+mouth.style.width=e.target.value+"px";
+};
+
+viso.oninput=e=>{
+head.style.width=e.target.value+"px";
+};
+
+occhiDist.oninput=e=>{
+document.querySelector(".eye.left").style.left=e.target.value+"px";
+document.querySelector(".eye.right").style.right=e.target.value+"px";
+};
+
 /* SALVA */
 function salva(){
 
-let personaggio = {
-
-nome: document.getElementById("nome").value,
-cognome: document.getElementById("cognome").value,
-
-aspetto:{
-capelli: document.getElementById("hair").style.background,
-occhi: document.getElementById("eyeL").style.background,
-pelle: document.getElementById("head").style.background,
-barba: document.getElementById("beard").style.display === "block",
-altezza: document.getElementById("avatar").style.transform
-}
-
+let p={
+nome:nome.value,
+cognome:cognome.value
 };
 
-console.log(personaggio);
-
-/* QUI DOPO LO COLLEGHIAMO A FIREBASE */
-alert("Personaggio creato!");
+console.log(p);
+alert("Salvato!");
 
 }
 
 </script>
 
 </body>
-  </html>
+</html>
