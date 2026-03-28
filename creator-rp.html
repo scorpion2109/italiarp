@@ -2,85 +2,190 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Creator Avatar</title>
+<title>Creator FiveM Style PRO</title>
 
 <style>
 body{
-margin:0;
-background:#0c0c0f;
-color:white;
-font-family:sans-serif;
-display:flex;
-flex-direction:column;
-height:100vh;
+  margin:0;
+  display:flex;
+  height:100vh;
+  background:#0d0d10;
+  font-family:sans-serif;
+  color:white;
 }
 
-.top{
-height:60px;
-display:flex;
-align-items:center;
-justify-content:center;
-background:#111;
+#ui{
+  width:360px;
+  background:#1a1a20;
+  padding:15px;
+  overflow-y:auto;
 }
 
-iframe{
-flex:1;
-border:none;
+h2{
+  font-size:15px;
+  border-bottom:1px solid #333;
 }
 
-button{
-padding:12px;
-background:#00ffd5;
-border:none;
-font-weight:bold;
-cursor:pointer;
+label{
+  display:block;
+  margin-top:10px;
+  font-size:13px;
 }
 
+input, select{
+  width:100%;
+  background:#111;
+  border:1px solid #333;
+  color:white;
+  padding:5px;
+}
+
+/* scena */
+#scene{
+  flex:1;
+}
 </style>
 </head>
 
 <body>
 
-<div class="top">
-<button onclick="salvaAvatar()">Salva Avatar</button>
+<div id="ui">
+
+<h2>IDENTITÀ</h2>
+<label>Nome<input></label>
+<label>Cognome<input></label>
+<label>Data<input type="date"></label>
+
+<h2>VOLTO</h2>
+
+<label>Testa
+<input type="range" id="head" min="0.8" max="1.2" step="0.01">
+</label>
+
+<label>Occhi
+<input type="range" id="eyes" min="0.8" max="1.2" step="0.01">
+</label>
+
+<label>Mandibola
+<input type="range" id="jaw" min="0.8" max="1.2" step="0.01">
+</label>
+
+<label>Naso
+<input type="range" id="nose" min="0.8" max="1.2" step="0.01">
+</label>
+
+<h2>CAPELLI</h2>
+<select id="hair">
+<option value="0">Corto</option>
+<option value="1">Lungo</option>
+<option value="2">Rasato</option>
+</select>
+
+<h2>VESTITI</h2>
+<select id="outfit">
+<option value="0">Casual</option>
+<option value="1">Sport</option>
+<option value="2">Elegante</option>
+</select>
+
+<button onclick="salva()">SALVA</button>
+
 </div>
 
-<!-- CREATOR 3D -->
-<iframe id="frame"
-src="https://demo.readyplayer.me/avatar?frameApi"></iframe>
+<div id="scene"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r153/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.153/examples/js/loaders/GLTFLoader.js"></script>
 
 <script>
 
-/* RICEVE AVATAR */
-window.addEventListener("message",(event)=>{
+// SCENA
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x999999);
 
-if(event.data?.source !== "readyplayerme") return;
+// CAMERA FISSA (tipo FiveM)
+const camera = new THREE.PerspectiveCamera(40, window.innerWidth/window.innerHeight, 0.1, 1000);
+camera.position.set(0,1.6,1.5); // zoom faccia
 
-if(event.data.eventName === "v1.avatar.exported"){
+// RENDER
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setSize(window.innerWidth-360, window.innerHeight);
+document.getElementById("scene").appendChild(renderer.domElement);
 
-const url = event.data.data.url;
+// LUCE
+const light = new THREE.HemisphereLight(0xffffff, 0x444444, 1.2);
+scene.add(light);
 
-console.log("Avatar creato:", url);
+// MODELLO BASE
+const loader = new THREE.GLTFLoader();
+let player;
 
-/* SALVA */
-sessionStorage.setItem("avatar_url", url);
-
-/* TORNA ALLA HOME */
-alert("Avatar salvato!");
-
-window.location.href="home.html";
-
+loader.load(
+'https://models.babylonjs.com/CesiumMan/glTF/CesiumMan.gltf',
+gltf=>{
+  player = gltf.scene;
+  player.position.y = 0;
+  scene.add(player);
 }
+);
 
-});
+// LOOP
+function animate(){
+  requestAnimationFrame(animate);
+  renderer.render(scene,camera);
+}
+animate();
 
-/* SALVA MANUALE */
-function salvaAvatar(){
-alert("Finisci di creare avatar prima!");
+
+// ===== CONTROLLI VISO =====
+
+document.getElementById("head").oninput = e=>{
+  if(player) player.scale.y = e.target.value;
+};
+
+document.getElementById("eyes").oninput = e=>{
+  if(player) player.scale.x = e.target.value;
+};
+
+document.getElementById("jaw").oninput = e=>{
+  if(player) player.scale.z = e.target.value;
+};
+
+document.getElementById("nose").oninput = e=>{
+  if(player) player.position.y = e.target.value/10;
+};
+
+
+// ===== VESTITI (SIMULAZIONE) =====
+document.getElementById("outfit").onchange = e=>{
+  if(!player) return;
+
+  const v = e.target.value;
+
+  if(v == 0) player.children[0].material.color.set("white");
+  if(v == 1) player.children[0].material.color.set("red");
+  if(v == 2) player.children[0].material.color.set("black");
+};
+
+
+// ===== CAPELLI (SIMULAZIONE) =====
+document.getElementById("hair").onchange = e=>{
+  if(!player) return;
+
+  const v = e.target.value;
+
+  if(v == 0) player.children[0].material.color.set("brown");
+  if(v == 1) player.children[0].material.color.set("yellow");
+  if(v == 2) player.children[0].material.color.set("gray");
+};
+
+
+// ===== SALVA =====
+function salva(){
+  alert("Personaggio salvato stile FiveM!");
 }
 
 </script>
 
 </body>
-</html>
+                                                                                           </html>
