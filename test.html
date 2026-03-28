@@ -1,383 +1,140 @@
-<!DOCTYPE html>
-<html lang="it">
+<!DOCTYPE html><html lang="it">
 <head>
 <meta charset="UTF-8">
-<title>Carta RP Banca</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-
+<title>Selezione Personaggi</title><style>
 body{
 margin:0;
-background:#161832;
-font-family:Arial, sans-serif;
-display:flex;
-flex-direction:column;
-align-items:center;
-padding-top:40px;
+font-family:Segoe UI;
+background:#1c102b;
 color:white;
 }
 
-/* -------- CARTA -------- */
-
-.card-container{
-width:420px;
-height:260px;
-perspective:1200px;
-margin-bottom:30px;
-}
-
-.card{
-width:100%;
-height:100%;
-position:relative;
-transform-style:preserve-3d;
-transition:transform 0.8s;
-cursor:pointer;
-}
-
-.card.flip{
-transform:rotateY(180deg);
-}
-
-.front, .back{
-position:absolute;
-width:100%;
-height:100%;
-border-radius:20px;
-backface-visibility:hidden;
-overflow:hidden;
-box-shadow:0 35px 90px rgba(0,0,0,0.85),
-0 10px 20px rgba(0,0,0,0.5),
-inset 0 3px 8px rgba(255,255,255,0.25);
-}
-
-.front::after,
-.back::after{
-content:"";
-position:absolute;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:linear-gradient(
-120deg,
-rgba(255,255,255,0.25) 0%,
-rgba(255,255,255,0.05) 40%,
-transparent 60%
-);
-pointer-events:none;
-}
-
-/* FRONTE */
-.front{
-background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);
-}
-
-.gold-bar{
-position:absolute;
-left:0;
-top:0;
-height:100%;
-width:55px;
-background:linear-gradient(180deg,#7a5a00,#d4af37,#ffd700,#cfa600,#7a5a00);
-}
-
-.postepay{
-position:absolute;
-top:22px;
-left:75px;
-color:#ffd700;
-font-weight:900;
-font-size:28px;
-}
-
-.evolution{
-position:absolute;
-top:58px;
-left:190px;
-color:#ffd700;
-font-size:13px;
-}
-
-.chip{
-position:absolute;
-top:100px;
-left:75px;
-width:65px;
-}
-
-.contactless{
-position:absolute;
-top:117px;
-left:130px;
-width:30px;
-}
-
-.posteitaliane{
-position:absolute;
-top:117px;
-left:165px;
-font-size:19px;
-font-weight:900;
-}
-
-.poste{color:#cfcfcf;}
-.italiane{color:#444;}
-
-.card-number{
-position:absolute;
-bottom:70px;
-left:75px;
-font-size:20px;
-letter-spacing:3px;
-font-weight:700;
-color:#f1f1f1;
-text-shadow:1px 1px 0 #aaa,2px 2px 2px rgba(0,0,0,0.6);
-}
-
-.expiry{
-position:absolute;
-bottom:22px;
-right:90px;
-color:#e6e6e6;
-text-align:right;
-}
-
-.expiry .label{font-size:9px;}
-.expiry .date{font-size:16px;font-weight:bold;}
-
-.card-logo{
-position:absolute;
-bottom:20px;
-right:20px;
-width:55px;
-}
-
-.card-logo img{width:100%;}
-
-.rp-box{
-position:absolute;
-top:22px;
-right:20px;
-padding:6px 14px;
-border-radius:6px;
-background:rgba(0,0,0,0.35);
-border:1px solid rgba(255,255,255,0.25);
-color:white;
-font-weight:700;
-font-size:12px;
-}
-
-/* RETRO */
-.back{
-transform:rotateY(180deg);
-background:linear-gradient(135deg,#5f5f5f,#a0a0a0,#7a7a7a,#bcbcbc,#6a6a6a);
-}
-
-.magnetic{
-position:absolute;
-top:25px;
-left:0;
-width:100%;
-height:45px;
-background:black;
-}
-
-.name{
-position:absolute;
-top:95px;
-left:30px;
-font-weight:700;
-font-size:16px;
-color:#111;
-text-shadow:1px 1px 0 #bbb,2px 2px 3px rgba(0,0,0,0.5);
-}
-
-.cvv-bar{
-position:absolute;
-top:135px;
-left:30px;
-width:220px;
-height:35px;
-background:white;
-border-radius:4px;
+/* NAVBAR */
+.navbar{
 display:flex;
 align-items:center;
-justify-content:flex-end;
-padding-right:10px;
-font-weight:bold;
-letter-spacing:2px;
-}
-
-.iban{
-position:absolute;
-bottom:20px;
-left:30px;
-font-size:14px;
-font-weight:bold;
-color:#222;
-}
-
-/* -------- SALDO -------- */
-
-.balance-box{
-width:420px;
-background:#1f1f1f;
-border-radius:14px;
-padding:20px;
-margin-top:20px;
-box-shadow:0 10px 25px rgba(0,0,0,0.6);
-}
-
-.balance-row{
-display:flex;
 justify-content:space-between;
-padding:10px 0;
-font-size:18px;
+padding:10px 20px;
+background:#140a22;
+border-bottom:2px solid #2a1b3f;
 }
 
-.label{font-weight:bold;}
-.amount{color:#ffd700;font-weight:bold;}
-
-/* -------- OPERAZIONI -------- */
-
-.operations-line{
-width:420px;
-border-top:3px solid black;
-margin-top:30px;
-}
-
-.operations-title{
-margin-top:10px;
-margin-bottom:20px;
-font-weight:bold;
-letter-spacing:2px;
-}
-
-.operations{
-width:420px;
+.logo{
 display:flex;
-gap:20px;
-}
-
-.operation-box{
-flex:1;
-background:#222;
-border-radius:12px;
-padding:15px;
-display:flex;
-flex-direction:column;
+align-items:center;
 gap:10px;
 }
 
-select,input{
-padding:8px;
-border-radius:6px;
+.logo img{
+width:40px;
+border-radius:50%;
+}
+
+.title{
+font-size:20px;
+font-weight:bold;
+}
+
+.profile{
+cursor:pointer;
+}
+
+/* LAYOUT */
+.main{
+display:flex;
+height:calc(100vh - 60px);
+}
+
+.left, .right{
+flex:1;
+padding:20px;
+}
+
+.left{
+border-right:2px solid #2a1b3f;
+}
+
+input{
+width:100%;
+padding:10px;
+margin-bottom:10px;
+border-radius:8px;
 border:none;
 }
 
 button{
 padding:10px;
 border:none;
-border-radius:6px;
-background:#ffd700;
-font-weight:bold;
+border-radius:8px;
+background:#5865F2;
+color:white;
 cursor:pointer;
 }
 
-button:hover{
-background:#e6c200;
+/* CARD */
+.card{
+background:white;
+color:black;
+padding:20px;
+border-radius:10px;
+width:300px;
 }
 
-</style>
-</head>
-<body>
-
-<!-- CARTA -->
-<div class="card-container">
-<div class="card" onclick="this.classList.toggle('flip')">
-
-<!-- FRONTE -->
-<div class="front">
-<div class="gold-bar"></div>
-<div class="postepay">POSTEPAY</div>
-<div class="evolution">evolution</div>
-<img src="assets/chip.png" class="chip">
-<img src="assets/contactless.png" class="contactless">
-<div class="posteitaliane"><span class="poste">POSTE</span><span class="italiane">ITALIANE</span></div>
-<div class="rp-box">ITALIA RP</div>
-<div class="card-number">1234 5678 9012 3456</div>
-<div class="expiry"><div class="label">VALID THRU</div><div class="date">12/29</div></div>
-<div class="card-logo"><img src="assets/mastercard.png"></div>
-</div>
-
-<!-- RETRO -->
-<div class="back">
-<div class="magnetic"></div>
-<div class="name">MARIO ROSSI</div>
-<div class="cvv-bar">123</div>
-<div class="iban">IT60 X054 2811 1010 0000 0123 456</div>
-</div>
-
-</div>
-</div>
-
-<!-- SALDO -->
-<div class="balance-box">
-<div class="balance-row"><span class="label">BANCA:</span><span id="banca" class="amount">€1000</span></div>
-<div class="balance-row"><span class="label">CASH:</span><span id="cash" class="amount">€200</span></div>
-</div>
-
-<!-- OPERAZIONI -->
-<div class="operations-line"></div>
-<div class="operations-title">OPERAZIONI</div>
-
-<div class="operations">
-
-<!-- DEPOSITO / PRELIEVO -->
-<div class="operation-box">
-<select id="tipo">
-<option value="deposito">Deposito</option>
-<option value="prelievo">Prelievo</option>
-</select>
-<input id="importo1" type="number" placeholder="Quantità">
-<button onclick="operazione()">Conferma</button>
-</div>
-
-<!-- BONIFICO -->
-<div class="operation-box">
-<select>
-<option>Mario Rossi</option>
-<option>Luca Bianchi</option>
-<option>Giulia Verdi</option>
-</select>
-<input type="number" placeholder="Quantità">
-<button>Conferma</button>
-</div>
-
-</div>
-
-<script>
-let banca = 1000
-let cash = 200
-
-function operazione(){
-  let tipo = document.getElementById("tipo").value
-  let importo = parseInt(document.getElementById("importo1").value)
-  if(!importo) return
-  if(tipo === "deposito" && cash >= importo){
-    cash -= importo
-    banca += importo
-  }
-  if(tipo === "prelievo" && banca >= importo){
-    banca -= importo
-    cash += importo
-  }
-  document.getElementById("banca").innerText = "€" + banca
-  document.getElementById("cash").innerText = "€" + cash
+.card img{
+width:100px;
+border-radius:10px;
+margin-bottom:10px;
 }
-</script>
 
-</body>
+</style></head><body><!-- NAVBAR --><div class="navbar"><div class="logo">
+<img src="https://via.placeholder.com/40">
+<div class="title">Selezione Personaggi</div>
+</div><div class="profile">👤 Profilo</div></div><!-- MAIN --><div class="main"><!-- SINISTRA FORM --><div class="left"><input id="nome" placeholder="Nome">
+<input id="cognome" placeholder="Cognome">
+<input id="data" placeholder="Data nascita">
+<input id="occhi" placeholder="Occhi">
+<input id="capelli" placeholder="Capelli">
+<input id="residenza" placeholder="Residenza">
+<input type="file" id="foto"><button onclick="salva()">Crea Personaggio</button>
+
+</div><!-- DESTRA CARD LIVE --><div class="right"><div class="card" id="preview">
+<img id="imgPreview" src="https://via.placeholder.com/100"><div id="p_nome">Nome: -</div>
+<div id="p_cognome">Cognome: -</div>
+<div id="p_data">Data: -</div>
+<div id="p_occhi">Occhi: -</div>
+<div id="p_capelli">Capelli: -</div>
+<div id="p_residenza">Residenza: -</div></div></div></div><script>
+
+const inputs = ["nome","cognome","data","occhi","capelli","residenza"];
+
+inputs.forEach(id=>{
+document.getElementById(id).addEventListener("input", aggiornaPreview);
+});
+
+function aggiornaPreview(){
+
+document.getElementById("p_nome").innerText = "Nome: " + (nome.value || "-");
+document.getElementById("p_cognome").innerText = "Cognome: " + (cognome.value || "-");
+document.getElementById("p_data").innerText = "Data: " + (data.value || "-");
+document.getElementById("p_occhi").innerText = "Occhi: " + (occhi.value || "-");
+document.getElementById("p_capelli").innerText = "Capelli: " + (capelli.value || "-");
+document.getElementById("p_residenza").innerText = "Residenza: " + (residenza.value || "-");
+
+}
+
+// FOTO LIVE
+foto.addEventListener("change", ()=>{
+const reader = new FileReader();
+reader.onload = e=>{
+document.getElementById("imgPreview").src = e.target.result;
+};
+reader.readAsDataURL(foto.files[0]);
+});
+
+function salva(){
+alert("Qui colleghi Firebase come già hai fatto");
+}
+
+</script></body>
 </html>
-
