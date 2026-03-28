@@ -8,6 +8,7 @@ margin:0;
 font-family:Segoe UI;
 background:#1c102b;
 color:white;
+overflow:hidden;
 }
 
 /* NAVBAR */
@@ -53,6 +54,7 @@ padding:20px;
 
 .left{
 border-right:2px solid #2a1b3f;
+overflow:auto;
 }
 
 input{
@@ -72,25 +74,70 @@ color:white;
 cursor:pointer;
 }
 
-/* CARD */
+/* ===== CARD 3D ===== */
+.wrapper{ perspective:2500px; display:flex; justify-content:center; align-items:center; height:100%; }
+
 .card{
-background:white;
-color:black;
-padding:20px;
-border-radius:10px;
-width:300px;
+width:540px;
+height:340px;
+position:relative;
+transform-style:preserve-3d;
+transition:1.2s cubic-bezier(.2,.8,.2,1);
+cursor:pointer;
 }
 
-.card img{
-width:100px;
+.card.flipped{ transform:rotateY(180deg); }
+
+.face{
+position:absolute;
+width:100%;
+height:100%;
+border-radius:18px;
+backface-visibility:hidden;
+overflow:hidden;
+box-shadow:0 40px 80px rgba(0,0,0,0.8);
+}
+
+.front{
+background:linear-gradient(135deg,#fdfdfd,#f1f1f1);
+padding:20px;
+color:black;
+}
+
+.back{
+transform:rotateY(180deg);
+background:#e8f1f3;
+padding:20px;
+color:black;
+}
+
+.photo{
+width:120px;
+height:150px;
+background:#ccc;
 border-radius:10px;
+overflow:hidden;
 margin-bottom:10px;
 }
 
-</style></head><body><!-- NAVBAR --><div class="navbar"><div class="logo">
+.photo img{ width:100%; height:100%; object-fit:cover; }
+
+.row{ margin-bottom:8px; }
+
+.signature{
+margin-top:10px;
+font-family:cursive;
+font-size:20px;
+}
+
+</style></head><body><div class="navbar">
+<div class="logo">
 <img src="https://via.placeholder.com/40">
 <div class="title">Selezione Personaggi</div>
-</div><div class="profile">👤 Profilo</div></div><!-- MAIN --><div class="main"><!-- SINISTRA FORM --><div class="left"><input id="nome" placeholder="Nome">
+</div>
+<div class="profile">👤 Profilo</div>
+</div><div class="main"><div class="left">
+<input id="nome" placeholder="Nome">
 <input id="cognome" placeholder="Cognome">
 <input id="data" placeholder="Data nascita">
 <input id="occhi" placeholder="Occhi">
@@ -98,43 +145,41 @@ margin-bottom:10px;
 <input id="residenza" placeholder="Residenza">
 <input type="file" id="foto"><button onclick="salva()">Crea Personaggio</button>
 
-</div><!-- DESTRA CARD LIVE --><div class="right"><div class="card" id="preview">
-<img id="imgPreview" src="https://via.placeholder.com/100"><div id="p_nome">Nome: -</div>
-<div id="p_cognome">Cognome: -</div>
-<div id="p_data">Data: -</div>
-<div id="p_occhi">Occhi: -</div>
-<div id="p_capelli">Capelli: -</div>
-<div id="p_residenza">Residenza: -</div></div></div></div><script>
+</div><div class="right">
+<div class="wrapper"><div class="card" id="card"><div class="face front"><div class="photo"><img id="imgPreview"></div><div class="row"><b>Nome:</b> <span id="p_nome"></span></div>
+<div class="row"><b>Cognome:</b> <span id="p_cognome"></span></div>
+<div class="row"><b>Data:</b> <span id="p_data"></span></div>
+<div class="row"><b>Occhi:</b> <span id="p_occhi"></span></div>
+<div class="row"><b>Capelli:</b> <span id="p_capelli"></span></div><div class="signature" id="firma"></div></div><div class="face back"><div class="row"><b>Residenza:</b> <span id="p_residenza"></span></div></div></div></div>
+</div></div><script>
 
-const inputs = ["nome","cognome","data","occhi","capelli","residenza"];
+card.onclick=()=>card.classList.toggle("flipped");
+
+const inputs=["nome","cognome","data","occhi","capelli","residenza"];
 
 inputs.forEach(id=>{
-document.getElementById(id).addEventListener("input", aggiornaPreview);
+document.getElementById(id).addEventListener("input", aggiorna);
 });
 
-function aggiornaPreview(){
-
-document.getElementById("p_nome").innerText = "Nome: " + (nome.value || "-");
-document.getElementById("p_cognome").innerText = "Cognome: " + (cognome.value || "-");
-document.getElementById("p_data").innerText = "Data: " + (data.value || "-");
-document.getElementById("p_occhi").innerText = "Occhi: " + (occhi.value || "-");
-document.getElementById("p_capelli").innerText = "Capelli: " + (capelli.value || "-");
-document.getElementById("p_residenza").innerText = "Residenza: " + (residenza.value || "-");
-
+function aggiorna(){
+p_nome.innerText=nome.value;
+p_cognome.innerText=cognome.value;
+p_data.innerText=data.value;
+p_occhi.innerText=occhi.value;
+p_capelli.innerText=capelli.value;
+p_residenza.innerText=residenza.value;
+firma.innerText=nome.value+" "+cognome.value;
 }
 
-// FOTO LIVE
-foto.addEventListener("change", ()=>{
-const reader = new FileReader();
-reader.onload = e=>{
-document.getElementById("imgPreview").src = e.target.result;
-};
+foto.addEventListener("change",()=>{
+const reader=new FileReader();
+reader.onload=e=>imgPreview.src=e.target.result;
 reader.readAsDataURL(foto.files[0]);
 });
 
 function salva(){
-alert("Qui colleghi Firebase come già hai fatto");
+alert("Collega qui Firebase");
 }
 
 </script></body>
-</html>
+  </html>
