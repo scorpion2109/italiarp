@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Staff</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+min-height:100vh;
+background:linear-gradient(180deg,#1c102b,#2a1b3f);
+color:white;
+display:flex;
+flex-direction:column;
+}
+
+.header{
+height:70px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 30px;
+background:rgba(0,0,0,0.4);
+}
+
+.grid{
+flex:1;
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:40px;
+padding:60px;
+justify-items:center;
+}
+
+.app{
+display:flex;
+flex-direction:column;
+align-items:center;
+cursor:pointer;
+}
+
+.app img{
+width:80px;
+margin-bottom:10px;
+}
+
+.app:hover{
+transform:scale(1.1);
+}
+
+.hidden{
+display:none;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+<h2>Dashboard Staff</h2>
+<button onclick="window.location.href='home.html'">Torna</button>
+</div>
+
+<div class="grid">
+
+<!-- STAFF -->
+<div class="app hidden" id="utenti">
+<img src="assets/utenti.png">
+<span>Utenti</span>
+</div>
+
+<div class="app hidden" id="item">
+<img src="assets/item.png">
+<span>Gestionar Item</span>
+</div>
+
+<div class="app hidden" id="logs">
+<img src="assets/log.png">
+<span>Logs</span>
+</div>
+
+<!-- DIRETTORE -->
+<div class="app hidden" id="attivita">
+<img src="assets/attivita.png">
+<span>Gestione Attività</span>
+</div>
+
+<!-- ADMIN -->
+<div class="app hidden" id="admin">
+<img src="assets/admin.png">
+<span>Admin Panel</span>
+</div>
+
+<!-- FOUNDER -->
+<div class="app hidden" id="sistema">
+<img src="assets/system.png">
+<span>Controllo Sistema</span>
+</div>
+
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
+
+const firebaseConfig = {
+apiKey: "AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
+authDomain: "sito-rp.firebaseapp.com",
+projectId: "sito-rp"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const uid = localStorage.getItem("discord_uid");
+
+if(!uid){
+    window.location.href="index.html";
+}
+
+const snap = await getDoc(doc(db,"users",uid));
+
+if(!snap.exists()){
+    window.location.href="index.html";
+}
+
+const data = snap.data();
+
+let ruolo = data.gradoStaff;
+
+// fallback se dentro personaggio
+if(!ruolo){
+    const index = parseInt(localStorage.getItem("personaggioIndex"));
+    const lista = data.personaggi || [];
+    ruolo = lista[index]?.gradoStaff;
+}
+
+const attivita = data.attivita || [];
+
+// 👮 STAFF
+if(ruolo === "staff" || ruolo === "admin" || ruolo === "founder"){
+    document.getElementById("utenti").classList.remove("hidden");
+    document.getElementById("item").classList.remove("hidden");
+    document.getElementById("logs").classList.remove("hidden");
+}
+
+// 🏢 DIRETTORE (se ha attività)
+if(attivita.length > 0){
+    document.getElementById("attivita").classList.remove("hidden");
+}
+
+// 👑 ADMIN
+if(ruolo === "admin" || ruolo === "founder"){
+    document.getElementById("admin").classList.remove("hidden");
+}
+
+// 🔥 FOUNDER
+if(ruolo === "founder"){
+    document.getElementById("sistema").classList.remove("hidden");
+}
+
+</script>
+
+</body>
+  </html>
