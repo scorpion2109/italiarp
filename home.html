@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Italia RP - Home</title>
 
 <style>
-
 *{
 margin:0;
 padding:0;
@@ -212,6 +210,12 @@ color:white;
 <span>Instagram</span>
 </div>
 
+<!-- QUADRATO DASHBOARD STAFF -->
+<div class="app" id="dashboardStaff" data-app="DashboardStaff" style="display:none;">
+<img src="assets/logo-staff.png" alt="Dashboard Staff">
+<span>Dashboard Staff</span>
+</div>
+
 </div>
 
 <div class="documenti-overlay" id="documentiOverlay">
@@ -246,6 +250,7 @@ Cambia Personaggio
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
 import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
 
+// CONFIG FIREBASE
 const firebaseConfig = {
 apiKey: "AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
 authDomain: "sito-rp.firebaseapp.com",
@@ -261,95 +266,87 @@ const db = getFirestore(app);
 const uid = localStorage.getItem("discord_uid");
 const personaggioIndex = parseInt(localStorage.getItem("personaggioIndex"));
 
+// REDIRECT SE NON LOGGATO
 if(!uid || isNaN(personaggioIndex)){
-window.location.href="index.html";
+    window.location.href="index.html";
 }
 
 /* CARICA PERSONAGGIO */
-
 const ref = doc(db,"users",uid);
 const snap = await getDoc(ref);
 
 let personaggio = null;
 
 if(snap.exists()){
-
-const data = snap.data();
-const lista = data.personaggi || [];
-personaggio = lista[personaggioIndex];
-
+    const data = snap.data();
+    const lista = data.personaggi || [];
+    personaggio = lista[personaggioIndex];
 }
 
 if(!personaggio){
-alert("Personaggio non trovato");
-window.location.href="lista-personaggi.html";
+    alert("Personaggio non trovato");
+    window.location.href="lista-personaggi.html";
 }
 
 document.getElementById("nomePersonaggio").innerText =
 personaggio.nome + " " + personaggio.cognome;
 
 /* OROLOGIO */
-
 function updateClock(){
-
-const now = new Date();
-
-document.getElementById("clock").innerText =
-now.getHours().toString().padStart(2,"0")+":"+
-now.getMinutes().toString().padStart(2,"0")+":"+
-now.getSeconds().toString().padStart(2,"0");
-
+    const now = new Date();
+    document.getElementById("clock").innerText =
+    now.getHours().toString().padStart(2,"0")+":"+
+    now.getMinutes().toString().padStart(2,"0")+":"+
+    now.getSeconds().toString().padStart(2,"0");
 }
-
 setInterval(updateClock,1000);
 updateClock();
 
 /* DOCUMENTI */
-
 const overlay = document.getElementById("documentiOverlay");
 
-document.getElementById("btnDocumenti").onclick = ()=>{
-overlay.style.display="flex";
-};
-
-document.getElementById("chiudiDocumenti").onclick = ()=>{
-overlay.style.display="none";
-};
-
-overlay.onclick = (e)=>{
-if(e.target===overlay){
-overlay.style.display="none";
-}
-};
+document.getElementById("btnDocumenti").onclick = ()=>{ overlay.style.display="flex"; };
+document.getElementById("chiudiDocumenti").onclick = ()=>{ overlay.style.display="none"; };
+overlay.onclick = (e)=>{ if(e.target===overlay){ overlay.style.display="none"; } };
 
 /* APERTURA APP */
-
 document.querySelectorAll(".app").forEach(appEl=>{
+    appEl.onclick = async ()=>{
+        const nomeApp = appEl.dataset.app;
 
-appEl.onclick = async ()=>{
+        await addDoc(collection(db,"users",uid,"logs"),{
+            personaggio:personaggio.nome + " " + personaggio.cognome,
+            app:nomeApp,
+            timestamp:serverTimestamp()
+        });
 
-const nomeApp = appEl.dataset.app;
+        if(nomeApp === "Banca"){
+            window.location.href="banca.html";
+            return;
+        }
+        if(nomeApp === "DashboardStaff"){
+            window.location.href="staff.html";
+            return;
+        }
 
-await addDoc(collection(db,"users",uid,"logs"),{
-
-personaggio:personaggio.nome + " " + personaggio.cognome,
-app:nomeApp,
-timestamp:serverTimestamp()
-
+        alert("Aperto: "+nomeApp);
+    };
 });
 
-/* collegamento banca */
-
-if(nomeApp === "Banca"){
-window.location.href="banca.html";
-return;
+/* MOSTRA DASHBOARD STAFF SOLO A CHI HA RUOLO */
+if(uid){
+    getDoc(doc(db,"users",uid)).then(snap => {
+        if(snap.exists()){
+            const data = snap.data();
+            const ruoloStaff = data.gradoStaff; // 'staff', 'admin', 'founder'
+            if(ruoloStaff === "staff" || ruoloStaff === "admin" || ruoloStaff === "founder"){
+                document.getElementById("dashboardStaff").style.display = "flex";
+            }
+        }
+    }).catch(err=>{
+        console.error("Errore caricando ruolo staff:", err);
+    });
 }
-
-alert("Aperto: "+nomeApp);
-
-};
-
-});
 
 </script>
 
