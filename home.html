@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Italia RP - Home</title>
 
 <style>
+
 *{
 margin:0;
 padding:0;
@@ -53,25 +55,11 @@ font-weight:600;
 letter-spacing:2px;
 }
 
-.top-icons{
-display:flex;
-gap:20px;
-}
-
-.top-icons img{
-width:26px;
-cursor:pointer;
-transition:0.2s;
-}
-
-.top-icons img:hover{
-transform:scale(1.15);
-}
-
+/* GRID SISTEMATA */
 .grid{
 flex:1;
 display:grid;
-grid-template-columns:repeat(auto-fit, minmax(120px, 1fr));
+grid-template-columns:repeat(auto-fit, minmax(100px, 1fr));
 gap:30px;
 padding:60px 30px;
 justify-items:center;
@@ -79,96 +67,47 @@ max-width:800px;
 margin:0 auto;
 }
 
-@media(max-width:900px){
-
-.grid{
-grid-template-columns:repeat(2,1fr);
-}
-
-}
-
+/* APP */
 .app{
 display:flex;
 flex-direction:column;
 align-items:center;
 cursor:pointer;
-transition:0.3s;
+transition:transform 0.15s ease, filter 0.2s ease;
 }
 
 .app img{
-width:85px;
-height:85px;
+width:70px;
+height:70px;
 object-fit:contain;
-margin-bottom:12px;
+margin-bottom:10px;
 }
 
 .app span{
-font-size:15px;
-font-weight:500;
+font-size:14px;
 text-align:center;
 }
 
+/* HOVER SOLO PC */
 @media (hover: hover) {
 .app:hover{
-transform:scale(1.12);
-filter:drop-shadow(0 0 15px rgba(0,255,0,0.7));
+transform:scale(1.1);
+filter:drop-shadow(0 0 10px rgba(0,255,0,0.6));
 }
+}
+
+/* CLICK MOBILE */
+.app:active{
+transform:scale(0.9);
 }
 
 .footer{
 height:50px;
-backdrop-filter:blur(6px);
 background:rgba(0,0,0,0.5);
 display:flex;
 align-items:center;
 justify-content:center;
 font-size:14px;
-border-top:1px solid rgba(255,255,255,0.15);
-}
-
-.documenti-overlay{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,0.6);
-display:none;
-align-items:center;
-justify-content:center;
-z-index:1000;
-}
-
-.documenti-box{
-width:400px;
-max-width:90%;
-background:rgba(20,20,20,0.95);
-border-radius:20px;
-padding:25px;
-backdrop-filter:blur(10px);
-}
-
-.documenti-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:20px;
-}
-
-.documenti-header span{
-cursor:pointer;
-font-size:18px;
-}
-
-.documenti-content{
-text-align:center;
-}
-
-.documenti-content button{
-margin-top:15px;
-padding:10px 20px;
-border:none;
-border-radius:10px;
-cursor:pointer;
-background:#00aa44;
-color:white;
 }
 
 </style>
@@ -178,68 +117,38 @@ color:white;
 <body>
 
 <div class="header">
-
 <div class="logo">
 <img src="assets/logo.png">
 </div>
-
 <div class="clock" id="clock"></div>
-
-<div class="top-icons">
-<img src="assets/logo-documento.png" id="btnDocumenti">
-<img src="assets/logo-impostazioni.png">
-</div>
-
 </div>
 
 <div class="grid">
 
 <div class="app" data-app="Comune">
-<img src="assets/comune.png">
+<img src="assets/comune.png" onerror="this.src='assets/default.png'">
 <span>Comune</span>
 </div>
 
 <div class="app" data-app="Banca">
-<img src="assets/banca.png">
+<img src="assets/banca.png" onerror="this.src='assets/default.png'">
 <span>Banca</span>
 </div>
 
 <div class="app" data-app="Whatsapp">
-<img src="assets/whatsapp.png">
+<img src="assets/whatsapp.png" onerror="this.src='assets/default.png'">
 <span>Whatsapp</span>
 </div>
 
 <div class="app" data-app="Instagram">
-<img src="assets/instagram.png">
+<img src="assets/instagram.png" onerror="this.src='assets/default.png'">
 <span>Instagram</span>
 </div>
 
-<div class="app" data-app="dashboardStaff">
-<img src="assets/logo-staff.png">
+<!-- STAFF -->
+<div class="app" id="dashboardStaff" data-app="DashboardStaff" style="display:none;">
+<img src="assets/logo-staff.png" onerror="this.src='assets/default.png'">
 <span>Dashboard Staff</span>
-</div>
-
-</div>
-
-<div class="documenti-overlay" id="documentiOverlay">
-
-<div class="documenti-box">
-
-<div class="documenti-header">
-<h2>I Tuoi Documenti</h2>
-<span id="chiudiDocumenti">✖</span>
-</div>
-
-<div class="documenti-content">
-
-<p id="nomePersonaggio"></p>
-
-<button onclick="window.location.href='lista-personaggi.html'">
-Cambia Personaggio
-</button>
-
-</div>
-
 </div>
 
 </div>
@@ -253,14 +162,10 @@ Cambia Personaggio
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
 import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
 
-// CONFIG FIREBASE
 const firebaseConfig = {
 apiKey: "AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
 authDomain: "sito-rp.firebaseapp.com",
-projectId: "sito-rp",
-storageBucket: "sito-rp.appspot.com",
-messagingSenderId: "234781749995",
-appId: "1:234781749995:web:6954473363659fe38b04ae"
+projectId: "sito-rp"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -269,89 +174,91 @@ const db = getFirestore(app);
 const uid = localStorage.getItem("discord_uid");
 const personaggioIndex = parseInt(localStorage.getItem("personaggioIndex"));
 
-// REDIRECT SE NON LOGGATO
 if(!uid || isNaN(personaggioIndex)){
-    window.location.href="index.html";
+window.location.href="index.html";
 }
-
-/* CARICA PERSONAGGIO */
-const ref = doc(db,"users",uid);
-const snap = await getDoc(ref);
-
-let personaggio = null;
-
-if(snap.exists()){
-    const data = snap.data();
-    const lista = data.personaggi || [];
-    personaggio = lista[personaggioIndex];
-}
-
-if(!personaggio){
-    alert("Personaggio non trovato");
-    window.location.href="lista-personaggi.html";
-}
-
-document.getElementById("nomePersonaggio").innerText =
-personaggio.nome + " " + personaggio.cognome;
 
 /* OROLOGIO */
 function updateClock(){
-    const now = new Date();
-    document.getElementById("clock").innerText =
-    now.getHours().toString().padStart(2,"0")+":"+
-    now.getMinutes().toString().padStart(2,"0")+":"+
-    now.getSeconds().toString().padStart(2,"0");
+const now = new Date();
+document.getElementById("clock").innerText =
+now.getHours().toString().padStart(2,"0")+":"+
+now.getMinutes().toString().padStart(2,"0")+":"+
+now.getSeconds().toString().padStart(2,"0");
 }
 setInterval(updateClock,1000);
 updateClock();
 
-/* DOCUMENTI */
-const overlay = document.getElementById("documentiOverlay");
+/* CONTROLLO STAFF */
+const snap = await getDoc(doc(db,"users",uid));
+if(snap.exists()){
+const data = snap.data();
 
-document.getElementById("btnDocumenti").onclick = ()=>{ overlay.style.display="flex"; };
-document.getElementById("chiudiDocumenti").onclick = ()=>{ overlay.style.display="none"; };
-overlay.onclick = (e)=>{ if(e.target===overlay){ overlay.style.display="none"; } };
+let ruolo = data.gradoStaff;
+
+if(!ruolo){
+const lista = data.personaggi || [];
+const p = lista[personaggioIndex];
+ruolo = p?.gradoStaff;
+}
+
+if(ruolo === "staff" || ruolo === "admin" || ruolo === "founder"){
+document.getElementById("dashboardStaff").style.display = "flex";
+}
+}
 
 /* APERTURA APP */
 document.querySelectorAll(".app").forEach(appEl=>{
-    appEl.onclick = async ()=>{
-        const nomeApp = appEl.dataset.app;
 
-        await addDoc(collection(db,"users",uid,"logs"),{
-            personaggio:personaggio.nome + " " + personaggio.cognome,
-            app:nomeApp,
-            timestamp:serverTimestamp()
-        });
+appEl.onclick = async ()=>{
 
-        if(nomeApp === "Banca"){
-            window.location.href="banca.html";
-            return;
-        }
-        if(nomeApp === "DashboardStaff"){
-            window.location.href="staff.html";
-            return;
-        }
+appEl.style.transform = "scale(1.2)";
+appEl.style.opacity = "0.5";
 
-        alert("Aperto: "+nomeApp);
-    };
+setTimeout(async ()=>{
+
+const nomeApp = appEl.dataset.app;
+
+// LOG
+await addDoc(collection(db,"users",uid,"logs"),{
+app:nomeApp,
+timestamp:serverTimestamp()
 });
 
-/* MOSTRA DASHBOARD STAFF SOLO A CHI HA RUOLO */
-if(uid){
-    getDoc(doc(db,"users",uid)).then(snap => {
-        if(snap.exists()){
-            const data = snap.data();
-            const ruoloStaff = data.gradoStaff; // 'staff', 'admin', 'founder'
-            if(ruoloStaff === "staff" || ruoloStaff === "admin" || ruoloStaff === "founder"){
-                document.getElementById("dashboardStaff").style.display = "flex";
-            }
-        }
-    }).catch(err=>{
-        console.error("Errore caricando ruolo staff:", err);
-    });
+// LINK
+switch(nomeApp){
+
+case "Banca":
+window.location.href="banca.html";
+break;
+
+case "DashboardStaff":
+window.location.href="staff.html";
+break;
+
+case "Comune":
+window.location.href="comune.html";
+break;
+
+case "Whatsapp":
+window.location.href="whatsapp.html";
+break;
+
+case "Instagram":
+window.location.href="instagram.html";
+break;
+
+default:
+alert("Aperto: "+nomeApp);
 }
+
+},200);
+
+};
+
+});
 
 </script>
 
 </body>
-    </html>
+</html>
