@@ -8,11 +8,30 @@
 
 <style>
 
-body{
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
 font-family:'Segoe UI',sans-serif;
-background:#1c102b;
+}
+
+body{
+min-height:100vh;
 color:white;
+background-image:url("assets/sfondo.webp");
+background-size:cover;
+background-position:center;
+background-attachment:fixed;
 padding:15px;
+}
+
+/* overlay */
+body::before{
+content:"";
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.6);
+z-index:-1;
 }
 
 /* HEADER */
@@ -20,15 +39,22 @@ padding:15px;
 display:flex;
 justify-content:space-between;
 align-items:center;
-margin-bottom:15px;
+margin-bottom:20px;
+}
+
+.header h2{
+font-size:22px;
 }
 
 /* SEARCH */
-input{
+.search{
 width:100%;
-padding:10px;
-border-radius:10px;
+padding:12px;
+border-radius:15px;
 border:none;
+background:rgba(255,255,255,0.1);
+color:white;
+backdrop-filter:blur(10px);
 margin-bottom:15px;
 }
 
@@ -37,16 +63,23 @@ margin-bottom:15px;
 display:flex;
 gap:10px;
 overflow-x:auto;
-margin-bottom:15px;
+margin-bottom:20px;
 }
 
 .filtri button{
-padding:8px 12px;
+padding:8px 14px;
 border:none;
-border-radius:10px;
-background:#333;
+border-radius:20px;
+background:rgba(255,255,255,0.1);
 color:white;
 cursor:pointer;
+backdrop-filter:blur(10px);
+transition:0.2s;
+}
+
+.filtri button:hover{
+background:#00ff88;
+color:black;
 }
 
 /* GRID */
@@ -58,26 +91,54 @@ gap:15px;
 
 /* CARD */
 .card{
-background:#2a1b3f;
+position:relative;
+border-radius:20px;
 padding:10px;
-border-radius:15px;
-text-align:center;
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(12px);
+overflow:hidden;
+transition:0.25s;
 }
 
+.card:hover{
+transform:scale(1.03);
+box-shadow:0 0 20px rgba(0,255,136,0.4);
+}
+
+/* IMG */
 .card img{
 width:100%;
-height:100px;
+height:110px;
 object-fit:contain;
 }
 
+/* NOME */
 .nome{
 font-size:14px;
 margin-top:5px;
 }
 
+/* PREZZO */
 .prezzo{
 color:#00ff88;
 font-weight:bold;
+}
+
+/* BADGE */
+.badge{
+position:absolute;
+top:8px;
+left:8px;
+background:#00ff88;
+color:black;
+font-size:10px;
+padding:3px 8px;
+border-radius:10px;
+}
+
+/* CLICK */
+.card:active{
+transform:scale(0.95);
 }
 
 </style>
@@ -88,10 +149,10 @@ font-weight:bold;
 
 <div class="header">
 <h2>Listino</h2>
-<button onclick="window.location.href='home.html'">⬅</button>
+<span onclick="window.location.href='home.html'">⬅</span>
 </div>
 
-<input type="text" id="search" placeholder="Cerca item...">
+<input type="text" id="search" class="search" placeholder="Cerca item...">
 
 <div class="filtri">
 <button onclick="filtra('tutti')">Tutti</button>
@@ -117,34 +178,34 @@ projectId: "sito-rp"
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-let tuttiItems = [];
-let filtroCorrente = "tutti";
+let items = [];
+let filtro = "tutti";
 
-/* CARICA ITEM */
+/* LOAD */
 const snap = await getDocs(collection(db,"items"));
 
 snap.forEach(doc=>{
-tuttiItems.push(doc.data());
+items.push(doc.data());
 });
 
-mostra();
+render();
 
-/* MOSTRA */
-function mostra(){
+/* RENDER */
+function render(){
 
-const search = document.getElementById("search").value.toLowerCase();
 const lista = document.getElementById("lista");
+const search = document.getElementById("search").value.toLowerCase();
 
 lista.innerHTML="";
 
-tuttiItems.forEach(item=>{
+items.forEach(item=>{
 
-if(filtroCorrente !== "tutti" && item.tipo !== filtroCorrente) return;
-
+if(filtro !== "tutti" && item.tipo !== filtro) return;
 if(!item.nome.toLowerCase().includes(search)) return;
 
 lista.innerHTML += `
 <div class="card">
+<div class="badge">${item.tipo}</div>
 <img src="${item.immagine || 'assets/default.png'}">
 <div class="nome">${item.nome}</div>
 <div class="prezzo">€ ${item.prezzo}</div>
@@ -156,13 +217,13 @@ lista.innerHTML += `
 }
 
 /* FILTRO */
-window.filtra = (tipo)=>{
-filtroCorrente = tipo;
-mostra();
+window.filtra = (t)=>{
+filtro = t;
+render();
 };
 
 /* SEARCH */
-document.getElementById("search").oninput = mostra;
+document.getElementById("search").oninput = render;
 
 </script>
 
