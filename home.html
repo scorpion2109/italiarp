@@ -145,6 +145,11 @@ font-size:14px;
 <span>Instagram</span>
 </div>
 
+  <div class="app" data-app="listino">
+<img src="assets/listino.png" onerror="this.src='assets/default.png'">
+<span>Instagram</span>
+</div>
+
 <!-- STAFF -->
 <div class="app" id="dashboardStaff" data-app="DashboardStaff" style="display:none;">
 <img src="assets/logo-staff.png" onerror="this.src='assets/default.png'">
@@ -248,6 +253,10 @@ case "Instagram":
 window.location.href="instagram.html";
 break;
 
+case "listino":
+window.location.href="listino.html";
+break;
+    
 default:
 alert("Aperto: "+nomeApp);
 }
