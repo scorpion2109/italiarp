@@ -211,8 +211,8 @@ display:none;
 <!-- COMPRA -->
 <div id="compraStep" class="hidden">
 <h3 id="nomeItem"></h3>
-<input id="colore" placeholder="Colore">
-<input id="targa" placeholder="Targa">
+<input id="colore" placeholder="Colore (solo veicoli)">
+<input id="targa" placeholder="Targa (solo veicoli)">
 <button id="compra">Compra</button>
 </div>
 
@@ -230,7 +230,7 @@ display:none;
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
-import { getFirestore, doc, getDoc, collection, getDocs, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, collection, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
 
 const firebaseConfig = {
 apiKey: "AIzaSy...",
@@ -290,7 +290,6 @@ renderUtenti();
 
 /* UTENTI */
 function renderUtenti(){
-
 listaUtenti.innerHTML="";
 const search = searchUser.value.toLowerCase();
 
@@ -306,11 +305,11 @@ listaUtenti.innerHTML += `
 </div>
 `;
 });
-
 }
 
 searchUser.oninput = renderUtenti;
 
+/* SCEGLI UTENTE */
 window.scegliUtente = async (id)=>{
 utenteSelezionato = utenti.find(u=>u.id===id);
 
@@ -330,7 +329,6 @@ renderItems();
 
 /* ITEMS */
 function renderItems(){
-
 listaItem.innerHTML="";
 const search = searchItem.value.toLowerCase();
 
@@ -348,11 +346,11 @@ listaItem.innerHTML += `
 </div>
 `;
 });
-
 }
 
 searchItem.oninput = renderItems;
 
+/* SCEGLI ITEM */
 window.scegliItem = (nome)=>{
 itemSelezionato = items.find(i=>i.nome===nome);
 
@@ -362,19 +360,24 @@ compraStep.classList.remove("hidden");
 nomeItem.innerText = nome;
 };
 
-/* COMPRA */
+/* COMPRA SICURO (FIX BUG) */
 compra.onclick = async ()=>{
+
+const ref = doc(db,"users",utenteSelezionato.id);
+const snap = await getDoc(ref);
+const data = snap.data();
 
 const prezzo = itemSelezionato.prezzo;
 
-if(utenteSelezionato.banca < prezzo){
+if(data.banca < prezzo){
 alert("Soldi insufficienti");
 return;
 }
 
-await updateDoc(doc(db,"users",utenteSelezionato.id),{
-banca: utenteSelezionato.banca - prezzo
-});
+let personaggi = data.personaggi || [];
+let pg = personaggi[0];
+
+pg.inventario = pg.inventario || [];
 
 let nuovoItem = {
 tipo:itemSelezionato.tipo,
@@ -386,8 +389,11 @@ nuovoItem.targa = targa.value;
 nuovoItem.colore = colore.value;
 }
 
-await updateDoc(doc(db,"users",utenteSelezionato.id),{
-"personaggi.0.inventario": arrayUnion(nuovoItem)
+pg.inventario.push(nuovoItem);
+
+await updateDoc(ref,{
+banca: data.banca - prezzo,
+personaggi: personaggi
 });
 
 /* ANIMAZIONE */
