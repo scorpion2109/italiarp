@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Listino</title>
+
+<style>
+
+body{
+font-family:'Segoe UI',sans-serif;
+background:#1c102b;
+color:white;
+padding:15px;
+}
+
+/* HEADER */
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:15px;
+}
+
+/* SEARCH */
+input{
+width:100%;
+padding:10px;
+border-radius:10px;
+border:none;
+margin-bottom:15px;
+}
+
+/* FILTRI */
+.filtri{
+display:flex;
+gap:10px;
+overflow-x:auto;
+margin-bottom:15px;
+}
+
+.filtri button{
+padding:8px 12px;
+border:none;
+border-radius:10px;
+background:#333;
+color:white;
+cursor:pointer;
+}
+
+/* GRID */
+.grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:15px;
+}
+
+/* CARD */
+.card{
+background:#2a1b3f;
+padding:10px;
+border-radius:15px;
+text-align:center;
+}
+
+.card img{
+width:100%;
+height:100px;
+object-fit:contain;
+}
+
+.nome{
+font-size:14px;
+margin-top:5px;
+}
+
+.prezzo{
+color:#00ff88;
+font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+<h2>Listino</h2>
+<button onclick="window.location.href='home.html'">⬅</button>
+</div>
+
+<input type="text" id="search" placeholder="Cerca item...">
+
+<div class="filtri">
+<button onclick="filtra('tutti')">Tutti</button>
+<button onclick="filtra('arma')">Armi</button>
+<button onclick="filtra('veicolo')">Veicoli</button>
+<button onclick="filtra('cibo')">Cibo</button>
+<button onclick="filtra('oggetto')">Oggetti</button>
+</div>
+
+<div class="grid" id="lista"></div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
+
+const firebaseConfig = {
+apiKey: "AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
+authDomain: "sito-rp.firebaseapp.com",
+projectId: "sito-rp"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let tuttiItems = [];
+let filtroCorrente = "tutti";
+
+/* CARICA ITEM */
+const snap = await getDocs(collection(db,"items"));
+
+snap.forEach(doc=>{
+tuttiItems.push(doc.data());
+});
+
+mostra();
+
+/* MOSTRA */
+function mostra(){
+
+const search = document.getElementById("search").value.toLowerCase();
+const lista = document.getElementById("lista");
+
+lista.innerHTML="";
+
+tuttiItems.forEach(item=>{
+
+if(filtroCorrente !== "tutti" && item.tipo !== filtroCorrente) return;
+
+if(!item.nome.toLowerCase().includes(search)) return;
+
+lista.innerHTML += `
+<div class="card">
+<img src="${item.immagine || 'assets/default.png'}">
+<div class="nome">${item.nome}</div>
+<div class="prezzo">€ ${item.prezzo}</div>
+</div>
+`;
+
+});
+
+}
+
+/* FILTRO */
+window.filtra = (tipo)=>{
+filtroCorrente = tipo;
+mostra();
+};
+
+/* SEARCH */
+document.getElementById("search").oninput = mostra;
+
+</script>
+
+</body>
+</html>
