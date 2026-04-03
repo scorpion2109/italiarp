@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard Staff</title>
 
 <style>
+
 *{
 margin:0;
 padding:0;
@@ -15,49 +17,95 @@ font-family:'Segoe UI',sans-serif;
 
 body{
 min-height:100vh;
-background:linear-gradient(180deg,#1c102b,#2a1b3f);
 color:white;
+background:linear-gradient(180deg,#1c102b,#2a1b3f);
 display:flex;
 flex-direction:column;
 }
 
+/* HEADER */
 .header{
 height:70px;
 display:flex;
 align-items:center;
 justify-content:space-between;
-padding:0 30px;
+padding:0 20px;
 background:rgba(0,0,0,0.4);
 }
 
+/* GRID */
 .grid{
 flex:1;
 display:grid;
 grid-template-columns:repeat(3,1fr);
-gap:40px;
-padding:60px;
-justify-items:center;
+gap:25px;
+padding:40px 20px;
+max-width:400px;
+margin:0 auto;
 }
 
+/* APP */
 .app{
 display:flex;
 flex-direction:column;
 align-items:center;
 cursor:pointer;
+transition:0.2s;
 }
 
 .app img{
-width:80px;
-margin-bottom:10px;
+width:70px;
+height:70px;
+border-radius:15px;
+background:rgba(255,255,255,0.1);
+padding:10px;
 }
 
-.app:hover{
-transform:scale(1.1);
+.app span{
+margin-top:8px;
+font-size:13px;
+}
+
+.app:active{
+transform:scale(0.9);
+}
+
+/* SEZIONI */
+.section{
+display:none;
+padding:20px;
+max-width:400px;
+margin:auto;
+}
+
+.active{
+display:block;
+}
+
+/* FORM */
+input, select{
+width:100%;
+margin-top:10px;
+padding:10px;
+border-radius:10px;
+border:none;
+}
+
+button{
+margin-top:15px;
+padding:12px;
+width:100%;
+background:#00aa44;
+border:none;
+border-radius:10px;
+color:white;
+font-size:16px;
 }
 
 .hidden{
 display:none;
 }
+
 </style>
 
 </head>
@@ -65,52 +113,95 @@ display:none;
 <body>
 
 <div class="header">
-<h2>Dashboard Staff</h2>
-<button onclick="window.location.href='home.html'">Torna</button>
+<span onclick="goHome()">⬅</span>
+<h3>Staff</h3>
 </div>
 
-<div class="grid">
+<!-- DASHBOARD -->
+<div class="grid" id="dashboard">
 
-<!-- STAFF -->
-<div class="app hidden" id="utenti">
+<div class="app" id="btnItem">
+<img src="assets/item.png">
+<span>Item</span>
+</div>
+
+<div class="app" id="btnUtenti">
 <img src="assets/utenti.png">
 <span>Utenti</span>
 </div>
 
-<div class="app hidden" id="item">
-<img src="assets/item.png">
-<span>Gestionar Item</span>
-</div>
-
-<div class="app hidden" id="logs">
+<div class="app" id="btnLogs">
 <img src="assets/log.png">
 <span>Logs</span>
 </div>
 
-<!-- DIRETTORE -->
-<div class="app hidden" id="attivita">
-<img src="assets/attivita.png">
-<span>Gestione Attività</span>
-</div>
-
-<!-- ADMIN -->
-<div class="app hidden" id="admin">
+<div class="app hidden" id="btnAdmin">
 <img src="assets/admin.png">
-<span>Admin Panel</span>
+<span>Admin</span>
 </div>
 
-<!-- FOUNDER -->
-<div class="app hidden" id="sistema">
+<div class="app hidden" id="btnSistema">
 <img src="assets/system.png">
-<span>Controllo Sistema</span>
+<span>Sistema</span>
 </div>
+
+</div>
+
+<!-- SEZIONE ITEM -->
+<div class="section" id="itemSection">
+
+<h2>Crea Item</h2>
+
+<input id="nome" placeholder="Nome item">
+
+<select id="tipo">
+<option value="">Tipo</option>
+<option value="arma">Arma</option>
+<option value="veicolo">Veicolo</option>
+<option value="cibo">Cibo</option>
+<option value="oggetto">Oggetto</option>
+</select>
+
+<select id="tipoArma" class="hidden">
+<option value="">Tipo arma</option>
+<option>manuale</option>
+<option>semi-automatica</option>
+<option>automatica</option>
+<option>arma bianca</option>
+</select>
+
+<select id="categoriaVeicolo" class="hidden">
+<option value="">Categoria</option>
+<option>auto</option>
+<option>moto</option>
+</select>
+
+<select id="fasciaVeicolo" class="hidden">
+<option value="">Fascia</option>
+<option>bassa</option>
+<option>media</option>
+<option>alta</option>
+</select>
+
+<input id="fame" class="hidden" placeholder="Fame">
+
+<input id="prezzo" placeholder="Prezzo">
+<input id="immagine" placeholder="URL immagine">
+
+<select id="consumabile">
+<option value="true">Consumabile</option>
+<option value="false">Non consumabile</option>
+</select>
+
+<button id="creaItem">Crea</button>
+<button onclick="torna()">⬅ Torna</button>
 
 </div>
 
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
 
 const firebaseConfig = {
 apiKey: "AIzaSyDgNJwxV81Q9qgTjRKODsBGis1tBvy3RMM",
@@ -123,52 +214,98 @@ const db = getFirestore(app);
 
 const uid = localStorage.getItem("discord_uid");
 
-if(!uid){
-    window.location.href="index.html";
-}
+if(!uid) location.href="index.html";
 
 const snap = await getDoc(doc(db,"users",uid));
-
-if(!snap.exists()){
-    window.location.href="index.html";
-}
-
 const data = snap.data();
 
 let ruolo = data.gradoStaff;
 
-// fallback se dentro personaggio
-if(!ruolo){
-    const index = parseInt(localStorage.getItem("personaggioIndex"));
-    const lista = data.personaggi || [];
-    ruolo = lista[index]?.gradoStaff;
-}
-
-const attivita = data.attivita || [];
-
-// 👮 STAFF
-if(ruolo === "staff" || ruolo === "admin" || ruolo === "founder"){
-    document.getElementById("utenti").classList.remove("hidden");
-    document.getElementById("item").classList.remove("hidden");
-    document.getElementById("logs").classList.remove("hidden");
-}
-
-// 🏢 DIRETTORE (se ha attività)
-if(attivita.length > 0){
-    document.getElementById("attivita").classList.remove("hidden");
-}
-
-// 👑 ADMIN
+// PERMESSI
 if(ruolo === "admin" || ruolo === "founder"){
-    document.getElementById("admin").classList.remove("hidden");
+document.getElementById("btnAdmin").classList.remove("hidden");
 }
 
-// 🔥 FOUNDER
 if(ruolo === "founder"){
-    document.getElementById("sistema").classList.remove("hidden");
+document.getElementById("btnSistema").classList.remove("hidden");
 }
+
+// NAV
+document.getElementById("btnItem").onclick = ()=>{
+document.getElementById("dashboard").style.display="none";
+document.getElementById("itemSection").classList.add("active");
+};
+
+// TORNA
+window.torna = ()=>{
+document.getElementById("dashboard").style.display="grid";
+document.getElementById("itemSection").classList.remove("active");
+};
+
+// HOME
+window.goHome = ()=>{
+window.location.href="home.html";
+};
+
+// TIPO ITEM
+document.getElementById("tipo").onchange = ()=>{
+
+document.getElementById("tipoArma").classList.add("hidden");
+document.getElementById("categoriaVeicolo").classList.add("hidden");
+document.getElementById("fasciaVeicolo").classList.add("hidden");
+document.getElementById("fame").classList.add("hidden");
+
+const t = document.getElementById("tipo").value;
+
+if(t==="arma"){
+document.getElementById("tipoArma").classList.remove("hidden");
+}
+if(t==="veicolo"){
+document.getElementById("categoriaVeicolo").classList.remove("hidden");
+document.getElementById("fasciaVeicolo").classList.remove("hidden");
+}
+if(t==="cibo"){
+document.getElementById("fame").classList.remove("hidden");
+}
+
+};
+
+// CREA ITEM
+document.getElementById("creaItem").onclick = async ()=>{
+
+const tipo = document.getElementById("tipo").value;
+
+let item = {
+nome: document.getElementById("nome").value,
+tipo: tipo,
+prezzo: parseInt(document.getElementById("prezzo").value),
+immagine: document.getElementById("immagine").value,
+consumabile: document.getElementById("consumabile").value==="true"
+};
+
+if(tipo==="arma"){
+item.tipoArma = document.getElementById("tipoArma").value;
+item.negozio="armeria";
+}
+
+if(tipo==="veicolo"){
+item.categoria=document.getElementById("categoriaVeicolo").value;
+item.fascia=document.getElementById("fasciaVeicolo").value;
+item.negozio="concessionario";
+}
+
+if(tipo==="cibo"){
+item.fame=parseInt(document.getElementById("fame").value);
+item.negozio="ristorante";
+}
+
+await addDoc(collection(db,"items"), item);
+
+alert("Item creato!");
+
+};
 
 </script>
 
 </body>
-  </html>
+    </html>
