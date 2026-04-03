@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Attività</title>
+
+<style>
+
+body{
+font-family:'Segoe UI',sans-serif;
+background:#1c102b;
+color:white;
+padding:15px;
+}
+
+/* GRID MENU */
+.grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:15px;
+}
+
+/* CARD */
+.card{
+background:#2a1b3f;
+padding:20px;
+border-radius:15px;
+text-align:center;
+cursor:pointer;
+transition:0.2s;
+}
+
+.card:hover{
+transform:scale(1.05);
+}
+
+/* LISTE */
+.list{
+margin-top:15px;
+}
+
+.item{
+padding:10px;
+background:#2a1b3f;
+margin-bottom:8px;
+border-radius:10px;
+cursor:pointer;
+}
+
+.item:hover{
+background:#3a2b5f;
+}
+
+/* INPUT */
+input{
+width:100%;
+padding:10px;
+border-radius:10px;
+border:none;
+margin-top:10px;
+}
+
+button{
+margin-top:10px;
+padding:12px;
+width:100%;
+border:none;
+border-radius:10px;
+background:#00aa44;
+color:white;
+}
+
+.hidden{
+display:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>Attività</h2>
+
+<!-- MENU -->
+<div id="menu" class="grid"></div>
+
+<!-- STEP UTENTI -->
+<div id="utentiStep" class="hidden">
+<input id="searchUser" placeholder="Cerca utente...">
+<div id="listaUtenti" class="list"></div>
+</div>
+
+<!-- STEP ITEM -->
+<div id="itemStep" class="hidden">
+<input id="searchItem" placeholder="Cerca...">
+<div id="listaItem" class="list"></div>
+</div>
+
+<!-- STEP COMPRA -->
+<div id="compraStep" class="hidden">
+
+<h3 id="nomeItem"></h3>
+
+<input id="colore" placeholder="Colore (solo veicoli)">
+<input id="targa" placeholder="Targa (solo veicoli)">
+
+<button id="compra">Compra</button>
+
+</div>
+
+<button onclick="tornaMenu()" id="backBtn" class="hidden">⬅ Torna</button>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
+import { getFirestore, doc, getDoc, collection, getDocs, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js";
+
+const firebaseConfig = {
+apiKey: "AIzaSy...",
+projectId: "sito-rp"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const uid = localStorage.getItem("discord_uid");
+
+const snap = await getDoc(doc(db,"users",uid));
+const data = snap.data();
+
+const index = parseInt(localStorage.getItem("personaggioIndex"));
+const personaggio = data.personaggi[index];
+
+const ruolo = personaggio.lavoro;
+
+const menu = document.getElementById("menu");
+
+let utenti = [];
+let items = [];
+let utenteSelezionato = null;
+let itemSelezionato = null;
+let filtroTipo = "";
+
+/* MENU DINAMICO */
+
+if(ruolo === "concessionario"){
+menu.innerHTML += card("Veicoli","veicolo");
+}
+
+if(ruolo === "armaiolo"){
+menu.innerHTML += card("Armi","arma");
+menu.innerHTML += card("Porto d'armi","porto");
+}
+
+if(ruolo === "meccanico"){
+menu.innerHTML += card("Modifiche","meccanico");
+}
+
+function card(nome,tipo){
+return `<div class="card" onclick="entra('${tipo}')">${nome}</div>`;
+}
+
+/* ENTRA */
+window.entra = async (tipo)=>{
+
+filtroTipo = tipo;
+
+menu.classList.add("hidden");
+document.getElementById("utentiStep").classList.remove("hidden");
+document.getElementById("backBtn").classList.remove("hidden");
+
+const snapUsers = await getDocs(collection(db,"users"));
+
+utenti = [];
+snapUsers.forEach(doc=>{
+utenti.push({id:doc.id, ...doc.data()});
+});
+
+renderUtenti();
+
+};
+
+/* UTENTI */
+function renderUtenti(){
+
+const lista = document.getElementById("listaUtenti");
+const search = document.getElementById("searchUser").value.toLowerCase();
+
+lista.innerHTML="";
+
+utenti.forEach(u=>{
+
+const nome = u.personaggi?.[0]?.nome || "User";
+
+if(!nome.toLowerCase().includes(search)) return;
+
+lista.innerHTML += `
+<div class="item" onclick="scegliUtente('${u.id}')">
+${nome}
+</div>
+`;
+
+});
+
+}
+
+document.getElementById("searchUser").oninput = renderUtenti;
+
+window.scegliUtente = async (id)=>{
+
+utenteSelezionato = utenti.find(u=>u.id===id);
+
+document.getElementById("utentiStep").classList.add("hidden");
+document.getElementById("itemStep").classList.remove("hidden");
+
+const snapItems = await getDocs(collection(db,"items"));
+
+items = [];
+
+snapItems.forEach(doc=>{
+const data = doc.data();
+if(data.tipo === filtroTipo){
+items.push(data);
+}
+});
+
+renderItems();
+
+};
+
+/* ITEMS */
+function renderItems(){
+
+const lista = document.getElementById("listaItem");
+const search = document.getElementById("searchItem").value.toLowerCase();
+
+lista.innerHTML="";
+
+items.forEach(i=>{
+
+if(!i.nome.toLowerCase().includes(search)) return;
+
+lista.innerHTML += `
+<div class="item" onclick="scegliItem('${i.nome}')">
+${i.nome} - €${i.prezzo}
+</div>
+`;
+
+});
+
+}
+
+document.getElementById("searchItem").oninput = renderItems;
+
+window.scegliItem = (nome)=>{
+
+itemSelezionato = items.find(i=>i.nome===nome);
+
+document.getElementById("itemStep").classList.add("hidden");
+document.getElementById("compraStep").classList.remove("hidden");
+
+document.getElementById("nomeItem").innerText = nome;
+
+};
+
+/* COMPRA */
+document.getElementById("compra").onclick = async ()=>{
+
+const prezzo = itemSelezionato.prezzo;
+
+if(utenteSelezionato.banca < prezzo){
+alert("Soldi insufficienti");
+return;
+}
+
+// scala soldi
+await updateDoc(doc(db,"users",utenteSelezionato.id),{
+banca: utenteSelezionato.banca - prezzo
+});
+
+// crea oggetto
+let nuovoItem = {
+tipo: itemSelezionato.tipo,
+nome: itemSelezionato.nome
+};
+
+// se veicolo
+if(itemSelezionato.tipo === "veicolo"){
+nuovoItem.targa = document.getElementById("targa").value;
+nuovoItem.colore = document.getElementById("colore").value;
+}
+
+// aggiungi inventario
+await updateDoc(doc(db,"users",utenteSelezionato.id),{
+"personaggi.0.inventario": arrayUnion(nuovoItem)
+});
+
+alert("Venduto!");
+
+};
+
+/* TORNA */
+window.tornaMenu = ()=>{
+location.reload();
+};
+
+</script>
+
+</body>
+</html>
