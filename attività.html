@@ -8,25 +8,42 @@
 
 <style>
 
-body{
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
 font-family:'Segoe UI',sans-serif;
-background:#1c102b;
+}
+
+body{
+min-height:100vh;
 color:white;
+background-image:url("assets/sfondo.webp");
+background-size:cover;
+background-position:center;
 padding:15px;
 }
 
-/* GRID MENU */
+body::before{
+content:"";
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.6);
+z-index:-1;
+}
+
+/* MENU */
 .grid{
 display:grid;
 grid-template-columns:repeat(2,1fr);
 gap:15px;
 }
 
-/* CARD */
 .card{
-background:#2a1b3f;
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(10px);
 padding:20px;
-border-radius:15px;
+border-radius:20px;
 text-align:center;
 cursor:pointer;
 transition:0.2s;
@@ -34,23 +51,7 @@ transition:0.2s;
 
 .card:hover{
 transform:scale(1.05);
-}
-
-/* LISTE */
-.list{
-margin-top:15px;
-}
-
-.item{
-padding:10px;
-background:#2a1b3f;
-margin-bottom:8px;
-border-radius:10px;
-cursor:pointer;
-}
-
-.item:hover{
-background:#3a2b5f;
+box-shadow:0 0 20px rgba(0,255,136,0.5);
 }
 
 /* INPUT */
@@ -62,6 +63,69 @@ border:none;
 margin-top:10px;
 }
 
+/* UTENTI */
+.user{
+display:flex;
+align-items:center;
+gap:10px;
+background:rgba(255,255,255,0.08);
+padding:10px;
+border-radius:15px;
+margin-bottom:10px;
+cursor:pointer;
+transition:0.2s;
+}
+
+.user:hover{
+transform:scale(1.02);
+background:rgba(0,255,136,0.2);
+}
+
+.user img{
+width:40px;
+height:40px;
+border-radius:50%;
+}
+
+/* ITEM */
+.item{
+background:rgba(255,255,255,0.08);
+border-radius:15px;
+padding:10px;
+margin-bottom:10px;
+display:flex;
+align-items:center;
+gap:10px;
+cursor:pointer;
+transition:0.2s;
+}
+
+.item:hover{
+transform:scale(1.03);
+box-shadow:0 0 15px rgba(0,255,136,0.5);
+}
+
+.item img{
+width:60px;
+height:60px;
+object-fit:contain;
+}
+
+.prezzo{
+color:#00ff88;
+font-weight:bold;
+}
+
+.badge{
+font-size:10px;
+background:#00ff88;
+color:black;
+padding:3px 6px;
+border-radius:10px;
+margin-left:auto;
+}
+
+/* BUTTON */
 button{
 margin-top:10px;
 padding:12px;
@@ -70,6 +134,52 @@ border:none;
 border-radius:10px;
 background:#00aa44;
 color:white;
+}
+
+/* SUCCESS */
+.success-overlay{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.7);
+display:flex;
+align-items:center;
+justify-content:center;
+opacity:0;
+pointer-events:none;
+transition:0.4s;
+z-index:9999;
+}
+
+.success-overlay.active{
+opacity:1;
+pointer-events:auto;
+}
+
+.success-box{
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(15px);
+padding:30px;
+border-radius:25px;
+text-align:center;
+animation:scaleIn 0.4s ease;
+}
+
+.check{
+font-size:50px;
+color:#00ff88;
+margin-bottom:10px;
+animation:pop 0.5s ease;
+}
+
+@keyframes scaleIn{
+0%{transform:scale(0.6); opacity:0;}
+100%{transform:scale(1); opacity:1;}
+}
+
+@keyframes pop{
+0%{transform:scale(0);}
+80%{transform:scale(1.2);}
+100%{transform:scale(1);}
 }
 
 .hidden{
@@ -84,34 +194,38 @@ display:none;
 
 <h2>Attività</h2>
 
-<!-- MENU -->
 <div id="menu" class="grid"></div>
 
-<!-- STEP UTENTI -->
+<!-- UTENTI -->
 <div id="utentiStep" class="hidden">
 <input id="searchUser" placeholder="Cerca utente...">
-<div id="listaUtenti" class="list"></div>
+<div id="listaUtenti"></div>
 </div>
 
-<!-- STEP ITEM -->
+<!-- ITEM -->
 <div id="itemStep" class="hidden">
 <input id="searchItem" placeholder="Cerca...">
-<div id="listaItem" class="list"></div>
+<div id="listaItem"></div>
 </div>
 
-<!-- STEP COMPRA -->
+<!-- COMPRA -->
 <div id="compraStep" class="hidden">
-
 <h3 id="nomeItem"></h3>
-
-<input id="colore" placeholder="Colore (solo veicoli)">
-<input id="targa" placeholder="Targa (solo veicoli)">
-
+<input id="colore" placeholder="Colore">
+<input id="targa" placeholder="Targa">
 <button id="compra">Compra</button>
-
 </div>
 
 <button onclick="tornaMenu()" id="backBtn" class="hidden">⬅ Torna</button>
+
+<!-- SUCCESS -->
+<div id="successOverlay" class="success-overlay">
+<div class="success-box">
+<div class="check">✔</div>
+<h2>Acquisto completato</h2>
+<p id="successText"></p>
+</div>
+</div>
 
 <script type="module">
 
@@ -144,19 +258,12 @@ let utenteSelezionato = null;
 let itemSelezionato = null;
 let filtroTipo = "";
 
-/* MENU DINAMICO */
-
+/* MENU */
 if(ruolo === "concessionario"){
 menu.innerHTML += card("Veicoli","veicolo");
 }
-
 if(ruolo === "armaiolo"){
 menu.innerHTML += card("Armi","arma");
-menu.innerHTML += card("Porto d'armi","porto");
-}
-
-if(ruolo === "meccanico"){
-menu.innerHTML += card("Modifiche","meccanico");
 }
 
 function card(nome,tipo){
@@ -165,109 +272,98 @@ return `<div class="card" onclick="entra('${tipo}')">${nome}</div>`;
 
 /* ENTRA */
 window.entra = async (tipo)=>{
-
 filtroTipo = tipo;
 
 menu.classList.add("hidden");
-document.getElementById("utentiStep").classList.remove("hidden");
-document.getElementById("backBtn").classList.remove("hidden");
+utentiStep.classList.remove("hidden");
+backBtn.classList.remove("hidden");
 
 const snapUsers = await getDocs(collection(db,"users"));
-
 utenti = [];
+
 snapUsers.forEach(doc=>{
 utenti.push({id:doc.id, ...doc.data()});
 });
 
 renderUtenti();
-
 };
 
 /* UTENTI */
 function renderUtenti(){
 
-const lista = document.getElementById("listaUtenti");
-const search = document.getElementById("searchUser").value.toLowerCase();
-
-lista.innerHTML="";
+listaUtenti.innerHTML="";
+const search = searchUser.value.toLowerCase();
 
 utenti.forEach(u=>{
-
 const nome = u.personaggi?.[0]?.nome || "User";
 
 if(!nome.toLowerCase().includes(search)) return;
 
-lista.innerHTML += `
-<div class="item" onclick="scegliUtente('${u.id}')">
-${nome}
+listaUtenti.innerHTML += `
+<div class="user" onclick="scegliUtente('${u.id}')">
+<img src="https://cdn.discordapp.com/embed/avatars/0.png">
+<span>${nome}</span>
 </div>
 `;
-
 });
 
 }
 
-document.getElementById("searchUser").oninput = renderUtenti;
+searchUser.oninput = renderUtenti;
 
 window.scegliUtente = async (id)=>{
-
 utenteSelezionato = utenti.find(u=>u.id===id);
 
-document.getElementById("utentiStep").classList.add("hidden");
-document.getElementById("itemStep").classList.remove("hidden");
+utentiStep.classList.add("hidden");
+itemStep.classList.remove("hidden");
 
 const snapItems = await getDocs(collection(db,"items"));
 
 items = [];
-
 snapItems.forEach(doc=>{
-const data = doc.data();
-if(data.tipo === filtroTipo){
-items.push(data);
-}
+const d = doc.data();
+if(d.tipo === filtroTipo) items.push(d);
 });
 
 renderItems();
-
 };
 
 /* ITEMS */
 function renderItems(){
 
-const lista = document.getElementById("listaItem");
-const search = document.getElementById("searchItem").value.toLowerCase();
-
-lista.innerHTML="";
+listaItem.innerHTML="";
+const search = searchItem.value.toLowerCase();
 
 items.forEach(i=>{
-
 if(!i.nome.toLowerCase().includes(search)) return;
 
-lista.innerHTML += `
+listaItem.innerHTML += `
 <div class="item" onclick="scegliItem('${i.nome}')">
-${i.nome} - €${i.prezzo}
+<img src="${i.immagine || 'assets/default.png'}">
+<div>
+<div>${i.nome}</div>
+<div class="prezzo">€ ${i.prezzo}</div>
+</div>
+<div class="badge">${i.tipo}</div>
 </div>
 `;
-
 });
 
 }
 
-document.getElementById("searchItem").oninput = renderItems;
+searchItem.oninput = renderItems;
 
 window.scegliItem = (nome)=>{
-
 itemSelezionato = items.find(i=>i.nome===nome);
 
-document.getElementById("itemStep").classList.add("hidden");
-document.getElementById("compraStep").classList.remove("hidden");
+itemStep.classList.add("hidden");
+compraStep.classList.remove("hidden");
 
-document.getElementById("nomeItem").innerText = nome;
-
+nomeItem.innerText = nome;
 };
 
 /* COMPRA */
-document.getElementById("compra").onclick = async ()=>{
+compra.onclick = async ()=>{
 
 const prezzo = itemSelezionato.prezzo;
 
@@ -276,36 +372,40 @@ alert("Soldi insufficienti");
 return;
 }
 
-// scala soldi
 await updateDoc(doc(db,"users",utenteSelezionato.id),{
 banca: utenteSelezionato.banca - prezzo
 });
 
-// crea oggetto
 let nuovoItem = {
-tipo: itemSelezionato.tipo,
-nome: itemSelezionato.nome
+tipo:itemSelezionato.tipo,
+nome:itemSelezionato.nome
 };
 
-// se veicolo
 if(itemSelezionato.tipo === "veicolo"){
-nuovoItem.targa = document.getElementById("targa").value;
-nuovoItem.colore = document.getElementById("colore").value;
+nuovoItem.targa = targa.value;
+nuovoItem.colore = colore.value;
 }
 
-// aggiungi inventario
 await updateDoc(doc(db,"users",utenteSelezionato.id),{
 "personaggi.0.inventario": arrayUnion(nuovoItem)
 });
 
-alert("Venduto!");
+/* ANIMAZIONE */
+const audio = new Audio("assets/success.mp3");
+audio.play();
+
+successText.innerText = itemSelezionato.nome + " acquistato!";
+successOverlay.classList.add("active");
+
+setTimeout(()=>{
+successOverlay.classList.remove("active");
+location.reload();
+},2000);
 
 };
 
 /* TORNA */
-window.tornaMenu = ()=>{
-location.reload();
-};
+window.tornaMenu = ()=> location.reload();
 
 </script>
 
