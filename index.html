@@ -84,8 +84,14 @@ const user = await res.json();
 
 console.log("Discord user:",user);
 
-// SALVA UID
-localStorage.setItem("discord_uid",user.id);
+localStorage.setItem("discord_username", user.username);
+
+/* AVATAR DISCORD */
+const avatarUrl = user.avatar
+? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+: `https://cdn.discordapp.com/embed/avatars/0.png`;
+
+localStorage.setItem("discord_avatar", avatarUrl);
 
 // pulisce url
 history.replaceState(null,null," ");
